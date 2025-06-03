@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Informations générales du contrat -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titre }}</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:liste_contrats_partenaire' %}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Retour à la liste
+                        </a>
+                        <a href="{% url 'payments:paiement_rapide' 'partenaire' contrat.id %}" class="btn btn-success">
+                            <i class="fas fa-money-bill-wave"></i> Enregistrer un paiement
+                        </a>
+                        
+                        <a href="{% url 'contrats:modifier_contrat_partenaire' contrat.id %}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modifier le contrat
+                        </a>
+                        
+                        {% if contrat.statut == 'actif' %}
+                                <a href="#" class="btn btn-warning btn-lg">
+                                    <i class="fas fa-pause"></i> Suspendre le contrat
+                                </a>
+                        {% elif contrat.statut == 'suspendu' %}
+                            <a href="#" class="btn btn-info btn-lg">
+                                <i class="fas fa-play"></i> Réactiver le contrat
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Informations du contrat</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Référence</th>
+                                    <td>{{ contrat.reference }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Partenaire</th>
+                                    <td>
+                                        <a href="{% url 'contrats:details_partenaire' contrat.partenaire.id %}">
+                                            {{ contrat.partenaire.prenom }} {{ contrat.partenaire.nom }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Statut</th>
+                                    <td>
+                                        {% if contrat.statut == 'actif' %}
+                                            <span class="badge badge-success">Actif</span>
+                                        {% elif contrat.statut == 'terminé' %}
+                                            <span class="badge badge-info">Terminé</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">Suspendu</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Date de signature</th>
+                                    <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de début</th>
+                                    <td>{{ contrat.date_debut|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de fin</th>
+                                    <td>{{ contrat.date_fin|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Durée (semaines)</th>
+                                    <td>{{ contrat.duree_semaines }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Informations financières</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Montant total</th>
+                                    <td>{{ contrat.montant_total|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <th>Montant payé</th>
+                                    <td>{{ contrat.montant_paye|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <th>Montant restant</th>
+                                    <td>{{ contrat.montant_restant|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <th>Fréquence de paiement</th>
+                                    <td>
+                                        {% if contrat.frequence_paiement == 'journalier' %}
+                                            Journalier
+                                        {% elif contrat.frequence_paiement == 'hebdomadaire' %}
+                                            Hebdomadaire
+                                        {% elif contrat.frequence_paiement == 'mensuel' %}
+                                            Mensuel
+                                        {% else %}
+                                            Trimestriel
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Montant par paiement</th>
+                                    <td>{{ contrat.montant_par_paiement|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <th>Caution batterie</th>
+                                    <td>{{ contrat.montant_caution_batterie|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <th>Durée caution batterie</th>
+                                    <td>{{ contrat.duree_caution_batterie }} jours</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+ 
+                    <!-- Barre de progression pour le paiement -->
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <h4>Progression du paiement</h4>
+                            {% if contrat.montant_total > 0 %}
+                                {% with pourcentage=contrat.montant_paye|floatformat:"0"|default:"0"|add:"0" %}
+                                    {% with pourcent_paye=pourcentage|floatformat:"0" %}
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                aria-valuenow="{{ pourcent_paye }}" aria-valuemin="0" aria-valuemax="100" 
+                                                style="width: {{ pourcent_paye }}%">
+                                                {{ pourcent_paye }}%
+                                            </div>
+                                        </div>
+                                        <small class="text-muted mt-1">
+                                            {{ contrat.montant_paye|floatformat:"0" }} FCFA sur {{ contrat.montant_total|floatformat:"0" }} FCFA
+                                        </small>
+                                    {% endwith %}
+                                {% endwith %}
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    Aucun montant à payer défini pour ce contrat.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+ 
+                    
+ 
+                    <!-- Documents contractuels -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <h4>Documents contractuels</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Contrat physique</th>
+                                    <td>
+                                        {% if contrat.contrat_physique %}
+                                            <a href="{{ contrat.contrat_physique.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>CNI document</th>
+                                    <td>
+                                        {% if contrat.cni_document %}
+                                            <a href="{{ contrat.cni_document.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Plan de localisation</th>
+                                    <td>
+                                        {% if contrat.plan_localisation %}
+                                            <a href="{{ contrat.plan_localisation.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Motos associées -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Motos associées</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>VIN</th>
+                                <th>Identifiant unique</th>
+                                <th>Modèle</th>
+                                <th>IMEI GPS</th>
+                                <th>Assurance</th>
+                                <th>Permis</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for moto in motos %}
+                            <tr>
+                                <td>{{ moto.vin }}</td>
+                                <td>{{ moto.moto_unique_id }}</td>
+                                <td>{{ moto.model }}</td>
+                                <td>{{ moto.gps_imei }}</td>
+                                <td>{{ moto.assurance|default:"Non fourni" }}</td>
+                                <td>{{ moto.permis|default:"Non fourni" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucune moto associée à ce contrat</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Contrat de caution batterie associé -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Contrat de caution batterie associé</h3>
+                </div>
+                <div class="card-body">
+                    {% for contrat_batterie in contrat.partenaire.contrats_batterie.all %}
+                        <div >
+                            <strong>Contrat batterie associé:</strong> 
+                            <a href="{% url 'contrats:details_contrat_batterie' contrat_batterie.id %}">
+                                {{ contrat_batterie.reference }}
+                            </a>
+                            <p class="mt-2 mb-0">
+                                <strong>Montant caution:</strong> {{ contrat_batterie.montant_caution|floatformat:0 }} FCFA | 
+                                <strong>Durée:</strong> {{ contrat_batterie.duree_caution }} jours | 
+                                <strong>Statut:</strong> 
+                                {% if contrat_batterie.statut == 'actif' %}
+                                    <span class="badge badge-success">Actif</span>
+                                {% elif contrat_batterie.statut == 'terminé' %}
+                                    <span class="badge badge-info">Terminé</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Suspendu</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% empty %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i> Aucun contrat de caution batterie associé à ce partenaire.
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ {% endblock %}
+ 
+ {% block extra_js %}
+ <script>
+ $(document).ready(function() {
+    // Initialiser DataTables si nécessaire
+    $('.table-striped').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+            "url": "{% static 'datatables/fr.json' %}"
+        }
+    });
+ });
+ </script>
+ {% endblock %}

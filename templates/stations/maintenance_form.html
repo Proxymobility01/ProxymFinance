@@ -1,0 +1,368 @@
+{% extends 'stations/base_stations.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        {% if form.instance.pk %}
+                            Modifier la maintenance
+                        {% else %}
+                            Planifier une nouvelle maintenance
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <h5>Informations générales</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group mb-3">
+                                {{ form.titre.label_tag }}
+                                {{ form.titre }}
+                                {% if form.titre.errors %}
+                                <div class="text-danger">{{ form.titre.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                {{ form.station.label_tag }}
+                                {{ form.station }}
+                                {% if form.station.errors %}
+                                <div class="text-danger">{{ form.station.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    
+                        
+                        <div class="form-group mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group mb-6">
+                                    {{ form.type_maintenance.label_tag }}
+                                    {{ form.type_maintenance }}
+                                    {% if form.type_maintenance.errors %}
+                                    <div class="text-danger">{{ form.type_maintenance.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-6">
+                                    {{ form.statut.label_tag }}
+                                    {{ form.statut }}
+                                    {% if form.statut.errors %}
+                                    <div class="text-danger">{{ form.statut.errors }}</div>
+                                    {% endif %}
+                                    {% if not form.instance.pk %}
+                                    <small class="form-text text-muted">Généralement, une nouvelle maintenance est planifiée.</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <div class="text-danger">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3 mb-3">
+                            
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    {{ form.date_planifiee.label_tag }}
+                                    {{ form.date_planifiee }}
+                                    {% if form.date_planifiee.errors %}
+                                    <div class="text-danger">{{ form.date_planifiee.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    {{ form.duree_estimee.label_tag }}
+                                    {{ form.duree_estimee }}
+                                    {% if form.duree_estimee.errors %}
+                                    <div class="text-danger">{{ form.duree_estimee.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    {{ form.technicien.label_tag }}
+                                    {{ form.technicien }}
+                                    {% if form.technicien.errors %}
+                                    <div class="text-danger">{{ form.technicien.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    {{ form.cout_estime.label_tag }}
+                                    {{ form.cout_estime }}
+                                    {% if form.cout_estime.errors %}
+                                    <div class="text-danger">{{ form.cout_estime.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {% if form.instance.pk %}
+                            <div class="col-md-8">
+                                <hr>
+                                <h5>Réalisation</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            {{ form.date_realisation.label_tag }}
+                                            {{ form.date_realisation }}
+                                            {% if form.date_realisation.errors %}
+                                            <div class="text-danger">{{ form.date_realisation.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            {{ form.duree_reelle.label_tag }}
+                                            {{ form.duree_reelle }}
+                                            {% if form.duree_reelle.errors %}
+                                            <div class="text-danger">{{ form.duree_reelle.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form.cout_reel.label_tag }}
+                                    {{ form.cout_reel }}
+                                    {% if form.cout_reel.errors %}
+                                    <div class="text-danger">{{ form.cout_reel.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="form-group mb-3">
+                                    {{ form.rapport.label_tag }}
+                                    {{ form.rapport }}
+                                    {% if form.rapport.errors %}
+                                    <div class="text-danger">{{ form.rapport.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    Mettre à jour
+                                {% else %}
+                                    Planifier
+                                {% endif %}
+                            </button>
+                            <a href="{% url 'stations:maintenance-list' %}" class="btn btn-secondary">
+                                Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            {% if form.instance.pk %}
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Historique de la maintenance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-primary">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Création</h6>
+                                <p class="timeline-text">Créée le {{ form.instance.created_at|date:"d/m/Y à H:i" }}</p>
+                            </div>
+                        </div>
+                        
+                        {% if form.instance.updated_at != form.instance.created_at %}
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-info">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Dernière modification</h6>
+                                <p class="timeline-text">Modifiée le {{ form.instance.updated_at|date:"d/m/Y à H:i" }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if form.instance.statut == 'en_cours' %}
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-warning">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">En cours</h6>
+                                <p class="timeline-text">Maintenance en cours d'exécution</p>
+                            </div>
+                        </div>
+                        {% elif form.instance.statut == 'terminee' %}
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-success">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Terminée</h6>
+                                <p class="timeline-text">Maintenance terminée le {{ form.instance.date_realisation|date:"d/m/Y à H:i" }}</p>
+                            </div>
+                        </div>
+                        {% elif form.instance.statut == 'annulee' %}
+                        <div class="timeline-item">
+                            <div class="timeline-badge bg-danger">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="timeline-title">Annulée</h6>
+                                <p class="timeline-text">Maintenance annulée</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    /* Style pour la timeline */
+    .timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+    
+    .timeline:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 20px;
+        width: 2px;
+        background-color: #e0e0e0;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+        padding-left: 50px;
+    }
+    
+    .timeline-badge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 40px;
+        color: white;
+        z-index: 1;
+    }
+    
+    .timeline-badge i {
+        font-size: 16px;
+    }
+    
+    .timeline-content {
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border-left: 3px solid #3b82f6;
+    }
+    
+    .timeline-title {
+        margin: 0;
+        font-weight: 600;
+    }
+    
+    .timeline-text {
+        margin: 5px 0 0;
+        color: #6b7280;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Définir la date minimale pour la date planifiée comme date actuelle
+        const dateInput = document.getElementById('id_date_planifiee');
+        if (dateInput && !dateInput.value) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            
+            dateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+        
+        // Pour les maintenances existantes, préremplir les champs de réalisation si le statut change à "terminée"
+        const statutSelect = document.getElementById('id_statut');
+        const dateRealisationInput = document.getElementById('id_date_realisation');
+        
+        if (statutSelect && dateRealisationInput) {
+            statutSelect.addEventListener('change', function() {
+                if (this.value === 'terminee' && !dateRealisationInput.value) {
+                    // Préremplir avec la date et l'heure actuelles
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                    const day = now.getDate().toString().padStart(2, '0');
+                    const hours = now.getHours().toString().padStart(2, '0');
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    
+                    dateRealisationInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+                    
+                    // Copier la durée estimée dans la durée réelle
+                    const dureeEstimeeInput = document.getElementById('id_duree_estimee');
+                    const dureeReelleInput = document.getElementById('id_duree_reelle');
+                    
+                    if (dureeEstimeeInput && dureeReelleInput && !dureeReelleInput.value) {
+                        dureeReelleInput.value = dureeEstimeeInput.value;
+                    }
+                    
+                    // Copier le coût estimé dans le coût réel
+                    const coutEstimeInput = document.getElementById('id_cout_estime');
+                    const coutReelInput = document.getElementById('id_cout_reel');
+                    
+                    if (coutEstimeInput && coutReelInput && !coutReelInput.value) {
+                        coutReelInput.value = coutEstimeInput.value;
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

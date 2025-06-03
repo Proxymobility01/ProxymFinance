@@ -1,0 +1,1206 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Nouvelle pénalité" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    
+    .card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: var(--transition);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+        border-bottom: 1px solid var(--gray-200);
+        padding: 1rem 1.25rem;
+        background-color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+    }
+    
+    .card-header h5 {
+        margin-bottom: 0;
+        font-weight: 600;
+        color: var(--gray-800);
+    }
+    
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    /* Client selector */
+    .client-selector-container {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    
+    .client-selector {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--gray-300);
+        font-size: 1rem;
+    }
+    
+    .client-selector:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
+        outline: none;
+    }
+    
+    .client-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        max-height: 250px;
+        overflow-y: auto;
+        background-color: white;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        border: 1px solid var(--gray-300);
+        border-top: none;
+        z-index: 1000;
+        display: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .client-dropdown.show {
+        display: block;
+    }
+    
+    .client-item {
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        border-bottom: 1px solid var(--gray-200);
+        transition: var(--transition);
+    }
+    
+    .client-item:hover {
+        background-color: var(--primary-light);
+    }
+    
+    .client-item:last-child {
+        border-bottom: none;
+    }
+    
+    /* Client info display */
+    .client-info {
+        display: none;
+        background-color: white;
+        border-radius: var(--border-radius);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .client-info.show {
+        display: flex;
+    }
+    
+    .client-photo-container {
+        width: 100px;
+        padding: 1.25rem;
+        background-color: var(--primary-light);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .client-photo {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 0.5rem;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .client-details {
+        flex: 1;
+        padding: 1.25rem;
+    }
+    
+    .client-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--gray-900);
+    }
+    
+    .client-info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        color: var(--gray-700);
+    }
+    
+    .client-info-item i {
+        width: 20px;
+        margin-right: 0.75rem;
+        color: var(--primary-color);
+    }
+    
+    .client-contracts {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .contract-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: var(--primary-light);
+        color: var(--primary-color);
+        border-radius: 50px;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .contract-badge:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    .contract-badge.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    .contract-badge i {
+        margin-right: 0.35rem;
+    }
+    
+    /* Form elements */
+    .form-label {
+        font-weight: 500;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control, 
+    .form-select {
+        padding: 0.75rem 1rem;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--gray-300);
+        font-size: 1rem;
+    }
+    
+    .form-control:focus, 
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(63, 81, 181, 0.25);
+    }
+    
+    /* Penalty type selector */
+    .penalty-type-selector {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .penalty-type-option {
+        flex: 1;
+        min-width: 200px;
+        background-color: white;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--border-radius);
+        padding: 1.25rem;
+        cursor: pointer;
+        text-align: center;
+        transition: var(--transition);
+    }
+    
+    .penalty-type-option:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+    
+    .penalty-type-option.active {
+        border-color: var(--primary-color);
+        background-color: var(--primary-light);
+        box-shadow: 0 2px 8px rgba(63, 81, 181, 0.15);
+    }
+    
+    .penalty-icon {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 0.75rem;
+    }
+    
+    .penalty-type-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--gray-800);
+    }
+    
+    .penalty-description {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+    }
+    
+    /* Amount presets */
+    .amount-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .amount-preset {
+        background-color: var(--gray-200);
+        color: var(--gray-700);
+        border: none;
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    
+    .amount-preset:hover {
+        background-color: var(--gray-300);
+        color: var(--gray-800);
+    }
+    
+    .amount-preset.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+    
+    /* Custom amount */
+    .custom-amount-container {
+        position: relative;
+        max-width: 300px;
+    }
+    
+    .custom-amount-input {
+        padding-left: 4rem;
+        text-align: right;
+        font-weight: 500;
+        font-size: 1.25rem;
+    }
+    
+    .currency-label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+        color: var(--gray-600);
+        background-color: var(--gray-200);
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
+        border-right: 1px solid var(--gray-300);
+    }
+    
+    /* Preview section */
+    .penalty-preview {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .preview-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .preview-title i {
+        margin-right: 0.5rem;
+    }
+    
+    .preview-table {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+    
+    .preview-table td {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .preview-table tr:last-child td {
+        border-bottom: none;
+        padding-top: 1.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    
+    /* Action buttons */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .btn {
+        border-radius: var(--border-radius);
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+    }
+    
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+    }
+    
+    .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    
+    .btn-light {
+        background-color: white;
+        border-color: var(--gray-300);
+        color: var(--gray-800);
+    }
+    
+    .btn-light:hover {
+        background-color: var(--gray-100);
+        border-color: var(--gray-400);
+    }
+    
+    /* Contract details modal */
+    .modal-header {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+    
+    .modal-title {
+        font-weight: 600;
+    }
+    
+    .modal-header .btn-close {
+        color: white;
+    }
+    
+    .contract-detail-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .contract-detail-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        width: 140px;
+        font-weight: 500;
+        color: var(--gray-700);
+    }
+    
+    .detail-value {
+        flex: 1;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 767.98px) {
+        .client-info {
+            flex-direction: column;
+        }
+        
+        .client-photo-container {
+            width: 100%;
+            padding: 1rem;
+        }
+        
+        .penalty-type-selector {
+            flex-direction: column;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+    
+    /* Success notification */
+    .success-toast {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: var(--success-color);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        animation: slideIn 0.3s ease forwards;
+    }
+    
+    .success-toast i {
+        margin-right: 0.75rem;
+        font-size: 1.25rem;
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+    
+    .toast-hide {
+        animation: slideOut 0.3s ease forwards;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'payments:centre_paiements' %}" class="text-decoration-none">Centre de paiements</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'payments:gestion_penalites' %}" class="text-decoration-none">Pénalités</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Nouvelle pénalité</li>
+        </ol>
+    </nav>
+    
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 fw-bold">{% trans "Nouvelle pénalité" %}</h1>
+    </div>
+    
+    <form id="penalty-form" method="post">
+        {% csrf_token %}
+        
+        <!-- Client Selection -->
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-user me-2"></i>{% trans "Sélection du client" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="client-selector-container">
+                    <input type="text" id="client-search" class="client-selector" 
+                           placeholder="{% trans 'Rechercher un client par nom, n° CNI ou téléphone...' %}" autocomplete="off">
+                    <div id="client-dropdown" class="client-dropdown"></div>
+                </div>
+                
+                <!-- Hidden fields for selected client and contract -->
+                <input type="hidden" id="client_id" name="client_id">
+                <input type="hidden" id="client_type" name="client_type"> <!-- chauffeur, partenaire, ou autre -->
+                <input type="hidden" id="contract_id" name="contract_id">
+                <input type="hidden" id="contract_type" name="contract_type"> <!-- chauffeur, partenaire, batterie -->
+                
+                <!-- Client info display (visible after selection) -->
+                <div id="client-info" class="client-info">
+                    <div class="client-photo-container">
+                        <div class="client-photo">
+                            <i class="fas fa-user fa-2x text-secondary"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="client-details">
+                        <h3 class="client-name" id="display-client-name"></h3>
+                        
+                        <div class="client-info-item">
+                            <i class="fas fa-id-card"></i>
+                            <span id="display-client-cni"></span>
+                        </div>
+                        
+                        <div class="client-info-item">
+                            <i class="fas fa-phone"></i>
+                            <span id="display-client-phone"></span>
+                        </div>
+                        
+                        <div class="client-info-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span id="display-client-date"></span>
+                        </div>
+                        
+                        <div class="client-contracts" id="client-contracts">
+                            <!-- Contracts will be added dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Penalty Type -->
+        <div class="card" id="penalty-type-card" style="display: none;">
+            <div class="card-header">
+                <h5><i class="fas fa-exclamation-triangle me-2"></i>{% trans "Type de pénalité" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="penalty-type-selector">
+                    <div class="penalty-type-option" data-penalty-type="retard_paiement">
+                        <div class="penalty-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h5 class="penalty-type-title">{% trans "Retard de paiement" %}</h5>
+                        <p class="penalty-description">{% trans "Pénalité pour non-respect de l'échéance de paiement" %}</p>
+                    </div>
+                    
+                    <div class="penalty-type-option" data-penalty-type="materiel_endommage">
+                        <div class="penalty-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h5 class="penalty-type-title">{% trans "Matériel endommagé" %}</h5>
+                        <p class="penalty-description">{% trans "Pénalité pour dommages sur le matériel fourni" %}</p>
+                    </div>
+                    
+                    <div class="penalty-type-option" data-penalty-type="infraction_reglement">
+                        <div class="penalty-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <h5 class="penalty-type-title">{% trans "Infraction au règlement" %}</h5>
+                        <p class="penalty-description">{% trans "Pénalité pour non-respect des règles de l'entreprise" %}</p>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="penalty_type" name="penalty_type">
+            </div>
+        </div>
+        
+        <!-- Penalty Details -->
+        <div class="card" id="penalty-details-card" style="display: none;">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>{% trans "Détails de la pénalité" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label for="penalty_date" class="form-label">{% trans "Date de l'incident" %}</label>
+                            <input type="date" id="penalty_date" name="penalty_date" class="form-control" value="{{ today|date:'Y-m-d' }}">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">{% trans "Montant de la pénalité" %}</label>
+                            
+                            <div class="amount-presets mb-2" id="amount-presets">
+                                <button type="button" class="amount-preset" data-amount="1000">1 000 FCFA</button>
+                                <button type="button" class="amount-preset" data-amount="2000">2 000 FCFA</button>
+                                <button type="button" class="amount-preset" data-amount="5000">5 000 FCFA</button>
+                                <button type="button" class="amount-preset" data-amount="10000">10 000 FCFA</button>
+                            </div>
+                            
+                            <div class="custom-amount-container">
+                                <span class="currency-label">FCFA</span>
+                                <input type="number" id="penalty_amount" name="penalty_amount" 
+                                       class="form-control custom-amount-input" min="0" step="500" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-4">
+                            <label for="penalty_description" class="form-label">{% trans "Description détaillée" %}</label>
+                            <textarea id="penalty_description" name="penalty_description" 
+                                      class="form-control" rows="4" placeholder="{% trans 'Décrivez les circonstances de cette pénalité...' %}"></textarea>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="immediate_payment" class="form-label">{% trans "Modalité de paiement" %}</label>
+                            <select id="immediate_payment" name="immediate_payment" class="form-select">
+                                <option value="later">{% trans "À payer lors du prochain paiement" %}</option>
+                                <option value="immediate">{% trans "Paiement immédiat" %}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="send_notification" name="send_notification" checked>
+                    <label class="form-check-label" for="send_notification">
+                        {% trans "Envoyer une notification au client" %}
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Preview -->
+        <div class="penalty-preview" id="penalty-preview" style="display: none;">
+            <h5 class="preview-title"><i class="fas fa-file-invoice-dollar"></i> {% trans "Récapitulatif" %}</h5>
+            
+            <table class="preview-table">
+                <tbody>
+                    <tr>
+                        <td>{% trans "Client" %}</td>
+                        <td class="text-end" id="preview-client"></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Contrat" %}</td>
+                        <td class="text-end" id="preview-contract"></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Type de pénalité" %}</td>
+                        <td class="text-end" id="preview-penalty-type"></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Date" %}</td>
+                        <td class="text-end" id="preview-date"></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Paiement" %}</td>
+                        <td class="text-end" id="preview-payment-type"></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "MONTANT" %}</td>
+                        <td class="text-end" id="preview-amount">0 FCFA</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="action-buttons justify-content-center">
+                <button type="submit" class="btn btn-light btn-lg">
+                    <i class="fas fa-save"></i> {% trans "Enregistrer la pénalité" %}
+                </button>
+                
+                <a href="{% url 'payments:gestion_penalites' %}" class="btn btn-outline-light">
+                    <i class="fas fa-times"></i> {% trans "Annuler" %}
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Contract Details Modal -->
+<div class="modal fade" id="contractDetailsModal" tabindex="-1" aria-labelledby="contractDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contractDetailsModalLabel">{% trans "Détails du contrat" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="contract-details-content">
+                    <!-- Contract details will be added dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    <i class="fas fa-check"></i> {% trans "Fermer" %}
+                </button>
+                <a href="#" id="view-full-contract" class="btn btn-outline-primary">
+                    <i class="fas fa-file-contract"></i> {% trans "Voir le contrat complet" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success notification toast -->
+<div id="success-toast" class="success-toast" style="display: none;">
+    <i class="fas fa-check-circle"></i>
+    <span>{% trans "Pénalité enregistrée avec succès !" %}</span>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Client search functionality
+        const clientSearch = document.getElementById('client-search');
+        const clientDropdown = document.getElementById('client-dropdown');
+        const clientInfo = document.getElementById('client-info');
+        const penaltyTypeCard = document.getElementById('penalty-type-card');
+        const penaltyDetailsCard = document.getElementById('penalty-details-card');
+        const penaltyPreview = document.getElementById('penalty-preview');
+        
+        // Event listeners for client search
+        clientSearch.addEventListener('input', debounce(function() {
+            if (this.value.length < 2) {
+                clientDropdown.innerHTML = '';
+                clientDropdown.classList.remove('show');
+                return;
+            }
+            
+            // Simulate API call for client search
+            searchClients(this.value);
+        }, 300));
+        
+        clientSearch.addEventListener('focus', function() {
+            if (this.value.length >= 2 && clientDropdown.children.length > 0) {
+                clientDropdown.classList.add('show');
+            }
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!clientSearch.contains(e.target) && !clientDropdown.contains(e.target)) {
+                clientDropdown.classList.remove('show');
+            }
+        });
+        
+        // Penalty type selection
+        const penaltyTypeOptions = document.querySelectorAll('.penalty-type-option');
+        const penaltyTypeInput = document.getElementById('penalty_type');
+        
+        penaltyTypeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove active class from all options
+                penaltyTypeOptions.forEach(opt => opt.classList.remove('active'));
+                
+                // Add active class to selected option
+                this.classList.add('active');
+                
+                // Update hidden input
+                const penaltyType = this.getAttribute('data-penalty-type');
+                penaltyTypeInput.value = penaltyType;
+                
+                // Show penalty details section
+                penaltyDetailsCard.style.display = 'block';
+                penaltyPreview.style.display = 'block';
+                
+                // Update preview
+                updatePreview();
+            });
+        });
+        
+        // Amount presets
+        const amountPresets = document.querySelectorAll('.amount-preset');
+        const penaltyAmount = document.getElementById('penalty_amount');
+        
+        amountPresets.forEach(preset => {
+            preset.addEventListener('click', function() {
+                // Remove active class from all presets
+                amountPresets.forEach(p => p.classList.remove('active'));
+                
+                // Add active class to selected preset
+                this.classList.add('active');
+                
+                // Update amount input
+                const amount = this.getAttribute('data-amount');
+                penaltyAmount.value = amount;
+                
+                // Update preview
+                updatePreview();
+            });
+        });
+        
+        // Custom amount input
+        penaltyAmount.addEventListener('input', function() {
+            // Remove active class from all presets
+            amountPresets.forEach(p => p.classList.remove('active'));
+            
+            // Check if amount matches a preset
+            const amount = parseInt(this.value);
+            const matchingPreset = document.querySelector(`.amount-preset[data-amount="${amount}"]`);
+            
+            if (matchingPreset) {
+                matchingPreset.classList.add('active');
+            }
+            
+            // Update preview
+            updatePreview();
+        });
+        
+        // Date input
+        document.getElementById('penalty_date').addEventListener('change', updatePreview);
+        
+        // Payment type
+        document.getElementById('immediate_payment').addEventListener('change', updatePreview);
+        
+        // Form submission
+        document.getElementById('penalty-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Simulate form submission (would be an AJAX request in production)
+            showSuccessNotification();
+            
+            // In actual implementation, you would submit the form via AJAX here
+            
+            // Redirect after a delay
+            setTimeout(function() {
+                window.location.href = "{% url 'payments:gestion_penalites' %}";
+            }, 2000);
+        });
+        
+        // Helper functions
+        function debounce(func, delay) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), delay);
+            };
+        }
+        
+        function searchClients(query) {
+            // In a real implementation, this would be an AJAX call to your backend
+            // For demo purposes, we'll use sample data
+            
+            const sampleClients = [
+                { 
+                    id: 1, 
+                    type: 'chauffeur',
+                    nom: 'Amadou Diallo', 
+                    cni: 'CM12345678', 
+                    telephone: '677123456',
+                    date_inscription: '12/05/2023',
+                    contracts: [
+                        { id: 101, type: 'chauffeur', reference: 'CH-2023-101', label: 'Contrat Chauffeur' },
+                        { id: 201, type: 'batterie', reference: 'BAT-2023-201', label: 'Contrat Batterie' }
+                    ]
+                },
+                { 
+                    id: 2, 
+                    type: 'partenaire',
+                    nom: 'Fatou Sow', 
+                    cni: 'CM87654321', 
+                    telephone: '698765432',
+                    date_inscription: '23/08/2023',
+                    contracts: [
+                        { id: 102, type: 'partenaire', reference: 'PA-2023-102', label: 'Contrat Partenaire' }
+                    ]
+                },
+                { 
+                    id: 3, 
+                    type: 'chauffeur',
+                    nom: 'Jean Michel Kamga', 
+                    cni: 'CM45678912', 
+                    telephone: '655789123',
+                    date_inscription: '05/01/2024',
+                    contracts: [
+                        { id: 103, type: 'chauffeur', reference: 'CH-2024-103', label: 'Contrat Chauffeur' },
+                        { id: 202, type: 'batterie', reference: 'BAT-2024-202', label: 'Contrat Batterie' }
+                    ]
+                }
+            ];
+            
+            // Filter clients based on query
+            const filteredClients = sampleClients.filter(client => {
+                return client.nom.toLowerCase().includes(query.toLowerCase()) ||
+                       client.cni.toLowerCase().includes(query.toLowerCase()) ||
+                       client.telephone.includes(query);
+            });
+            
+            // Update dropdown
+            clientDropdown.innerHTML = '';
+            
+            if (filteredClients.length === 0) {
+                const noResult = document.createElement('div');
+                noResult.classList.add('client-item');
+                noResult.textContent = 'Aucun client trouvé';
+                clientDropdown.appendChild(noResult);
+            } else {
+                filteredClients.forEach(client => {
+                    const clientItem = document.createElement('div');
+                    clientItem.classList.add('client-item');
+                    clientItem.innerHTML = `
+                        <strong>${client.nom}</strong><br>
+                        <small><i class="fas fa-id-card me-1"></i>${client.cni} | <i class="fas fa-phone me-1"></i>${client.telephone}</small>
+                    `;
+                    
+                    clientItem.addEventListener('click', function() {
+                        selectClient(client);
+                    });
+                    
+                    clientDropdown.appendChild(clientItem);
+                });
+            }
+            
+            clientDropdown.classList.add('show');
+        }
+        
+        function selectClient(client) {
+            // Update hidden fields
+            document.getElementById('client_id').value = client.id;
+            document.getElementById('client_type').value = client.type;
+            
+            // Update client info display
+            document.getElementById('display-client-name').textContent = client.nom;
+            document.getElementById('display-client-cni').textContent = client.cni;
+            document.getElementById('display-client-phone').textContent = client.telephone;
+            document.getElementById('display-client-date').textContent = `Client depuis ${client.date_inscription}`;
+            
+            // Update search field
+            clientSearch.value = client.nom;
+            
+            // Update client contracts
+            const clientContracts = document.getElementById('client-contracts');
+            clientContracts.innerHTML = '';
+            
+            client.contracts.forEach(contract => {
+                const contractBadge = document.createElement('div');
+                contractBadge.classList.add('contract-badge');
+                contractBadge.setAttribute('data-contract-id', contract.id);
+                contractBadge.setAttribute('data-contract-type', contract.type);
+                contractBadge.setAttribute('data-contract-reference', contract.reference);
+                
+                let icon = 'fa-file-contract';
+                if (contract.type === 'chauffeur') icon = 'fa-car';
+                if (contract.type === 'partenaire') icon = 'fa-handshake';
+                if (contract.type === 'batterie') icon = 'fa-battery-full';
+                
+                contractBadge.innerHTML = `<i class="fas ${icon}"></i> ${contract.label}`;
+                
+                contractBadge.addEventListener('click', function() {
+                    selectContract(this, contract);
+                    showContractDetails(contract);
+                });
+                
+                clientContracts.appendChild(contractBadge);
+            });
+            
+            // Show client info and next sections
+            clientInfo.classList.add('show');
+            clientDropdown.classList.remove('show');
+            penaltyTypeCard.style.display = 'block';
+            
+            // If there's only one contract, select it automatically
+            if (client.contracts.length === 1) {
+                const contractBadge = clientContracts.querySelector('.contract-badge');
+                contractBadge.click();
+            }
+        }
+        
+        function selectContract(badge, contract) {
+            // Remove active class from all contract badges
+            const contractBadges = document.querySelectorAll('.contract-badge');
+            contractBadges.forEach(b => b.classList.remove('active'));
+            
+            // Add active class to selected badge
+            badge.classList.add('active');
+            
+            // Update hidden fields
+            document.getElementById('contract_id').value = contract.id;
+            document.getElementById('contract_type').value = contract.type;
+            
+            // Update preview
+            updatePreview();
+        }
+        
+        function showContractDetails(contract) {
+            // In a real implementation, this would fetch contract details via AJAX
+            // For demo purposes, we'll use sample data
+            
+            const contractDetailsMock = {
+                reference: contract.reference,
+                date_debut: '01/01/2024',
+                date_fin: '31/12/2024',
+                frequence_paiement: 'Mensuel',
+                montant_par_paiement: '50000',
+                montant_total: '600000',
+                montant_restant: '400000',
+                status: 'Actif'
+            };
+            
+            // Update modal content
+            const contractDetailsContent = document.getElementById('contract-details-content');
+            contractDetailsContent.innerHTML = `
+                <div class="contract-detail-item">
+                    <div class="detail-label">Référence</div>
+                    <div class="detail-value">${contractDetailsMock.reference}</div>
+                </div>
+                <div class="contract-detail-item">
+                    <div class="detail-label">Début</div>
+                    <div class="detail-value">${contractDetailsMock.date_debut}</div>
+                </div>
+                <div class="contract-detail-item">
+                    <div class="detail-label">Fin</div>
+                    <div class="detail-value">${contractDetailsMock.date_fin}</div>
+                </div>
+                <div class="contract-detail-item">
+                    <div class="detail-label">Fréquence</div>
+                    <div class="detail-value">${contractDetailsMock.frequence_paiement}</div>
+                </div>
+                <div class="contract-detail-item">
+                    <div class="detail-label">Montant/paiement</div>
+                    <div class="detail-value">${contractDetailsMock.montant_par_paiement} FCFA</div>
+                </div>
+                <div class="contract-detail-item">
+                    <div class="detail-label">Montant total</div>
+                    <div class="detail-value">${contractDetailsMock.montant_total} FCFA</div>
+                </div>
+                <div class="contract-detail-item">
+                    <div class="detail-label">Montant restant</div>
+                    <div class="detail-value">${contractDetailsMock.montant_restant} FCFA</div>
+                </div>
+                <div class="contract-detail-item">
+                    <div class="detail-label">Statut</div>
+                    <div class="detail-value">
+                        <span class="badge bg-success">${contractDetailsMock.status}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Update view full contract link
+            document.getElementById('view-full-contract').href = `#/contracts/${contract.type}/${contract.id}`;
+            
+            // Show modal
+            const contractDetailsModal = new bootstrap.Modal(document.getElementById('contractDetailsModal'));
+            contractDetailsModal.show();
+        }
+        
+        function updatePreview() {
+            // Get values
+            const clientId = document.getElementById('client_id').value;
+            const contractId = document.getElementById('contract_id').value;
+            const penaltyType = document.getElementById('penalty_type').value;
+            const penaltyDate = document.getElementById('penalty_date')?.value;
+            const penaltyAmount = document.getElementById('penalty_amount')?.value || 0;
+            const immediatePayment = document.getElementById('immediate_payment')?.value;
+            
+            // Skip if essential values are missing
+            if (!clientId || !contractId) return;
+            
+            // Update preview elements
+            // Client name
+            const clientName = document.getElementById('display-client-name').textContent;
+            document.getElementById('preview-client').textContent = clientName;
+            
+            // Contract reference
+            const contractBadge = document.querySelector('.contract-badge.active');
+            if (contractBadge) {
+                const contractReference = contractBadge.getAttribute('data-contract-reference');
+                document.getElementById('preview-contract').textContent = contractReference;
+            }
+            
+            // Penalty type
+            let penaltyTypeText = '';
+            if (penaltyType === 'retard_paiement') penaltyTypeText = 'Retard de paiement';
+            if (penaltyType === 'materiel_endommage') penaltyTypeText = 'Matériel endommagé';
+            if (penaltyType === 'infraction_reglement') penaltyTypeText = 'Infraction au règlement';
+            document.getElementById('preview-penalty-type').textContent = penaltyTypeText;
+            
+            // Date
+            if (penaltyDate) {
+                const formattedDate = new Date(penaltyDate).toLocaleDateString('fr-FR');
+                document.getElementById('preview-date').textContent = formattedDate;
+            }
+            
+            // Payment type
+            let paymentTypeText = 'À payer lors du prochain paiement';
+            if (immediatePayment === 'immediate') paymentTypeText = 'Paiement immédiat';
+            document.getElementById('preview-payment-type').textContent = paymentTypeText;
+            
+            // Amount
+            const formattedAmount = parseInt(penaltyAmount).toLocaleString() + ' FCFA';
+            document.getElementById('preview-amount').textContent = formattedAmount;
+        }
+        
+        function validateForm() {
+            // Get required values
+            const clientId = document.getElementById('client_id').value;
+            const contractId = document.getElementById('contract_id').value;
+            const penaltyType = document.getElementById('penalty_type').value;
+            const penaltyAmount = document.getElementById('penalty_amount').value;
+            const penaltyDescription = document.getElementById('penalty_description').value;
+            
+            // Validate client selection
+            if (!clientId) {
+                alert('Veuillez sélectionner un client.');
+                clientSearch.focus();
+                return false;
+            }
+            
+            // Validate contract selection
+            if (!contractId) {
+                alert('Veuillez sélectionner un contrat.');
+                return false;
+            }
+            
+            // Validate penalty type
+            if (!penaltyType) {
+                alert('Veuillez sélectionner un type de pénalité.');
+                return false;
+            }
+            
+            // Validate amount
+            if (!penaltyAmount || parseFloat(penaltyAmount) <= 0) {
+                alert('Veuillez entrer un montant valide pour la pénalité.');
+                document.getElementById('penalty_amount').focus();
+                return false;
+            }
+            
+            // Validate description
+            if (!penaltyDescription.trim()) {
+                alert('Veuillez fournir une description pour cette pénalité.');
+                document.getElementById('penalty_description').focus();
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function showSuccessNotification() {
+            const successToast = document.getElementById('success-toast');
+            successToast.style.display = 'flex';
+            
+            // Hide after 3 seconds
+            setTimeout(function() {
+                successToast.classList.add('toast-hide');
+                
+                // Remove element after animation completes
+                setTimeout(function() {
+                    successToast.style.display = 'none';
+                    successToast.classList.remove('toast-hide');
+                }, 300);
+            }, 3000);
+        }
+    });
+</script>
+{% endblock %}

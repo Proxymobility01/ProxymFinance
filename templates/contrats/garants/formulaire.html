@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titre }}</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:liste_garants' %}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Retour à la liste
+                        </a>
+                    </div>
+                </div>
+                <form method="post" enctype="multipart/form-data" class="form-horizontal">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Informations personnelles</h4>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.nom.id_for_label }}">{{ form.nom.label }}</label>
+                                    {{ form.nom }}
+                                    {% if form.nom.errors %}
+                                        <div class="text-danger">{{ form.nom.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.prenom.id_for_label }}">{{ form.prenom.label }}</label>
+                                    {{ form.prenom }}
+                                    {% if form.prenom.errors %}
+                                        <div class="text-danger">{{ form.prenom.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.numero_cni.id_for_label }}">{{ form.numero_cni.label }}</label>
+                                    {{ form.numero_cni }}
+                                    {% if form.numero_cni.errors %}
+                                        <div class="text-danger">{{ form.numero_cni.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.adresse.id_for_label }}">{{ form.adresse.label }}</label>
+                                    {{ form.adresse }}
+                                    {% if form.adresse.errors %}
+                                        <div class="text-danger">{{ form.adresse.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.occupation.id_for_label }}">{{ form.occupation.label }}</label>
+                                    {{ form.occupation }}
+                                    {% if form.occupation.errors %}
+                                        <div class="text-danger">{{ form.occupation.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.telephone.id_for_label }}">{{ form.telephone.label }}</label>
+                                    {{ form.telephone }}
+                                    {% if form.telephone.errors %}
+                                        <div class="text-danger">{{ form.telephone.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h4>Documents</h4>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.cni_document.id_for_label }}">{{ form.cni_document.label }}</label>
+                                    {% if garant.cni_document %}
+                                        <p>Fichier actuel : <a href="{{ garant.cni_document.url }}" target="_blank">Voir</a></p>
+                                    {% endif %}
+                                    {{ form.cni_document }}
+                                    {% if form.cni_document.errors %}
+                                        <div class="text-danger">{{ form.cni_document.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.justificatif_domicile.id_for_label }}">{{ form.justificatif_domicile.label }}</label>
+                                    {% if garant.justificatif_domicile %}
+                                        <p>Fichier actuel : <a href="{{ garant.justificatif_domicile.url }}" target="_blank">Voir</a></p>
+                                    {% endif %}
+                                    {{ form.justificatif_domicile }}
+                                    {% if form.justificatif_domicile.errors %}
+                                        <div class="text-danger">{{ form.justificatif_domicile.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.justificatif_activite.id_for_label }}">{{ form.justificatif_activite.label }}</label>
+                                    {% if garant.justificatif_activite %}
+                                        <p>Fichier actuel : <a href="{{ garant.justificatif_activite.url }}" target="_blank">Voir</a></p>
+                                    {% endif %}
+                                    {{ form.justificatif_activite }}
+                                    {% if form.justificatif_activite.errors %}
+                                        <div class="text-danger">{{ form.justificatif_activite.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.contrat_physique.id_for_label }}">{{ form.contrat_physique.label }}</label>
+                                    {% if garant.contrat_physique %}
+                                        <p>Fichier actuel : <a href="{{ garant.contrat_physique.url }}" target="_blank">Voir</a></p>
+                                    {% endif %}
+                                    {{ form.contrat_physique }}
+                                    {% if form.contrat_physique.errors %}
+                                        <div class="text-danger">{{ form.contrat_physique.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {{ action }}
+                        </button>
+                        <a href="{% url 'contrats:liste_garants' %}" class="btn btn-default">
+                            Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Initialisation des composants select2 si nécessaire
+    $('.select2').select2();
+    
+    // Initialisation des datepickers si nécessaire
+    $('.datepicker').datepicker({
+        dateFormat: 'yy-mm-dd',
+        autoclose: true,
+        todayHighlight: true
+    });
+});
+</script>
+{% endblock %}

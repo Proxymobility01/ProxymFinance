@@ -1,0 +1,138 @@
+{% extends 'stations/base_stations.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Page header -->
+    <div class="page-header">
+        <h2 class="page-title">Gestion des Notifications</h2>
+        <div>
+            <button id="markAllReadBtn" class="btn btn-secondary">
+                Marquer tout comme lu
+            </button>
+            <a href="{% url 'stations:station-list' %}" class="btn btn-primary">
+                Retour aux Stations
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="station" class="form-label">Station</label>
+                    <select name="station" id="station" class="form-select">
+                        <option value="">Toutes les stations</option>
+                        {% for station in stations %}
+                        <option value="{{ station.id }}" {% if request.GET.station == station.id|stringformat:"i" %}selected{% endif %}>
+                            {{ station.nom_agence }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="lu" class="form-label">Statut</label>
+                    <select name="lu" id="lu" class="form-select">
+                        <option value="">Tous</option>
+                        <option value="0" {% if request.GET.lu == '0' %}selected{% endif %}>Non lu</option>
+                        <option value="1" {% if request.GET.lu == '1' %}selected{% endif %}>Lu</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="priorite" class="form-label">Priorité</label>
+                    <select name="priorite" id="priorite" class="form-select">
+                        <option value="">Toutes</option>
+                        <option value="basse" {% if request.GET.priorite == 'basse' %}selected{% endif %}>Basse</option>
+                        <option value="moyenne" {% if request.GET.priorite == 'moyenne' %}selected{% endif %}>Moyenne</option>
+                        <option value="haute" {% if request.GET.priorite == 'haute' %}selected{% endif %}>Haute</option>
+                        <option value="critique" {% if request.GET.priorite == 'critique' %}selected{% endif %}>Critique</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="type_notification" class="form-label">Type</label>
+                    <select name="type_notification" id="type_notification" class="form-select">
+                        <option value="">Tous les types</option>
+                        <option value="batterie_faible" {% if request.GET.type_notification == 'batterie_faible' %}selected{% endif %}>Batterie faible</option>
+                        <option value="maintenance_due" {% if request.GET.type_notification == 'maintenance_due' %}selected{% endif %}>Maintenance due</option>
+                        <option value="equipement_hs" {% if request.GET.type_notification == 'equipement_hs' %}selected{% endif %}>Équipement HS</option>
+                        <option value="capacite_max" {% if request.GET.type_notification == 'capacite_max' %}selected{% endif %}>Capacité max</option>
+                        <option value="anomalie_swap" {% if request.GET.type_notification == 'anomalie_swap' %}selected{% endif %}>Anomalie swap</option>
+                        <option value="autre" {% if request.GET.type_notification == 'autre' %}selected{% endif %}>Autre</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <a href="{% url 'stations:notification-list' %}" class="btn btn-secondary">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="alert alert-info mb-4">
+        <strong>Total: {{ notifications|length }} notifications</strong> dont 
+        <strong class="text-danger">{{ non_lues_count }}</strong> non lues
+    </div>
+
+    <!-- Liste des notifications -->
+    <div class="card">
+        <div class="card-body">
+            <div class="notification-list">
+                {% for notification in notifications %}
+                <div class="notification-item {% if not notification.lu %}unread{% endif %}" id="notification-{{ notification.id }}">
+                    <div class="notification-header">
+                        <div class="notification-station">{{ notification.station.nom_agence }}</div>
+                        <div class="notification-date">{{ notification.date_notification|date:"d/m/Y H:i" }}</div>
+                    </div>
+                    <div class="notification-body">
+                        <div class="notification-priority priority-{{ notification.priorite }}">
+                            {{ notification.get_priorite_display }}
+                        </div>
+                        <div class="notification-content">
+                            <h4>{{ notification.titre }}</h4>
+                            <p>{{ notification.message }}</p>
+                        </div>
+                    </div>
+                    <div class="notification-footer">
+                        <div class="notification-type">
+                            {{ notification.get_type_notification_display }}
+                        </div>
+                        <div class="notification-actions">
+                            {% if not notification.lu %}
+                            <button class="btn btn-sm btn-success mark-read-btn" data-id="{{ notification.id }}">
+                                Marquer comme lu
+                            </button>
+                            {% else %}
+                            <span class="text-muted">
+                                Lu par {{ notification.lu_par.nom }} {{ notification.lu_par.prenom }} le {{ notification.date_lecture|date:"d/m/Y H:i" }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <p>Aucune notification trouvée.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pagination comme avant -->
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    /* Même style qu'avant */
+</style>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    /* Même script qu'avant */
+</script>
+{% endblock %}

@@ -1,0 +1,420 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% block payments_title %}Proxym Finance - Paiements{% endblock %}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'payments/css/payments.css' %}" rel="stylesheet">
+<style>
+    /* Styles communs pour le module de paiements */
+    :root {
+        --primary-color: #0d6efd;
+        --secondary-color: #6c757d;
+        --success-color: #28a745;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --info-color: #17a2b8;
+        --light-color: #f8f9fa;
+    }
+    
+    /* Styles des cartes et conteneurs */
+    .payment-module .card {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 1.5rem;
+    }
+    
+    .payment-module .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .payment-module .card-header {
+        font-weight: 600;
+        padding: 0.75rem 1.25rem;
+    }
+    
+    /* Styles des boutons */
+    .payment-module .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .payment-module .btn-action i {
+        font-size: 0.9rem;
+    }
+    
+    /* Styles des indicateurs d'état */
+    .payment-module .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+    }
+    
+    .payment-module .status-indicator.active { background-color: var(--success-color); }
+    .payment-module .status-indicator.warning { background-color: var(--warning-color); }
+    .payment-module .status-indicator.danger { background-color: var(--danger-color); }
+    .payment-module .status-indicator.info { background-color: var(--info-color); }
+    
+    /* Animations */
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.6; }
+        100% { opacity: 1; }
+    }
+    
+    .payment-module .pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    /* Breadcrumb personnalisé */
+    .payment-breadcrumb {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem 0;
+    }
+    
+    .payment-breadcrumb .breadcrumb-item {
+        display: flex;
+        align-items: center;
+    }
+    
+    .payment-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+        content: "/";
+        color: var(--secondary-color);
+        margin: 0 0.5rem;
+    }
+    
+    .payment-breadcrumb a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    
+    .payment-breadcrumb a:hover {
+        color: var(--primary-color-dark);
+        text-decoration: underline;
+    }
+    
+    .payment-breadcrumb .breadcrumb-item.active {
+        color: var(--secondary-color);
+    }
+    
+    /* Conteneurs de statistiques */
+    .payment-module .stats-card {
+        border-radius: 10px;
+        overflow: hidden;
+        padding: 0;
+    }
+    
+    .payment-module .stats-card .stats-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+    
+    .payment-module .stats-card .stats-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05rem;
+    }
+    
+    /* Personnalisation de formulaires */
+    .payment-module .form-label {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+    
+    .payment-module .form-control:focus,
+    .payment-module .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    
+    /* Badges personnalisés */
+    .payment-module .badge-corner {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-radius: 0 8px 0 8px;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .payment-module .stats-card .stats-value {
+            font-size: 1.5rem;
+        }
+        
+        .payment-module .side-nav {
+            position: relative;
+            top: 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-module .side-nav .nav-link {
+            padding: 0.5rem;
+        }
+    }
+    
+    /* Menu contextuel du module de paiements */
+    .payments-context-menu {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius-md);
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .payments-context-menu .context-menu-nav {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        overflow-x: auto;
+    }
+    
+    .payments-context-menu .context-menu-nav .menu-item {
+        padding: 0;
+    }
+    
+    .payments-context-menu .context-menu-nav .menu-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.25rem;
+        color: var(--text-color);
+        text-decoration: none;
+        white-space: nowrap;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+    }
+    
+    .payments-context-menu .context-menu-nav .menu-link:hover {
+        color: var(--primary-color);
+        background-color: rgba(var(--primary-rgb), 0.05);
+    }
+    
+    .payments-context-menu .context-menu-nav .menu-link.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+        background-color: rgba(var(--primary-rgb), 0.1);
+        font-weight: 500;
+    }
+    
+    .payments-context-menu .context-menu-nav .menu-link i {
+        margin-right: 0.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .payments-context-menu .context-menu-nav .menu-link .badge {
+        margin-left: 0.5rem;
+    }
+    
+    {% block payments_style %}
+    /* Styles spécifiques à la page en cours */
+    {% endblock %}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="payment-module">
+    <div class="container-fluid py-4">
+        <!-- Titre de la page et breadcrumb -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2 class="page-title mb-1">{% block payments_page_title %}Module Paiements{% endblock %}</h2>
+                <div class="payment-breadcrumb">
+                    <div class="breadcrumb-item">
+                        <a href="{% url 'dashboard:index' %}">
+                            <i class="ti ti-home"></i>
+                        </a>
+                    </div>
+                    <div class="breadcrumb-item">
+                        <a href="{% url 'payments:centre_paiements' %}">Paiements</a>
+                    </div>
+                    {% block payments_breadcrumb %}{% endblock %}
+                </div>
+            </div>
+            
+            {% block payments_page_actions %}
+            <!-- Actions spécifiques à la page en cours -->
+            {% endblock %}
+        </div>
+        
+        <!-- Menu contextuel du module de paiements -->
+        <div class="payments-context-menu">
+            <ul class="context-menu-nav">
+                <li class="menu-item">
+                    <a href="{% url 'payments:centre_paiements' %}" class="menu-link {% if request.resolver_match.url_name == 'centre_paiements' %}active{% endif %}">
+                        <i class="ti ti-dashboard"></i> Centre de paiements
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'payments:liste_paiements' %}" class="menu-link {% if request.resolver_match.url_name == 'liste_paiements' %}active{% endif %}">
+                        <i class="ti ti-history"></i> Historique
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'payments:gestion_penalites' %}" class="menu-link {% if request.resolver_match.url_name == 'gestion_penalites' %}active{% endif %}">
+                        <i class="ti ti-alert-triangle"></i> Pénalités
+                        {% if stats.nb_penalites_actives and stats.nb_penalites_actives > 0 %}
+                        <span class="badge bg-warning">{{ stats.nb_penalites_actives }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'payments:liste_swaps' %}" class="menu-link {% if request.resolver_match.url_name == 'liste_swaps' %}active{% endif %}">
+                        <i class="ti ti-refresh"></i> Transactions Swap
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'payments:analytique' %}" class="menu-link {% if request.resolver_match.url_name == 'analytique' %}active{% endif %}">
+                        <i class="ti ti-chart-bar"></i> Rapports
+                    </a>
+                </li>
+                {% if request.user.is_staff %}
+                <li class="menu-item">
+                    <a href="{% url 'payments:configuration_penalites' %}" class="menu-link {% if request.resolver_match.url_name == 'configuration_penalites' %}active{% endif %}">
+                        <i class="ti ti-settings"></i> Configuration
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        
+        <!-- Contenu principal du module -->
+        {% block payments_content %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Bienvenue dans le module de gestion des paiements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialiser les tooltips
+        if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+        
+        // Mettre à jour l'heure actuelle (si présente)
+        if (document.getElementById('heure-actuelle')) {
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+        
+        // Scripts spécifiques au module de paiements
+        initPaymentModule();
+    });
+    
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                          now.getMinutes().toString().padStart(2, '0') + ':' + 
+                          now.getSeconds().toString().padStart(2, '0');
+        
+        const clockElement = document.getElementById('heure-actuelle');
+        if (clockElement) {
+            // Déterminer la classe d'icône selon l'heure
+            let iconClass = 'ti ti-clock';
+            let textClass = 'text-success';
+            
+            if (now.getHours() >= 14) {
+                iconClass = 'ti ti-alert-circle';
+                textClass = 'text-danger';
+            } else if (now.getHours() >= 12) {
+                iconClass = 'ti ti-alert-triangle';
+                textClass = 'text-warning';
+            }
+            
+            // Mettre à jour l'horloge
+            clockElement.innerHTML = `<i class="${iconClass} ${textClass}"></i> ${timeString}`;
+            clockElement.className = 'heure-actuelle ' + textClass;
+        }
+    }
+    
+    function initPaymentModule() {
+        // Activer tous les calculs automatiques de montants
+        const calculElements = document.querySelectorAll('[data-calculate]');
+        calculElements.forEach(element => {
+            element.addEventListener('change', function() {
+                calculateTotals(this.getAttribute('data-calculate'));
+            });
+            
+            // Calculer dès le chargement
+            calculateTotals(element.getAttribute('data-calculate'));
+        });
+        
+        // Initialiser les gestionnaires d'événements pour les tabs
+        const paymentTabs = document.getElementById('paymentTabs');
+        if (paymentTabs) {
+            const tabLinks = paymentTabs.querySelectorAll('[data-bs-toggle="tab"]');
+            tabLinks.forEach(tabLink => {
+                tabLink.addEventListener('shown.bs.tab', function(event) {
+                    // Mettre à jour l'URL avec le paramètre d'onglet sans recharger la page
+                    const url = new URL(window.location);
+                    url.searchParams.set('onglet', event.target.getAttribute('href').substring(1));
+                    window.history.pushState({}, '', url);
+                });
+            });
+        }
+    }
+    
+    function calculateTotals(groupName) {
+        // Trouver tous les éléments d'entrée du groupe
+        const inputs = document.querySelectorAll(`[data-calculate="${groupName}"]`);
+        
+        // Calculer la somme
+        let total = 0;
+        inputs.forEach(input => {
+            const value = parseFloat(input.value) || 0;
+            
+            // Si l'élément a un attribut data-multiply
+            if (input.hasAttribute('data-multiply')) {
+                const factor = parseFloat(input.getAttribute('data-multiply')) || 1;
+                total += value * factor;
+            } else {
+                total += value;
+            }
+        });
+        
+        // Mettre à jour tous les éléments de total
+        const totalElements = document.querySelectorAll(`[data-total="${groupName}"]`);
+        totalElements.forEach(element => {
+            // Format numérique ou texte
+            if (element.tagName === 'INPUT') {
+                element.value = total.toFixed(2);
+            } else {
+                element.textContent = total.toLocaleString() + ' FCFA';
+            }
+            
+            // Déclencher un événement change pour propager les calculs
+            const event = new Event('change');
+            element.dispatchEvent(event);
+        });
+    }
+    
+    {% block payments_scripts %}
+    // Scripts spécifiques à la page en cours
+    {% endblock %}
+</script>
+{% endblock %}

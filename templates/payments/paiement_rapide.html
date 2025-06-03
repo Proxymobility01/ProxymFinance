@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">{{ titre }}</h1>
+    
+   
+<div class="row"> 
+  <!-- Carte Informations Client -->
+  <div class="col-6">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Informations Client</h6>
+        {% if est_en_conge %}
+          <span class="badge badge-info">En congé</span>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <div class="client-details">
+          {% if client %}
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Nom</div>
+              <div class="col-6 text-left">
+                {{ client.prenom }} {{ client.nom }}
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Téléphone</div>
+              <div class="col-6 text-left">
+                {{ client.phone }}
+              </div>
+            </div>
+            {% if client.email %}
+              <div class="row mb-2">
+                <div class="col-6 form-label text-left">Email</div>
+                <div class="col-6 text-left">
+                  {{ client.email }}
+                </div>
+              </div>
+            {% endif %}
+          {% endif %}
+
+          {% if contrat %}
+            <div class="row my-3">
+              <div class="col-12"><hr></div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Contrat</div>
+              <div class="col-6 text-left">
+                {{ contrat.reference }}
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Statut</div>
+              <div class="col-6 text-left">
+                {{ contrat.get_statut_display }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6 form-label text-left">Fréquence</div>
+              <div class="col-6 text-left">
+                {{ contrat.get_frequence_paiement_display }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte Détails du Paiement -->
+  <div class="col-6">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Détails du Paiement</h6>
+      </div>
+      <div class="card-body">
+        <div class="paiement-details">
+          <div class="row mb-2">
+            <div class="col-6 form-label text-left">Montant Engagé</div>
+            <div class="col-6 text-left">
+              {{ contrat.montant_engage|floatformat:0 }} FCFA
+            </div>
+          </div>
+          {% if contrat_batterie %}
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Montant batterie</div>
+              <div class="col-6 text-left">
+                {{ contrat_batterie.montant_par_paiement|floatformat:0 }} FCFA
+              </div>
+            </div>
+          {% endif %}
+          <!--div class="row mb-2">
+            <div class="col-6 form-label text-left">Total à payer</div>
+            <div class="col-6 text-left">
+              {{ form.initial.total_a_payer|floatformat:0 }} FCFA
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6 form-label text-left">Heure actuelle</div>
+            <div class="col-6 text-left">
+              {{ heure_actuelle|time:"H:i" }}
+            </div>
+          </div-->
+
+          {% if est_en_conge %}
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Statut</div>
+              <div class="col-6 text-left text-info">
+                En congé (pas de pénalité)
+              </div>
+            </div>
+          {% elif apres_limite_grave %}
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Statut</div>
+              <div class="col-6 text-left text-danger">
+                Paiement en retard grave (après 14h)
+              </div>
+            </div>
+          {% elif apres_limite %}
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Statut</div>
+              <div class="col-6 text-left text-warning">
+                Paiement en retard (après 12h)
+              </div>
+            </div>
+          {% else %}
+            <div class="row mb-2">
+              <div class="col-6 form-label text-left">Statut</div>
+              <div class="col-6 text-left text-success">
+                Paiement à temps
+              </div>
+            </div>
+          {% endif %}
+
+          {% if jours_retard > 0 %}
+            <div class="row">
+              <div class="col-6 form-label text-left">Jours de retard</div>
+              <div class="col-6 text-left text-danger">
+                {{ jours_retard }} jour(s)
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <!-- Formulaire de paiement -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Enregistrer le Paiement</h6>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.montant.id_for_label }}">{{ form.montant.label }}</label>
+                            {{ form.montant }}
+                            {% if form.montant.errors %}
+                            <div class="text-danger">
+                                {{ form.montant.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if contrat_batterie %}
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.montant_batterie.id_for_label }}">{{ form.montant_batterie.label }}</label>
+                            {{ form.montant_batterie }}
+                            {% if form.montant_batterie.errors %}
+                            <div class="text-danger">
+                                {{ form.montant_batterie.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.methode_paiement.id_for_label }}">{{ form.methode_paiement.label }}</label>
+                            {{ form.methode_paiement }}
+                            {% if form.methode_paiement.errors %}
+                            <div class="text-danger">
+                                {{ form.methode_paiement.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.reference_transaction.id_for_label }}">{{ form.reference_transaction.label }}</label>
+                            {{ form.reference_transaction }}
+                            {% if form.reference_transaction.errors %}
+                            <div class="text-danger">
+                                {{ form.reference_transaction.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section pénalités -->
+
+                {% if penalite_du_jour and not est_en_conge %}
+                <div class="card border-left-warning shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-warning">Pénalité du jour</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Une pénalité de <strong>{{ penalite_du_jour.montant|floatformat:0 }} FCFA</strong> 
+                            a été appliquée pour le paiement manqué d'aujourd'hui.
+                            <br>
+                            <small>Motif: {{ penalite_du_jour.get_motif_display }}</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="form-check">
+                                {{ form.pardonner_penalite_jour }}
+                                <label for="{{ form.pardonner_penalite_jour.id_for_label }}" class="form-check-label">
+                                    Pardonner cette pénalité
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="justification-group" style="display: none;">
+                            <label for="{{ form.justification_pardon.id_for_label }}">{{ form.justification_pardon.label }}</label>
+                            {{ form.justification_pardon }}
+                            {% if form.justification_pardon.errors %}
+                            <div class="text-danger">
+                                {{ form.justification_pardon.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Affichage des autres pénalités existantes (lecture seule) -->
+                {% if penalites_existantes %}
+                <div class="card border-left-info shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-info">Pénalités existantes</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            Ce client a {{ penalites_existantes.count }} pénalité(s) en attente. 
+                            Ces pénalités doivent être traitées dans le <a href="{% url 'payments:gestion_penalites' %}" target="_blank">Centre de gestion des pénalités</a>.
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Motif</th>
+                                        <th>Montant</th>
+                                        <th>Statut</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for penalite in penalites_existantes %}
+                                    <tr {% if penalite.date_paiement_manque == today %}class="table-warning"{% endif %}>
+                                        <td>{{ penalite.date_paiement_manque|date:"d/m/Y" }}</td>
+                                        <td>{{ penalite.get_motif_display }}</td>
+                                        <td>{{ penalite.montant|floatformat:0 }} FCFA</td>
+                                        <td>
+                                            <span class="badge badge-warning">{{ penalite.get_statut_display }}</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+                            {{ form.notes }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="envoyer_notification" name="envoyer_notification" checked>
+                                <label class="form-check-label" for="envoyer_notification">
+                                    Envoyer une notification au client
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!--div class="col-md-6">
+                        <div class="float-right">
+                            <h3 class="text-primary">Total: <span id="total_affiche">{{ form.initial.total_a_payer|floatformat:0 }}</span> FCFA</h3>
+                        </div>
+                    </div-->
+                </div>
+                
+                {{ form.total_a_payer }}
+                
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Enregistrer le paiement
+                    </button>
+                    
+                    <a href="{% url 'payments:centre_paiements' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Historique des paiements -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Historique des Paiements</h6>
+        </div>
+        <div class="card-body">
+            {% if historique_paiements %}
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Référence</th>
+                            <th>Montant</th>
+                            <th>Méthode</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paiement in historique_paiements %}
+                        <tr>
+                            <td>{{ paiement.date_paiement|date:"d/m/Y" }}</td>
+                            <td>{{ paiement.reference }}</td>
+                            <td>{{ paiement.montant|floatformat:0 }} FCFA</td>
+                            <td>{{ paiement.get_methode_paiement_display }}</td>
+                            <td>
+                                {% if paiement.est_penalite %}
+                                <span class="badge badge-warning">Pénalité</span>
+                                {% else %}
+                                <span class="badge badge-primary">{{ paiement.get_type_contrat_display }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-center">Aucun paiement enregistré pour ce contrat.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+
+    $(document).ready(function() {
+        // Afficher/masquer le champ de justification
+        $('#{{ form.pardonner_penalite_jour.id_for_label }}').change(function() {
+            if ($(this).is(':checked')) {
+                $('#justification-group').show();
+                $('#{{ form.justification_pardon.id_for_label }}').attr('required', true);
+            } else {
+                $('#justification-group').hide();
+                $('#{{ form.justification_pardon.id_for_label }}').attr('required', false);
+            }
+        });
+    });
+
+
+    $(document).ready(function() {
+        // Mettre à jour le total
+        function updateTotal() {
+            var montant = parseFloat($('#{{ form.montant.id_for_label }}').val()) || 0;
+            var montantBatterie = parseFloat($('#{{ form.montant_batterie.id_for_label }}').val()) || 0;
+            
+            var penalite = {{ penalite_applicable|default:"0" }};
+            var penalitesExistantes = {{ montant_penalites|default:"0" }};
+            
+            var total = montant + montantBatterie;
+            
+            $('#{{ form.total_a_payer.id_for_label }}').val(total.toFixed(2));
+            $('#total_affiche').text(total.toFixed(0));
+        }
+        
+        // Écouter les changements des montants
+        $('#{{ form.montant.id_for_label }}, #{{ form.montant_batterie.id_for_label }}').on('input', function() {
+            updateTotal();
+        });
+        
+        // Initialiser le total
+        updateTotal();
+    });
+</script>
+{% endblock %}

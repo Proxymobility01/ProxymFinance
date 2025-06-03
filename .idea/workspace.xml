@@ -1,18 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="" />
+    <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/authentication/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/authentication/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/authentication/apps.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/authentication/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/authentication/migrations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/authentication/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/authentication/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/authentication/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/authentication/views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contrats/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contrats/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contrats/apps.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contrats/migrations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contrats/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contrats/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contrats/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/contrats/views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dashboard/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/recto/Screenshot_2025-02-03_124935.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/recto/Screenshot_2025-02-03_125030.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/recto/Screenshot_2025-02-03_125030_HAdtpRO.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/recto/Screenshot_2025-02-10_171655.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/recto/coursUML2.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/verso/Screenshot_2025-02-03_124935.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/verso/Screenshot_2025-02-03_124935_N8UMSv7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/verso/Screenshot_2025-02-03_124935_ocv9PFS.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/verso/Screenshot_2025-02-10_171655.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/cni/verso/coursUML3.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/COMPLETE_INFORMATION.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Part_of_Deck_for_IT.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Planning_Stagiaire_IT1.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Screenshot_2025-02-03_124935.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Screenshot_2025-02-03_125030.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Screenshot_2025-02-03_125030_uVLkCrr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Screenshot_2025-02-10_171655.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Screenshot_2025-02-10_171655_Iwr8ONF.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Screenshot_2025-02-10_171820.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Screenshot_2025-02-18_172602.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/Screenshot_2025-02-18_172602_Hxmre9V.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_iiCt3Sw.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_jY3tKe9.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_q1nAjTi.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_r7c64eA.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_zmZtXYT.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/coursUML11.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/coursUML3.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/coursUML9.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/swap_logs.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/swap_logs_hnz6Ysh.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/swap_logs_jX08zq9.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/swap_logs_w8BqS0X.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/contrat/swap_logs_wyPeimM.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/localisation/Screenshot_2025-02-10_171820.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/localisation/Screenshot_2025-02-10_171916.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/localisation/Screenshot_2025-02-10_172125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/localisation/Screenshot_2025-02-24_163251.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/localisation/coursUML2.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/permis/Screenshot_2025-02-10_171820.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/permis/Screenshot_2025-02-10_171820_Q5oh7YA.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/permis/Screenshot_2025-02-10_172125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/permis/coursUML11.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/chauffeurs/permis/swap_logs.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/activite/AVANT.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/activite/MOTOPROXYM.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/activite/PROXYM_LOGO_TRACKING_Fond_Orange_FAVICON300x-100.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/activite/PROXYM_MOBILITY_LONG_COULEUR_Sans_Fond_1_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/activite/Screenshot_2025-02-03_125030.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/activite/coursUML2.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/activite/coursUML3.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/activite/coursUML9.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/cni/APRES.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/cni/OTP.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/cni/amitié_sur_fond_noir.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/cni/coursUML11.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/cni/playstore_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/contrat/CV_DASSI_PXM.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/contrat/LOGO_PROXYM_TRACKING_VERTICAL300x-100.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/contrat/Part_of_Deck_for_IT.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/contrat/authbd5.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/contrat/coursUML7.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/domicile/APRES.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/domicile/IMG-20241205-WA0098.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/domicile/PROXYM_MOBILITY_LONG_COULEUR_Sans_Fond_1_1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/domicile/amitié.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/garants/domicile/coursUML3.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/Screenshot_2025-02-03_125030.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/Screenshot_2025-02-10_171820.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/coursUML2.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/coursUML5.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/coursUML7.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/recto/amitié.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/recto/coursUML11.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/verso/APRES.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/cni/verso/coursUML9.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/contrat/Screenshot_2025-02-10_171655.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/contrat/Screenshot_2025-02-18_172602.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/contrat/coursUML11.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/contrat/coursUML11_qxOG4TC.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/contrat/coursUML2.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/contrat/coursUML3.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/contrat/coursUML7.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/localisation/Screenshot_2025-02-03_124935.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/localisation/Screenshot_2025-02-24_163251.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/localisation/amitié_sur_fond_noir.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/localisation/coursUML11.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/localisation/coursUML3.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/localisation/coursUML3_SEMKGF2.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/documents/partenaires/localisation/coursUML5.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/note" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations template.rar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/proxym_finance.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/proxym_finance.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxym_finance/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxym_finance/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/urls.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2xx6slrju79DJxBnPFBQYQGLiZk" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -20,13 +151,65 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Django Server.proxym_finance.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
+    "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
+    "git-widget-placeholder": "develop",
+    "last_opened_file_path": "C:/Users/insta/PycharmProjects/proxym_finance",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\insta\PycharmProjects\proxym_finance" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\insta\PycharmProjects\proxym_finance\templates" />
+      <recent name="C:\Users\insta\PycharmProjects\proxym_finance" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="proxym_finance" type="Python.DjangoServer" factoryName="Django server">
+      <module name="proxym_finance" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="proxym_finance.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -42,7 +225,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1748867586795</updated>
-      <workItem from="1748867587926" duration="3000" />
+      <workItem from="1748867587926" duration="4007000" />
+      <workItem from="1748871649430" duration="844000" />
+      <workItem from="1748874003043" duration="30389000" />
     </task>
     <servers />
   </component>
