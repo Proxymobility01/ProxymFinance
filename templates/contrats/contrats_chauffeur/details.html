@@ -45,9 +45,14 @@
                 <i class="ti ti-user"></i> Chauffeur
             </div>
             <div class="col-6 text-left">
-                <a href="{% url 'contrats:details_chauffeur' contrat.chauffeur.id %}">
-                {{ contrat.chauffeur.nom_complet }}
-                </a>
+                {% if contrat.association.validated_user %}
+                    <a href="{% url 'contrats:details_chauffeur' contrat.association.validated_user.id %}">
+                        {{ contrat.association.validated_user.nom }} {{ contrat.association.validated_user.prenom }}
+                    </a>
+                {% else %}
+                    <span class="text-muted">Non attribué</span>
+                {% endif %}
+
             </div>
             </div>
 
@@ -56,7 +61,7 @@
                 <i class="ti ti-motorbike"></i> Moto
             </div>
             <div class="col-6 text-left">
-                {{ contrat.moto.model }} ({{ contrat.moto.vin|slice:"-6:" }})
+                {{ contrat.association.moto_valide.model }} ({{ contrat.association.moto_valide.vin|slice:"-6:" }})
             </div>
             </div>
 
@@ -124,11 +129,20 @@
             </div>
 
             <div class="row mb-2">
-            <div class="col-6 form-label text-left">
-                <i class="ti ti-receipt"></i> Montant par paiement
+             <div class="col-6 form-label text-left">
+                <i class="ti ti-calendar-time"></i> Montant Normal par paiement
             </div>
             <div class="col-6 text-left">
                 {{ contrat.montant_par_paiement|floatformat:0 }} FCFA
+            </div>
+            </div>
+
+            <div class="row mb-2">
+            <div class="col-6 form-label text-left">
+                <i class="ti ti-receipt"></i> Montant par paiement auquel le chauffeur s'est engagé
+            </div>
+            <div class="col-6 text-left">
+                {{ contrat.montant_engage|floatformat:0 }} FCFA
             </div>
             </div>
 

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 # Create your models here.
 
 
@@ -36,12 +36,17 @@ class AssociationUserMoto(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     deleted_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
+    def __str__(self):
+        nom = self.validated_user.nom if self.validated_user else "Sans nom"
+        prenom = self.validated_user.prenom if self.validated_user else "Sans prénom"
+        moto = self.moto_valide.model if self.moto_valide else "Moto inconnue"
+        immatriculation = self.moto_valide.vin if self.moto_valide else "?"
+
+        return f"{prenom} {nom} - Moto: {moto} ({immatriculation})"
+
     class Meta:
         db_table = 'association_user_motos'
         verbose_name = 'Association utilisateur–moto'
-
-
-
 
 
 class ValidatedUser(models.Model):
@@ -360,6 +365,7 @@ class ContratPartenaire(Contrat):
         on_delete=models.CASCADE,
         related_name='contrats'
     )
+    motos = models.ManyToManyField(MotosValides)
     # Documents
     cni_document = models.FileField(upload_to='documents/partenaires/cni/', null=True, blank=True)
     plan_localisation = models.FileField(upload_to='documents/partenaires/localisation/', null=True, blank=True)

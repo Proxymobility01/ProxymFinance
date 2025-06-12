@@ -1,0 +1,350 @@
+<!-- templates/contrats/associations/liste.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête de page -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">{{ title }}</h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Tableau de bord</a></li>
+                                <li class="breadcrumb-item active">Associations</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-auto">
+                        <a href="{% url 'contrats:ajouter_association' %}" class="btn btn-primary">
+                            <i class="ti ti-plus"></i> Nouvelle association
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar avatar-md bg-primary-subtle text-primary rounded">
+                                <i class="ti ti-link"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Total associations</h6>
+                            <p class="text-muted mb-0">{{ associations.count }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar avatar-md bg-success-subtle text-success rounded">
+                                <i class="ti ti-credit-card"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Achat Direct</h6>
+                            <p class="text-muted mb-0">{{ associations|length|add:"-1" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar avatar-md bg-warning-subtle text-warning rounded">
+                                <i class="ti ti-calendar-event"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Lease</h6>
+                            <p class="text-muted mb-0">{{ associations|length|add:"-1" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="avatar avatar-md bg-info-subtle text-info rounded">
+                                <i class="ti ti-clock"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0">Aujourd'hui</h6>
+                            <p class="text-muted mb-0">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau des associations -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="card-title">
+                                <i class="ti ti-list"></i> Liste des associations chauffeur-moto
+                            </h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportTable('excel')">
+                                    <i class="ti ti-file-spreadsheet"></i> Excel
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="exportTable('pdf')">
+                                    <i class="ti ti-file-type-pdf"></i> PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    {% if associations %}
+                        <div class="table-responsive">
+                            <table id="associationsTable" class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Chauffeur</th>
+                                        <th>Email</th>
+                                        <th>Téléphone</th>
+                                        <th>Moto</th>
+                                        <th>VIN</th>
+                                        <th>Statut</th>
+                                        <th>Date création</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for association in associations %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-light text-dark">#{{ association.id }}</span>
+                                        </td>
+                                        <td>
+                                            {% if association.validated_user %}
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar avatar-sm bg-primary-subtle text-primary rounded-circle me-2">
+                                                        <i class="ti ti-user"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-semibold">{{ association.validated_user.prenom }} {{ association.validated_user.nom }}</div>
+                                                        <small class="text-muted">{{ association.validated_user.numero_cni|default:"N/A" }}</small>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">Non défini</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if association.validated_user %}
+                                                <a href="mailto:{{ association.validated_user.email }}" class="text-decoration-none">
+                                                    {{ association.validated_user.email }}
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if association.validated_user %}
+                                                <a href="tel:{{ association.validated_user.phone }}" class="text-decoration-none">
+                                                    {{ association.validated_user.phone }}
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if association.moto_valide %}
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar avatar-sm bg-success-subtle text-success rounded-circle me-2">
+                                                        <i class="ti ti-bike"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-semibold">{{ association.moto_valide.model }}</div>
+                                                        <small class="text-muted">IMEI: {{ association.moto_valide.gps_imei|default:"N/A" }}</small>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">Non définie</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if association.moto_valide %}
+                                                <code class="small">{{ association.moto_valide.vin }}</code>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if association.statut == 'lease' %}
+                                                <span class="badge bg-warning">Lease</span>
+                                            {% elif association.statut == 'achat_direct' %}
+                                                <span class="badge bg-success">Achat Direct</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ association.statut|default:"N/A" }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if association.created_at %}
+                                                <span data-bs-toggle="tooltip" title="{{ association.created_at }}">
+                                                    {{ association.created_at|date:"d/m/Y" }}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group" aria-label="Actions">
+                                                <a href="{% url 'contrats:modifier_association' association.id %}"
+                                                   class="btn btn-sm btn-outline-primary"
+                                                   data-bs-toggle="tooltip"
+                                                   title="Modifier">
+                                                    <i class="ti ti-edit"></i>
+                                                </a>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        onclick="confirmDelete({{ association.id }}, '{{ association }}')"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Supprimer">
+                                                    <i class="ti ti-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="avatar avatar-xl bg-light text-muted rounded-circle mx-auto mb-3">
+                                <i class="ti ti-link-off"></i>
+                            </div>
+                            <h5 class="text-muted">Aucune association trouvée</h5>
+                            <p class="text-muted mb-4">Commencez par créer votre première association chauffeur-moto.</p>
+                            <a href="{% url 'contrats:ajouter_association' %}" class="btn btn-primary">
+                                <i class="ti ti-plus"></i> Créer une association
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="ti ti-alert-triangle text-danger"></i> Confirmer la suppression
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer l'association <strong id="associationName"></strong> ?</p>
+                <div class="alert alert-warning">
+                    <i class="ti ti-alert-triangle"></i>
+                    <strong>Attention :</strong> Cette action est irréversible et peut affecter les contrats liés à cette association.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="ti ti-x"></i> Annuler
+                </button>
+                <form id="deleteForm" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="ti ti-trash"></i> Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    // Initialiser DataTables
+    const table = $('#associationsTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/fr_fr.json'
+        },
+        order: [[0, 'desc']],
+        pageLength: 25,
+        responsive: true,
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
+        columnDefs: [
+            { targets: -1, orderable: false }, // Actions column
+            { targets: 0, width: '80px' }, // ID column
+        ]
+    });
+
+    // Initialiser les tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+// Fonction de confirmation de suppression
+function confirmDelete(associationId, associationName) {
+    document.getElementById('associationName').textContent = associationName;
+    document.getElementById('deleteForm').action = "{% url 'contrats:supprimer_association' 0 %}".replace('0', associationId);
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+
+// Fonctions d'export (à implémenter selon vos besoins)
+function exportTable(format) {
+    if (format === 'excel') {
+        // Logique d'export Excel
+        alert('Export Excel en cours de développement');
+    } else if (format === 'pdf') {
+        // Logique d'export PDF
+        alert('Export PDF en cours de développement');
+    }
+}
+</script>
+{% endblock %}

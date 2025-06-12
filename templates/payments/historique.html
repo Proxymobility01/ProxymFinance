@@ -125,8 +125,8 @@
                                     <td>{{ paiement.reference }}</td>
                                     <td>
                                         {% if paiement.contrat_chauffeur %}
-                                            <a href="{% url 'contrats:details_chauffeur' paiement.contrat_chauffeur.chauffeur.id %}">
-                                                {{ paiement.contrat_chauffeur.chauffeur.prenom }} {{ paiement.contrat_chauffeur.chauffeur.nom }}
+                                            <a href="{% url 'contrats:details_chauffeur' paiement.contrat_chauffeur.association.validated_user.id %}">
+                                                {{ paiement.contrat_chauffeur.association.validated_user.prenom }} {{ paiement.contrat_chauffeur.association.validated_user.nom }}
                                             </a>
                                         {% elif paiement.contrat_partenaire %}
                                             <a href="{% url 'contrats:details_partenaire' paiement.contrat_partenaire.partenaire.id %}">

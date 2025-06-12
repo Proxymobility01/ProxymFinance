@@ -14,9 +14,63 @@
                     Tableau de bord
                 </a>
             </li>
-            
 
-           
+            <!-- Contrats dropdown -->
+            <li class="nav-item nav-dropdown">
+                <a href="{% url 'contrats:dashboard' %}" class="nav-link {% if 'contrats' in request.path %}active{% endif %}">
+                     Contrats
+                </a>
+                <div class="nav-dropdown-content user-dropdown-content">
+                    <a href="{% url 'contrats:liste_contrats_chauffeur' %}" class="nav-dropdown-item {% if 'contrats/chauffeur' in request.path %}active{% endif %}">
+                        Contrats Chauffeurs
+                    </a>
+                    <a href="{% url 'contrats:liste_contrats_partenaire' %}" class="nav-dropdown-item {% if 'contrats/partenaire' in request.path %}active{% endif %}">
+                        Contrats Partenaires
+                    </a>
+                    <a href="{% url 'contrats:liste_contrats_batterie' %}" class="nav-dropdown-item {% if 'contrats/batterie' in request.path %}active{% endif %}">
+                        Contrats Batteries
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'contrats:liste_chauffeurs' %}" class="nav-dropdown-item {% if 'contrats/chauffeurs' in request.path %}active{% endif %}">
+                        Chauffeurs
+                    </a>
+                    <a href="{% url 'contrats:liste_garants' %}" class="nav-dropdown-item {% if 'contrats/garants' in request.path %}active{% endif %}">
+                        Garants
+                    </a>
+                    <a href="{% url 'contrats:liste_partenaires' %}" class="nav-dropdown-item {% if 'contrats/partenaires' in request.path %}active{% endif %}">
+                        Partenaires
+                    </a>
+                    <a href="{% url 'contrats:liste_conges' %}" class="nav-dropdown-item {% if 'contrats/conges' in request.path %}active{% endif %}">
+                        Congés
+                    </a>
+                </div>
+            </li>
+
+            <!-- Paiements dropdown -->
+            <li class="nav-item nav-dropdown">
+                <a href="{% url 'payments:centre_paiements' %}" class="nav-link {% if 'payments' in request.path %}active{% endif %}">
+                    Paiements
+                </a>
+                <div class="nav-dropdown-content user-dropdown-content">
+                    <a href="{% url 'payments:centre_paiements' %}" class="nav-dropdown-item {% if 'payments' in request.path and not 'penalites' in request.path and not 'swaps' in request.path and not 'analytique' in request.path %}active{% endif %}">
+                        Paiements Contrats
+                    </a>
+                    <a href="{% url 'payments:liste_paiements' %}" class="nav-dropdown-item {% if 'payments/historique' in request.path %}active{% endif %}">
+                        Historique Paiements
+                    </a>
+                    <a href="{% url 'payments:gestion_penalites' %}" class="nav-dropdown-item {% if 'penalites' in request.path %}active{% endif %}">
+                        Pénalités
+                    </a>
+                    <a href="{% url 'payments:liste_swaps' %}" class="nav-dropdown-item {% if 'swaps' in request.path %}active{% endif %}">
+                        Swap
+                    </a>
+                    <a href="{% url 'payments:analytique' %}" class="nav-dropdown-item {% if 'analytique' in request.path %}active{% endif %}">
+                        Rapports
+                    </a>
+                </div>
+            </li>
+
+
             <!-- Other menu items -->
             <li class="nav-item">
                 <a href="#" class="nav-link {% if 'investisseurs' in request.path %}active{% endif %}">
@@ -24,41 +78,42 @@
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a href="#" class="nav-link {% if 'utilisateurs' in request.path %}active{% endif %}">
-                    Utilisateurs
-                </a>
-            </li>
         </ul>
-        
+
         <!-- Right side menu -->
         <ul class="navbar-nav">
+            <!-- Search button -->
+            <li class="nav-item">
+                <a href="{% url 'contrats:recherche_contrats' %}" class="btn btn-secondary" title="Rechercher">
+                    <i class="ti ti-search"></i>
+                </a>
+            </li>
 
             <!-- Notifications -->
             <li class="nav-item nav-dropdown">
                 <a href="#" class="btn btn-secondary" title="Notifications">
                     <i class="ti ti-bell"></i>
-                    {% if notifications_count > 0 %}
-                    <span class="badge badge-danger">{{ notifications_count }}</span>
-                    {% endif %}
+                    {#% if notifications_count > 0 %#}
+                    <span class="badge badge-danger">{# { notifications_count }#}</span>
+                    {#% endif %#}
                 </a>
-                <div class="nav-dropdown-content user-dropdown-content">
+                <!--div class="nav-dropdown-content user-dropdown-content">
                     <div class="dropdown-header">Notifications</div>
-                    {% if notifications %}
-                        {% for notification in notifications|slice:":5" %}
-                            <a href="{{ notification.link }}" class="nav-dropdown-item">
+                    {#% if notifications %#}
+                        {#% for notification in notifications|slice:":5" %#}
+                            <a href="{#{ notification.link }#}" class="nav-dropdown-item">
                                 <i class="ti ti-{{ notification.icon }}"></i>
                                 <div>
-                                    <strong>{{ notification.title }}</strong>
-                                    <small>{{ notification.time_ago }}</small>
+                                    <strong>{#{ notification.title }#}</strong>
+                                    <small>{#{ notification.time_ago }#}</small>
                                 </div>
                             </a>
-                        {% endfor %}
+                        {#% endfor %#}
                         <a href="#" class="nav-dropdown-item text-center">Voir toutes les notifications</a>
-                    {% else %}
+                    {#% else %#}
                         <div class="nav-dropdown-item">Aucune notification</div>
-                    {% endif %}
-                </div>
+                    {#% endif %#}
+                </div-->
             </li>
             
             <!-- User profile -->

@@ -107,8 +107,8 @@
             <div class="card-body">
                 <p>
                     <strong>Chauffeur :</strong>
-                    <a href="{% url 'contrats:details_chauffeur' contrat.chauffeur.id %}">
-                        {{ contrat.chauffeur.nom_complet }}
+                    <a href="{% url 'contrats:details_chauffeur' contrat.association.validated_user.id %}">
+                        {{ contrat.association.validated_user.nom}} {{ contrat.association.validated_user.prenom }}
                     </a>
                 </p>
                 <p>

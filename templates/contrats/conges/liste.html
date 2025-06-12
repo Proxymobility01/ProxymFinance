@@ -162,10 +162,17 @@
                     {% for conge in conges %}
                     <tr>
                         <td>
-                            <a href="{% url 'contrats:details_chauffeur' conge.contrat.chauffeur.id %}">
-                                {{ conge.contrat.chauffeur.nom_complet }}
-                            </a>
+                            {% if conge.contrat.association and conge.contrat.association.validated_user %}
+                                <a href="{% url 'contrats:details_chauffeur' conge.contrat.association.validated_user.id %}">
+                                    {{ conge.contrat.association.validated_user.nom }} {{ conge.contrat.association.validated_user.prenom }}
+                                </a>
+                            {% else %}
+                                <span class="text-danger">Aucun chauffeur</span>
+                            {% endif %}
+
+
                         </td>
+
                         <td>
                             <a href="{% url 'contrats:details_contrat_chauffeur' conge.contrat.id %}">
                                 {{ conge.contrat.reference }}

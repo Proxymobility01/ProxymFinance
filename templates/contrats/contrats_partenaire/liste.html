@@ -27,8 +27,8 @@
             <td>{{ contrat.statut }}</td>
             <td>{{ contrat.date_signature }}</td>
             <td>
-                <a href="{% url 'contrats:details_contrat_partenaire' contrat.id %}" class="btn btn-sm btn-info">Voir</a>
-                <a href="{% url 'contrats:modifier_contrat_partenaire' contrat.id %}" class="btn btn-sm btn-warning">Modifier</a>
+                <a href="{% url 'contrats:details_contrat_partenaire' contrat.id %}" class="btn btn-sm btn-info"><i class="ti ti-eye"></i></a>
+                <a href="{% url 'contrats:modifier_contrat_partenaire' contrat.id %}" class="btn btn-sm btn-warning"><i class="ti ti-edit"></i></a>
             </td>
         </tr>
         {% empty %}

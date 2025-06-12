@@ -1,0 +1,179 @@
+<!-- templates/contrats/associations/ajouter.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'vendor/select2/css/select2.min.css' %}" rel="stylesheet">
+<link href="{% static 'vendor/select2/css/select2-bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête de page -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">{{ title }}</h3>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Tableau de bord</a></li>
+                                <li class="breadcrumb-item"><a href="{% url 'contrats:liste_associations' %}">Associations</a></li>
+                                <li class="breadcrumb-item active">Ajouter</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-auto">
+                        <a href="{% url 'contrats:liste_associations' %}" class="btn btn-outline-primary">
+                            <i class="ti ti-arrow-left"></i> Retour à la liste
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="row">
+        <div class="col-lg-8 col-xl-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="ti ti-link"></i> Informations de l'association
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <form method="post" action="{% url 'contrats:ajouter_association' %}">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.validated_user.id_for_label }}" class="form-label">
+                                        {{ form.validated_user.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.validated_user }}
+                                    {% if form.validated_user.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.validated_user.errors }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="mt-2">
+                                        <a href="{% url 'contrats:ajouter_chauffeur' %}"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="ti ti-plus"></i> Nouveau chauffeur
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.moto_valide.id_for_label }}" class="form-label">
+                                        {{ form.moto_valide.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.moto_valide }}
+                                    {% if form.moto_valide.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.moto_valide.errors }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="mt-2">
+                                        <a href="{% url 'contrats:ajouter_moto' %}"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="ti ti-plus"></i> Nouvelle moto
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.statut.id_for_label }}" class="form-label">
+                                        {{ form.statut.label }}
+                                    </label>
+                                    {{ form.statut }}
+                                    {% if form.statut.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.statut.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="ti ti-info-circle"></i>
+                            <strong>Information:</strong> Cette association permet de lier un chauffeur à une moto pour la création de contrats.
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="ti ti-check"></i> Créer l'association
+                            </button>
+                            <a href="{% url 'contrats:liste_associations' %}" class="btn btn-secondary">
+                                <i class="ti ti-x"></i> Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-xl-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="ti ti-help"></i> Aide
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6>Qu'est-ce qu'une association ?</h6>
+                    <p class="text-muted">
+                        Une association lie un chauffeur à une moto spécifique. Cette relation est nécessaire
+                        pour créer des contrats chauffeur.
+                    </p>
+
+                    <h6>Règles importantes :</h6>
+                    <ul class="text-muted">
+                        <li>Un chauffeur ne peut être associé qu'à une seule moto</li>
+                        <li>Une moto ne peut être associée qu'à un seul chauffeur</li>
+                        <li>Vous pouvez modifier le statut de paiement (Achat direct ou Lease)</li>
+                    </ul>
+
+                    <h6>Statuts de paiement :</h6>
+                    <ul class="text-muted">
+                        <li><strong>Lease :</strong> Location avec option d'achat</li>
+                        <li><strong>Achat Direct :</strong> Achat immédiat du véhicule</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/select2/js/select2.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    // Initialiser Select2
+    $('#id_validated_user, #id_moto_valide').select2({
+        theme: 'bootstrap4',
+        width: '100%'
+    });
+});
+</script>
+{% endblock %}

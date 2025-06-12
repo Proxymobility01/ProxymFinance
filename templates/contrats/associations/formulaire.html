@@ -1,0 +1,199 @@
+<!-- templates/contrats/associations/formulaire.html -->
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'assets/vendor/select2/dist/css/select2.min.css' %}" rel="stylesheet" />
+<style>
+.select2-container {
+    width: 100% !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">{{ title }}</h4>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Tableau de bord" %}</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'contrats:liste_associations' %}">{% trans "Associations" %}</a></li>
+                        <li class="breadcrumb-item active">{{ title }}</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="ti ti-link me-2"></i>{{ title }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="associationForm">
+                        {% csrf_token %}
+
+                        <!-- Messages d'erreur globaux -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <!-- Chauffeur -->
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.validated_user.id_for_label }}" class="form-label">
+                                        {{ form.validated_user.label }}
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.validated_user }}
+                                    {% if form.validated_user.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.validated_user.errors }}
+                                        </div>
+                                    {% endif %}
+                                    {% if form.validated_user.help_text %}
+                                        <small class="form-text text-muted">{{ form.validated_user.help_text }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Moto -->
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.moto_valide.id_for_label }}" class="form-label">
+                                        {{ form.moto_valide.label }}
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.moto_valide }}
+                                    {% if form.moto_valide.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.moto_valide.errors }}
+                                        </div>
+                                    {% endif %}
+                                    {% if form.moto_valide.help_text %}
+                                        <small class="form-text text-muted">{{ form.moto_valide.help_text }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statut -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.statut.id_for_label }}" class="form-label">
+                                        {{ form.statut.label }}
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.statut }}
+                                    {% if form.statut.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.statut.errors }}
+                                        </div>
+                                    {% endif %}
+                                    {% if form.statut.help_text %}
+                                        <small class="form-text text-muted">{{ form.statut.help_text }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'contrats:liste_associations' %}" class="btn btn-secondary">
+                                <i class="ti ti-arrow-left me-1"></i>{% trans "Retour" %}
+                            </a>
+                            <div>
+                                <button type="reset" class="btn btn-outline-secondary me-2">
+                                    <i class="ti ti-refresh me-1"></i>{% trans "Réinitialiser" %}
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ti ti-device-floppy me-1"></i>{% trans "Enregistrer" %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Boutons d'ajout rapide -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">{% trans "Actions rapides" %}</h6>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="{% url 'contrats:ajouter_chauffeur' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="ti ti-user-plus me-1"></i>{% trans "Nouveau chauffeur" %}
+                        </a>
+                        <a href="{% url 'contrats:ajouter_moto' %}" class="btn btn-outline-success btn-sm">
+                            <i class="ti ti-motorbike me-1"></i>{% trans "Nouvelle moto" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/vendor/select2/dist/js/select2.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    // Initialiser Select2
+    $('.select2').select2({
+        theme: 'default',
+        placeholder: function(){
+            return $(this).data('placeholder');
+        },
+        allowClear: true
+    });
+
+    // Validation du formulaire
+    $('#associationForm').on('submit', function(e) {
+        let isValid = true;
+
+        // Vérifier que les champs obligatoires sont remplis
+        const requiredFields = ['#id_validated_user', '#id_moto_valide', '#id_statut'];
+
+        requiredFields.forEach(function(fieldId) {
+            const field = $(fieldId);
+            if (!field.val()) {
+                field.addClass('is-invalid');
+                isValid = false;
+            } else {
+                field.removeClass('is-invalid');
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            alert('{% trans "Veuillez remplir tous les champs obligatoires." %}');
+        }
+    });
+
+    // Supprimer les classes d'erreur lors de la saisie
+    $('.form-control').on('change', function() {
+        $(this).removeClass('is-invalid');
+    });
+});
+</script>
+{% endblock %}

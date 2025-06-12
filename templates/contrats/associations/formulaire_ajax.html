@@ -1,0 +1,365 @@
+{% load i18n %}
+
+<!-- templates/contrats/chauffeurs/formulaire_ajax.html -->
+<div class="modal fade" id="chauffeurModal" tabindex="-1" aria-labelledby="chauffeurModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chauffeurModalLabel">
+                    <i class="ti ti-user-plus me-2"></i>{{ title }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" id="ajaxChauffeurForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Messages d'erreur -->
+                    <div id="chauffeurErrors" class="alert alert-danger d-none"></div>
+
+                    <!-- Messages d'erreur globaux -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <!-- Informations personnelles -->
+                    <h6 class="text-primary mb-3">
+                        <i class="ti ti-user me-2"></i>{% trans "Informations personnelles" %}
+                    </h6>
+
+                    <div class="row">
+                        <!-- Nom -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.nom.id_for_label }}" class="form-label">
+                                    {{ form.nom.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.nom }}
+                                {% if form.nom.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.nom.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Prénom -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.prenom.id_for_label }}" class="form-label">
+                                    {{ form.prenom.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.prenom }}
+                                {% if form.prenom.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.prenom.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">
+                                    {{ form.email.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.email.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Téléphone -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">
+                                    {{ form.phone.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.phone.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Numéro CNI -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.numero_cni.id_for_label }}" class="form-label">
+                                    {{ form.numero_cni.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.numero_cni }}
+                                {% if form.numero_cni.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.numero_cni.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Domicile -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.domicile.id_for_label }}" class="form-label">
+                                    {{ form.domicile.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.domicile }}
+                                {% if form.domicile.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.domicile.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents -->
+                    <h6 class="text-primary mb-3 mt-4">
+                        <i class="ti ti-file-text me-2"></i>{% trans "Documents" %}
+                    </h6>
+
+                    <div class="row">
+                        <!-- CNI Recto -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.photo_cni_recto.id_for_label }}" class="form-label">
+                                    {{ form.photo_cni_recto.label }}
+                                </label>
+                                {{ form.photo_cni_recto }}
+                                {% if form.photo_cni_recto.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.photo_cni_recto.errors }}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">{% trans "Format accepté: JPG, PNG, PDF" %}</small>
+                            </div>
+                        </div>
+
+                        <!-- CNI Verso -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.photo_cni_verso.id_for_label }}" class="form-label">
+                                    {{ form.photo_cni_verso.label }}
+                                </label>
+                                {{ form.photo_cni_verso }}
+                                {% if form.photo_cni_verso.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.photo_cni_verso.errors }}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">{% trans "Format accepté: JPG, PNG, PDF" %}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Permis de conduire -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.permis_conduire.id_for_label }}" class="form-label">
+                                    {{ form.permis_conduire.label }}
+                                </label>
+                                {{ form.permis_conduire }}
+                                {% if form.permis_conduire.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.permis_conduire.errors }}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">{% trans "Format accepté: JPG, PNG, PDF" %}</small>
+                            </div>
+                        </div>
+
+                        <!-- Plan de localisation -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.plan_localisation.id_for_label }}" class="form-label">
+                                    {{ form.plan_localisation.label }}
+                                </label>
+                                {{ form.plan_localisation }}
+                                {% if form.plan_localisation.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.plan_localisation.errors }}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">{% trans "Format accepté: JPG, PNG, PDF" %}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations supplémentaires -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="ti ti-info-circle me-2"></i>
+                                {% trans "Tous les champs marqués d'un astérisque (*) sont obligatoires. Les documents peuvent être ajoutés plus tard si nécessaire." %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="ti ti-x me-1"></i>{% trans "Annuler" %}
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveChauffeurBtn">
+                        <i class="ti ti-device-floppy me-1"></i>{% trans "Enregistrer" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Gestion de la soumission du formulaire AJAX
+    $('#ajaxChauffeurForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const form = $(this);
+        const submitBtn = $('#saveChauffeurBtn');
+        const originalText = submitBtn.html();
+
+        // Désactiver le bouton et afficher le loading
+        submitBtn.prop('disabled', true).html('<i class="ti ti-loader-2 me-1 animate-spin"></i>{% trans "Enregistrement..." %}');
+
+        // Cacher les erreurs précédentes
+        $('#chauffeurErrors').addClass('d-none').empty();
+        $('.form-control').removeClass('is-invalid');
+
+        // Créer FormData pour gérer les fichiers
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: form.attr('action') || '{% url "contrats:ajouter_chauffeur" %}',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Ajouter la nouvelle option au select du formulaire parent (association)
+                    const chauffeurSelect = $('#id_validated_user');
+                    if (chauffeurSelect.length) {
+                        const newOption = new Option(response.chauffeur.label, response.chauffeur.id, true, true);
+                        chauffeurSelect.append(newOption).trigger('change');
+                    }
+
+                    // Fermer le modal
+                    $('#chauffeurModal').modal('hide');
+
+                    // Afficher un message de succès
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '{% trans "Succès" %}',
+                            text: response.message,
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        alert(response.message);
+                    }
+
+                    // Déclencher un événement personnalisé
+                    $(document).trigger('chauffeurCreated', [response.chauffeur]);
+                } else {
+                    // Afficher les erreurs
+                    let errorMsg = response.message || '{% trans "Une erreur est survenue." %}';
+
+                    if (response.errors) {
+                        for (let field in response.errors) {
+                            const fieldElement = $(`#id_${field}`);
+                            if (fieldElement.length) {
+                                fieldElement.addClass('is-invalid');
+                                // Ajouter le message d'erreur
+                                let errorDiv = fieldElement.next('.invalid-feedback');
+                                if (errorDiv.length === 0) {
+                                    errorDiv = $('<div class="invalid-feedback"></div>');
+                                    fieldElement.after(errorDiv);
+                                }
+                                errorDiv.text(response.errors[field].join(', '));
+                            }
+                        }
+                    }
+
+                    $('#chauffeurErrors').removeClass('d-none').text(errorMsg);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur AJAX:', error);
+                $('#chauffeurErrors').removeClass('d-none').text('{% trans "Erreur de communication avec le serveur." %}');
+            },
+            complete: function() {
+                // Réactiver le bouton
+                submitBtn.prop('disabled', false).html(originalText);
+            }
+        });
+    });
+
+    // Supprimer les classes d'erreur lors de la saisie
+    $('#chauffeurModal .form-control').on('input change', function() {
+        $(this).removeClass('is-invalid');
+        $(this).next('.invalid-feedback').remove();
+    });
+
+    // Validation côté client pour l'email
+    $('#id_email').on('blur', function() {
+        const email = $(this).val();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email && !emailRegex.test(email)) {
+            $(this).addClass('is-invalid');
+            let errorDiv = $(this).next('.invalid-feedback');
+            if (errorDiv.length === 0) {
+                errorDiv = $('<div class="invalid-feedback"></div>');
+                $(this).after(errorDiv);
+            }
+            errorDiv.text('{% trans "Veuillez saisir une adresse email valide." %}');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+        }
+    });
+
+    // Validation côté client pour le téléphone
+    $('#id_phone').on('input', function() {
+        const phone = $(this).val();
+        const phoneRegex = /^[0-9\s\-\+\(\)]+$/;
+
+        if (phone && (!phoneRegex.test(phone) || phone.replace(/\D/g, '').length < 8)) {
+            $(this).addClass('is-invalid');
+            let errorDiv = $(this).next('.invalid-feedback');
+            if (errorDiv.length === 0) {
+                errorDiv = $('<div class="invalid-feedback"></div>');
+                $(this).after(errorDiv);
+            }
+            errorDiv.text('{% trans "Le numéro de téléphone doit contenir au moins 8 chiffres." %}');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+        }
+    });
+});
+</script>

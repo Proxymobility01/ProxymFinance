@@ -185,12 +185,19 @@ class Paiement(models.Model):
             return {"nom": "Inconnu", "type": "Inconnu"}
 
         if self.type_contrat == 'chauffeur':
-            return {
-                "nom": f"{contract.chauffeur.prenom} {contract.chauffeur.nom}",
-                "type": "Chauffeur",
-                "id": contract.chauffeur.id,
-                "telephone": contract.chauffeur.phone
-            }
+            chauffeur = None
+            # On passe par l'association pour trouver le chauffeur lié
+            if hasattr(contract, 'association') and contract.association and hasattr(contract.association,
+                                                                                     'validated_user'):
+                chauffeur = contract.association.validated_user
+            if chauffeur:
+                return {
+                    "nom": f"{chauffeur.prenom} {chauffeur.nom}",
+                    "type": "Chauffeur",
+                    "id": chauffeur.id,
+                    "telephone": chauffeur.phone
+                }
+
         elif self.type_contrat == 'partenaire':
             return {
                 "nom": f"{contract.partenaire.prenom} {contract.partenaire.nom}",
@@ -256,8 +263,8 @@ class Penalite(models.Model):
 
     paiement = models.ForeignKey('Paiement', on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='penalites_associees')
-    cree_par = models.ForeignKey('contrats.ValidatedUser', on_delete=models.SET_NULL, null=True,
-                                 related_name='penalites_creees')
+    cree_par = models.ForeignKey('authentication.Employe', on_delete=models.SET_NULL, null=True, related_name='penalites_creees')
+
     raison_annulation = models.TextField(blank=True, null=True)
     date_modification = models.DateTimeField(null=True, blank=True)
     modifie_par = models.ForeignKey(
@@ -337,6 +344,7 @@ class Penalite(models.Model):
         if client:
             return f"Pénalité {self.id} - {client.prenom} {client.nom} - {self.montant} FCFA"
         return f"Pénalité {self.id} - {self.montant} FCFA"
+
 
 
 class NotificationPaiement(models.Model):
