@@ -1,0 +1,98 @@
+{% extends 'stations/base_stations.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Page header -->
+    <div class="page-header">
+        <h2 class="page-title">Gestion de l'Inventaire</h2>
+        <a href="{% url 'stations:inventaire-create' %}" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-1">
+                <path d="M12 5V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ajouter un équipement
+        </a>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="station" class="form-label">Station</label>
+                    <select name="station" id="station" class="form-select">
+                        <option value="">Toutes les stations</option>
+                        {% for station in stations %}
+                        <option value="{{ station.id }}" {% if request.GET.station == station.id|stringformat:"i" %}selected{% endif %}>
+                            {{ station.nom_agence }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="etat" class="form-label">État</label>
+                    <select name="etat" id="etat" class="form-select">
+                        <option value="">Tous les états</option>
+                        <option value="bon" {% if request.GET.etat == 'bon' %}selected{% endif %}>Bon état</option>
+                        <option value="a_reparer" {% if request.GET.etat == 'a_reparer' %}selected{% endif %}>À réparer</option>
+                        <option value="hors_service" {% if request.GET.etat == 'hors_service' %}selected{% endif %}>Hors service</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="type_equipement" class="form-label">Type d'équipement</label>
+                    <select name="type_equipement" id="type_equipement" class="form-select">
+                        <option value="">Tous les types</option>
+                        <option value="chargeur_batterie" {% if request.GET.type_equipement == 'chargeur_batterie' %}selected{% endif %}>Chargeur de Batterie</option>
+                        <option value="armoire_swap" {% if request.GET.type_equipement == 'armoire_swap' %}selected{% endif %}>Armoire de Swap</option>
+                        <option value="scanner" {% if request.GET.type_equipement == 'scanner' %}selected{% endif %}>Scanner</option>
+                        <option value="onduleur" {% if request.GET.type_equipement == 'onduleur' %}selected{% endif %}>Onduleur</option>
+                        <option value="autre" {% if request.GET.type_equipement == 'autre' %}selected{% endif %}>Autre Équipement</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <a href="{% url 'stations:inventaire-list' %}" class="btn btn-secondary">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>Total Équipements</h5>
+                    <h3>{{ inventaire|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>Bon état</h5>
+                    <h3 class="text-success">{{ bon_etat_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>À réparer</h5>
+                    <h3 class="text-warning">{{ a_reparer_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5>Hors service</h5>
+                    <h3 class="text-danger">{{ hors_service_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste de l'inventaire comme avant -->
+</div>
+{% endblock %}

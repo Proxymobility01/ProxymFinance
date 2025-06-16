@@ -1,0 +1,2005 @@
+[TAILING] Tailing last 1000 lines for [4] process (change the value with --lines option)
+/root/.pm2/logs/swap-error.log last 1000 lines:
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | No SOC data found for MAC ID: 613881627761
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 18
+4|swap     | No association found for battery ID: 13
+4|swap     | No SOC data found for MAC ID: 613881627791
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 18
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No association found for battery ID: 18
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 18
+4|swap     | No association found for battery ID: 13
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 13
+4|swap     | No association found for battery ID: 13
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 23
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 3
+4|swap     | No association found for battery ID: 3
+4|swap     | No association found for battery ID: 3
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 61388162837#
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881628336
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881628277
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 12
+4|swap     | No association found for battery ID: 15
+4|swap     | No association found for battery ID: 12
+4|swap     | No association found for battery ID: 12
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 12
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 7
+4|swap     | No association found for battery ID: 16
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881628027
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881628000
+4|swap     | No SOC data found for MAC ID: 613881628000
+4|swap     | No association found for battery ID: 21
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No association found for battery ID: 22
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881628000
+4|swap     | No SOC data found for MAC ID: 613881628000
+4|swap     | No SOC data found for MAC ID: 613881628000
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881628582
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881628590
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881628000
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881628035
+4|swap     | No SOC data found for MAC ID: 613881628035
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No association found for battery ID: 23
+4|swap     | No association found for battery ID: 23
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881628034
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | No SOC data found for MAC ID: 613881627990
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error sending SMS: {
+4|swap     |   requestError: {
+4|swap     |     policyException: {
+4|swap     |       messageId: 'POL0001',
+4|swap     |       text: 'A policy error occurred. Error code is %1',
+4|swap     |       variables: [Array]
+4|swap     |     }
+4|swap     |   }
+4|swap     | }
+4|swap     | Failed to send SMS notification
+4|swap     | Error inserting swap data: Error: ER_NO_DEFAULT_FOR_FIELD: Field 'agent_user_id' doesn't have a default value
+4|swap     |     at Sequence._packetToError (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Sequence.js:47:14)
+4|swap     |     at Query.ErrorPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:79:18)
+4|swap     |     at Protocol._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:291:23)
+4|swap     |     at Parser._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:433:10)
+4|swap     |     at Parser.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:43:10)
+4|swap     |     at Protocol.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:38:16)
+4|swap     |     at Socket.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:88:28)
+4|swap     |     at Socket.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:526:10)
+4|swap     |     at Socket.emit (node:events:518:28)
+4|swap     |     at addChunk (node:internal/streams/readable:561:12)
+4|swap     |     --------------------
+4|swap     |     at Pool.query (/home/ubuntu/backend/node_modules/mysql/lib/Pool.js:199:23)
+4|swap     |     at Query.<anonymous> (/home/ubuntu/backend/swap.js:468:20)
+4|swap     |     at Query.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:526:10)
+4|swap     |     at Query._callback (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:488:16)
+4|swap     |     at Sequence.end (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Sequence.js:83:24)
+4|swap     |     at Query._handleFinalResultPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:149:8)
+4|swap     |     at Query.OkPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:74:10)
+4|swap     |     at Protocol._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:291:23)
+4|swap     |     at Parser._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:433:10)
+4|swap     |     at Parser.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:43:10) {
+4|swap     |   code: 'ER_NO_DEFAULT_FOR_FIELD',
+4|swap     |   errno: 1364,
+4|swap     |   sqlMessage: "Field 'agent_user_id' doesn't have a default value",
+4|swap     |   sqlState: 'HY000',
+4|swap     |   index: 0,
+4|swap     |   sql: '\n' +
+4|swap     |     '                  INSERT INTO swaps\n' +
+4|swap     |     '                  (battery_moto_user_association_id, battery_in_id, battery_out_id, battery_out_soc, battery_in_soc, swap_price, swap_date)\n' +
+4|swap     |     '                  VALUES (2, 2, 1, 23, 100, 1700, CURRENT_TIMESTAMP)\n' +
+4|swap     |     '                '
+4|swap     | }
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | No association found for battery ID: 1
+4|swap     | Error inserting swap data: Error: ER_NO_DEFAULT_FOR_FIELD: Field 'agent_user_id' doesn't have a default value
+4|swap     |     at Sequence._packetToError (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Sequence.js:47:14)
+4|swap     |     at Query.ErrorPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:79:18)
+4|swap     |     at Protocol._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:291:23)
+4|swap     |     at Parser._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:433:10)
+4|swap     |     at Parser.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:43:10)
+4|swap     |     at Protocol.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:38:16)
+4|swap     |     at Socket.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:88:28)
+4|swap     |     at Socket.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:526:10)
+4|swap     |     at Socket.emit (node:events:518:28)
+4|swap     |     at addChunk (node:internal/streams/readable:561:12)
+4|swap     |     --------------------
+4|swap     |     at Pool.query (/home/ubuntu/backend/node_modules/mysql/lib/Pool.js:199:23)
+4|swap     |     at Query.<anonymous> (/home/ubuntu/backend/swap.js:468:20)
+4|swap     |     at Query.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:526:10)
+4|swap     |     at Query._callback (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:488:16)
+4|swap     |     at Sequence.end (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Sequence.js:83:24)
+4|swap     |     at Query._handleFinalResultPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:149:8)
+4|swap     |     at Query.OkPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:74:10)
+4|swap     |     at Protocol._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:291:23)
+4|swap     |     at Parser._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:433:10)
+4|swap     |     at Parser.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:43:10) {
+4|swap     |   code: 'ER_NO_DEFAULT_FOR_FIELD',
+4|swap     |   errno: 1364,
+4|swap     |   sqlMessage: "Field 'agent_user_id' doesn't have a default value",
+4|swap     |   sqlState: 'HY000',
+4|swap     |   index: 0,
+4|swap     |   sql: '\n' +
+4|swap     |     '                  INSERT INTO swaps\n' +
+4|swap     |     '                  (battery_moto_user_association_id, battery_in_id, battery_out_id, battery_out_soc, battery_in_soc, swap_price, swap_date)\n' +
+4|swap     |     '                  VALUES (12, 23, 3, 28, 100, 1550, CURRENT_TIMESTAMP)\n' +
+4|swap     |     '                '
+4|swap     | }
+4|swap     | No association found for battery ID: 3
+4|swap     | No association found for battery ID: 3
+4|swap     | Error inserting swap data: Error: ER_NO_DEFAULT_FOR_FIELD: Field 'agent_user_id' doesn't have a default value
+4|swap     |     at Sequence._packetToError (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Sequence.js:47:14)
+4|swap     |     at Query.ErrorPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:79:18)
+4|swap     |     at Protocol._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:291:23)
+4|swap     |     at Parser._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:433:10)
+4|swap     |     at Parser.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:43:10)
+4|swap     |     at Protocol.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:38:16)
+4|swap     |     at Socket.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:88:28)
+4|swap     |     at Socket.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:526:10)
+4|swap     |     at Socket.emit (node:events:518:28)
+4|swap     |     at addChunk (node:internal/streams/readable:561:12)
+4|swap     |     --------------------
+4|swap     |     at Pool.query (/home/ubuntu/backend/node_modules/mysql/lib/Pool.js:199:23)
+4|swap     |     at Query.<anonymous> (/home/ubuntu/backend/swap.js:468:20)
+4|swap     |     at Query.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:526:10)
+4|swap     |     at Query._callback (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:488:16)
+4|swap     |     at Sequence.end (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Sequence.js:83:24)
+4|swap     |     at Query._handleFinalResultPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:149:8)
+4|swap     |     at Query.OkPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:74:10)
+4|swap     |     at Protocol._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:291:23)
+4|swap     |     at Parser._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:433:10)
+4|swap     |     at Parser.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:43:10) {
+4|swap     |   code: 'ER_NO_DEFAULT_FOR_FIELD',
+4|swap     |   errno: 1364,
+4|swap     |   sqlMessage: "Field 'agent_user_id' doesn't have a default value",
+4|swap     |   sqlState: 'HY000',
+4|swap     |   index: 0,
+4|swap     |   sql: '\n' +
+4|swap     |     '                  INSERT INTO swaps\n' +
+4|swap     |     '                  (battery_moto_user_association_id, battery_in_id, battery_out_id, battery_out_soc, battery_in_soc, swap_price, swap_date)\n' +
+4|swap     |     '                  VALUES (10, 24, 21, 18, 100, 1800, CURRENT_TIMESTAMP)\n' +
+4|swap     |     '                '
+4|swap     | }
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | No SOC data found for MAC ID: 613881626138
+4|swap     | Error inserting swap data: Error: ER_NO_DEFAULT_FOR_FIELD: Field 'agent_user_id' doesn't have a default value
+4|swap     |     at Sequence._packetToError (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Sequence.js:47:14)
+4|swap     |     at Query.ErrorPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:79:18)
+4|swap     |     at Protocol._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:291:23)
+4|swap     |     at Parser._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:433:10)
+4|swap     |     at Parser.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:43:10)
+4|swap     |     at Protocol.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:38:16)
+4|swap     |     at Socket.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:88:28)
+4|swap     |     at Socket.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:526:10)
+4|swap     |     at Socket.emit (node:events:518:28)
+4|swap     |     at addChunk (node:internal/streams/readable:561:12)
+4|swap     |     --------------------
+4|swap     |     at Pool.query (/home/ubuntu/backend/node_modules/mysql/lib/Pool.js:199:23)
+4|swap     |     at Query.<anonymous> (/home/ubuntu/backend/swap.js:468:20)
+4|swap     |     at Query.<anonymous> (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:526:10)
+4|swap     |     at Query._callback (/home/ubuntu/backend/node_modules/mysql/lib/Connection.js:488:16)
+4|swap     |     at Sequence.end (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Sequence.js:83:24)
+4|swap     |     at Query._handleFinalResultPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:149:8)
+4|swap     |     at Query.OkPacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/sequences/Query.js:74:10)
+4|swap     |     at Protocol._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Protocol.js:291:23)
+4|swap     |     at Parser._parsePacket (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:433:10)
+4|swap     |     at Parser.write (/home/ubuntu/backend/node_modules/mysql/lib/protocol/Parser.js:43:10) {
+4|swap     |   code: 'ER_NO_DEFAULT_FOR_FIELD',
+4|swap     |   errno: 1364,
+4|swap     |   sqlMessage: "Field 'agent_user_id' doesn't have a default value",
+4|swap     |   sqlState: 'HY000',
+4|swap     |   index: 0,
+4|swap     |   sql: '\n' +
+4|swap     |     '                  INSERT INTO swaps\n' +
+4|swap     |     '                  (battery_moto_user_association_id, battery_in_id, battery_out_id, battery_out_soc, battery_in_soc, swap_price, swap_date)\n' +
+4|swap     |     '                  VALUES (12, 14, 23, 19, 100, 1750, CURRENT_TIMESTAMP)\n' +
+4|swap     |     '                '
+4|swap     | }
+4|swap     | No association found for battery ID: 23
+4|swap     | No association found for battery ID: 23
+4|swap     | No association found for battery ID: 23
+4|swap     | No association found for battery ID: 23
+
+/root/.pm2/logs/swap-out.log last 1000 lines:
+4|swap     | MAC ID received: 613881627900, Type: outgoing
+4|swap     | SOC retrieved: 27
+4|swap     | Price calculated: 1800 FCFA for battery with SOC 27%
+4|swap     | Battery ID retrieved: 10
+4|swap     | Association User Moto ID retrieved: 6
+4|swap     | Validated User ID retrieved: 6
+4|swap     | User retrieved: Nom=Mouaka, Prenom=John
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881628370, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881627900',
+4|swap     |   incoming_mac_id: '613881628370',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881627900, Incoming MAC ID: 613881628370
+4|swap     | Outgoing Battery ID: 10
+4|swap     | Incoming Battery ID: 24
+4|swap     | Outgoing SOC: 27
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1600 FCFA
+4|swap     | Battery-Moto Association ID: 10
+4|swap     | User Found: Mouaka John - Phone: 670127668
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | MAC ID received: 613881627956, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628435, Type: outgoing
+4|swap     | SOC retrieved: 25
+4|swap     | Price calculated: 1800 FCFA for battery with SOC 25%
+4|swap     | Battery ID retrieved: 7
+4|swap     | Association User Moto ID retrieved: 8
+4|swap     | Validated User ID retrieved: 9
+4|swap     | User retrieved: Nom=BEVO FERDOU, Prenom=Steve
+4|swap     | MAC ID received: 613881627766, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628435',
+4|swap     |   incoming_mac_id: '613881627766',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628435, Incoming MAC ID: 613881627766
+4|swap     | Outgoing Battery ID: 7
+4|swap     | Incoming Battery ID: 13
+4|swap     | Outgoing SOC: 25
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1650 FCFA
+4|swap     | Battery-Moto Association ID: 12
+4|swap     | User Found: BEVO FERDOU Steve - Phone: 671682591
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881627719, Type: outgoing
+4|swap     | SOC retrieved: 21
+4|swap     | Price calculated: 1900 FCFA for battery with SOC 21%
+4|swap     | Battery ID retrieved: 6
+4|swap     | Association User Moto ID retrieved: 2
+4|swap     | Validated User ID retrieved: 3
+4|swap     | User retrieved: Nom=Fon Njwe, Prenom=Dowely
+4|swap     | MAC ID received: 613881627873, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881627719',
+4|swap     |   incoming_mac_id: '613881627873',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881627719, Incoming MAC ID: 613881627873
+4|swap     | Outgoing Battery ID: 6
+4|swap     | Incoming Battery ID: 1
+4|swap     | Outgoing SOC: 21
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1700 FCFA
+4|swap     | Battery-Moto Association ID: 2
+4|swap     | User Found: Fon Njwe Dowely - Phone: 654471814
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628609, Type: incoming
+4|swap     | SOC retrieved: 66
+4|swap     | Price calculated: 850 FCFA for battery with SOC 66%
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628592, Type: outgoing
+4|swap     | SOC retrieved: 31
+4|swap     | Price calculated: 1700 FCFA for battery with SOC 31%
+4|swap     | Battery ID retrieved: 22
+4|swap     | Association User Moto ID retrieved: 1
+4|swap     | Validated User ID retrieved: 1
+4|swap     | User retrieved: Nom=NDIO ANONG, Prenom=HERMANN
+4|swap     | MAC ID received: 613881627900, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628592',
+4|swap     |   incoming_mac_id: '613881627900',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628592, Incoming MAC ID: 613881627900
+4|swap     | Outgoing Battery ID: 22
+4|swap     | Incoming Battery ID: 10
+4|swap     | Outgoing SOC: 31
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1500 FCFA
+4|swap     | Battery-Moto Association ID: 1
+4|swap     | User Found: NDIO ANONG HERMANN - Phone: 699188733
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628034, Type: outgoing
+4|swap     | MAC ID received: 613881628037, Type: outgoing
+4|swap     | SOC retrieved: 18
+4|swap     | Price calculated: 2000 FCFA for battery with SOC 18%
+4|swap     | Battery ID retrieved: 19
+4|swap     | Association User Moto ID retrieved: 7
+4|swap     | Validated User ID retrieved: 8
+4|swap     | User retrieved: Nom=BEA LIKENG, Prenom=Michel
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881628037, Type: outgoing
+4|swap     | SOC retrieved: 18
+4|swap     | Price calculated: 2000 FCFA for battery with SOC 18%
+4|swap     | Battery ID retrieved: 19
+4|swap     | Association User Moto ID retrieved: 7
+4|swap     | Validated User ID retrieved: 8
+4|swap     | User retrieved: Nom=BEA LIKENG, Prenom=Michel
+4|swap     | MAC ID received: 613881628530, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628037',
+4|swap     |   incoming_mac_id: '613881628530',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628037, Incoming MAC ID: 613881628530
+4|swap     | Outgoing Battery ID: 19
+4|swap     | Incoming Battery ID: 5
+4|swap     | Outgoing SOC: 18
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1800 FCFA
+4|swap     | Battery-Moto Association ID: 11
+4|swap     | User Found: BEA LIKENG Michel - Phone: 672771583
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628435, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628609, Type: incoming
+4|swap     | SOC retrieved: 66
+4|swap     | Price calculated: 850 FCFA for battery with SOC 66%
+4|swap     | MAC ID received: 613881628592, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627719, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628435, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627896, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628037, Type: incoming
+4|swap     | SOC retrieved: 63
+4|swap     | Price calculated: 900 FCFA for battery with SOC 63%
+4|swap     | MAC ID received: 613881628274, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627956, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628287, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | MAC ID received: 613881628390, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628021, Type: outgoing
+4|swap     | SOC retrieved: 22
+4|swap     | Price calculated: 1900 FCFA for battery with SOC 22%
+4|swap     | Battery ID retrieved: 23
+4|swap     | Association User Moto ID retrieved: 9
+4|swap     | Validated User ID retrieved: 10
+4|swap     | User retrieved: Nom=TEIGUIM GUY, Prenom=Romeo
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628021',
+4|swap     |   incoming_mac_id: '613881628046',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628021, Incoming MAC ID: 613881628046
+4|swap     | Outgoing Battery ID: 23
+4|swap     | Incoming Battery ID: 2
+4|swap     | Outgoing SOC: 22
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1700 FCFA
+4|swap     | Battery-Moto Association ID: 13
+4|swap     | User Found: TEIGUIM GUY Romeo - Phone: 681051246
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | MAC ID received: 613881627766, Type: outgoing
+4|swap     | SOC retrieved: 24
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 24%
+4|swap     | Battery ID retrieved: 13
+4|swap     | Association User Moto ID retrieved: 8
+4|swap     | Validated User ID retrieved: 9
+4|swap     | User retrieved: Nom=BEVO FERDOU, Prenom=Steve
+4|swap     | MAC ID received: 613881628435, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881627766',
+4|swap     |   incoming_mac_id: '613881628435',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881627766, Incoming MAC ID: 613881628435
+4|swap     | Outgoing Battery ID: 13
+4|swap     | Incoming Battery ID: 7
+4|swap     | Outgoing SOC: 24
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1650 FCFA
+4|swap     | Battery-Moto Association ID: 12
+4|swap     | User Found: BEVO FERDOU Steve - Phone: 671682591
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881627900, Type: outgoing
+4|swap     | SOC retrieved: 41
+4|swap     | Price calculated: 1450 FCFA for battery with SOC 41%
+4|swap     | Battery ID retrieved: 10
+4|swap     | Association User Moto ID retrieved: 1
+4|swap     | Validated User ID retrieved: 1
+4|swap     | User retrieved: Nom=NDIO ANONG, Prenom=HERMANN
+4|swap     | MAC ID received: 613881627896, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881627900',
+4|swap     |   incoming_mac_id: '613881627896',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881627900, Incoming MAC ID: 613881627896
+4|swap     | Outgoing Battery ID: 10
+4|swap     | Incoming Battery ID: 16
+4|swap     | Outgoing SOC: 41
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1300 FCFA
+4|swap     | Battery-Moto Association ID: 1
+4|swap     | User Found: NDIO ANONG HERMANN - Phone: 699188733
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | MAC ID received: 613881628037, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628370, Type: outgoing
+4|swap     | SOC retrieved: 25
+4|swap     | Price calculated: 1800 FCFA for battery with SOC 25%
+4|swap     | Battery ID retrieved: 24
+4|swap     | Association User Moto ID retrieved: 6
+4|swap     | Validated User ID retrieved: 6
+4|swap     | User retrieved: Nom=Mouaka, Prenom=John
+4|swap     | MAC ID received: 613881628592, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628370, Type: outgoing
+4|swap     | SOC retrieved: 25
+4|swap     | Price calculated: 1800 FCFA for battery with SOC 25%
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | Battery ID retrieved: 24
+4|swap     | Association User Moto ID retrieved: 6
+4|swap     | Validated User ID retrieved: 6
+4|swap     | User retrieved: Nom=Mouaka, Prenom=John
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881628370, Type: outgoing
+4|swap     | SOC retrieved: 25
+4|swap     | Price calculated: 1800 FCFA for battery with SOC 25%
+4|swap     | Battery ID retrieved: 24
+4|swap     | Association User Moto ID retrieved: 6
+4|swap     | Validated User ID retrieved: 6
+4|swap     | User retrieved: Nom=Mouaka, Prenom=John
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881626138, Type: outgoing
+4|swap     | MAC ID received: 613881628370, Type: outgoing
+4|swap     | SOC retrieved: 25
+4|swap     | Price calculated: 1800 FCFA for battery with SOC 25%
+4|swap     | Battery ID retrieved: 24
+4|swap     | Association User Moto ID retrieved: 6
+4|swap     | Validated User ID retrieved: 6
+4|swap     | User retrieved: Nom=Mouaka, Prenom=John
+4|swap     | MAC ID received: 613881628592, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628370',
+4|swap     |   incoming_mac_id: '613881628592',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628370, Incoming MAC ID: 613881628592
+4|swap     | Outgoing Battery ID: 24
+4|swap     | Incoming Battery ID: 22
+4|swap     | Outgoing SOC: 25
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1650 FCFA
+4|swap     | Battery-Moto Association ID: 10
+4|swap     | User Found: Mouaka John - Phone: 670127668
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881627900, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628021, Type: incoming
+4|swap     | SOC retrieved: 59
+4|swap     | Price calculated: 1000 FCFA for battery with SOC 59%
+4|swap     | MAC ID received: 613881628370, Type: incoming
+4|swap     | SOC retrieved: 33
+4|swap     | Price calculated: 1650 FCFA for battery with SOC 33%
+4|swap     | MAC ID received: 613881627766, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627719, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627766, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627900, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628046, Type: outgoing
+4|swap     | SOC retrieved: 62
+4|swap     | Price calculated: 950 FCFA for battery with SOC 62%
+4|swap     | Battery ID retrieved: 2
+4|swap     | Association User Moto ID retrieved: 9
+4|swap     | Validated User ID retrieved: 10
+4|swap     | User retrieved: Nom=TEIGUIM GUY, Prenom=Romeo
+4|swap     | MAC ID received: 613881627990, Type: incoming
+4|swap     | MAC ID received: 613881628046, Type: outgoing
+4|swap     | SOC retrieved: 62
+4|swap     | Price calculated: 950 FCFA for battery with SOC 62%
+4|swap     | Battery ID retrieved: 2
+4|swap     | Association User Moto ID retrieved: 9
+4|swap     | Validated User ID retrieved: 10
+4|swap     | User retrieved: Nom=TEIGUIM GUY, Prenom=Romeo
+4|swap     | MAC ID received: 613881627900, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628046',
+4|swap     |   incoming_mac_id: '613881627900',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628046, Incoming MAC ID: 613881627900
+4|swap     | Outgoing Battery ID: 2
+4|swap     | Incoming Battery ID: 10
+4|swap     | Outgoing SOC: 62
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 850 FCFA
+4|swap     | Battery-Moto Association ID: 13
+4|swap     | User Found: TEIGUIM GUY Romeo - Phone: 681051246
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | MAC ID received: 613881628530, Type: outgoing
+4|swap     | SOC retrieved: 10
+4|swap     | Price calculated: 2000 FCFA for battery with SOC 10%
+4|swap     | Battery ID retrieved: 5
+4|swap     | Association User Moto ID retrieved: 7
+4|swap     | Validated User ID retrieved: 8
+4|swap     | User retrieved: Nom=BEA LIKENG, Prenom=Michel
+4|swap     | MAC ID received: 613881627719, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628530',
+4|swap     |   incoming_mac_id: '613881627719',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628530, Incoming MAC ID: 613881627719
+4|swap     | Outgoing Battery ID: 5
+4|swap     | Incoming Battery ID: 6
+4|swap     | Outgoing SOC: 10
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1950 FCFA
+4|swap     | Battery-Moto Association ID: 11
+4|swap     | User Found: BEA LIKENG Michel - Phone: 672771583
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 64
+4|swap     | Price calculated: 900 FCFA for battery with SOC 64%
+4|swap     | MAC ID received: 613881628021, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628370, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628370, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628435, Type: outgoing
+4|swap     | SOC retrieved: 33
+4|swap     | Price calculated: 1650 FCFA for battery with SOC 33%
+4|swap     | Battery ID retrieved: 7
+4|swap     | Association User Moto ID retrieved: 8
+4|swap     | Validated User ID retrieved: 9
+4|swap     | User retrieved: Nom=BEVO FERDOU, Prenom=Steve
+4|swap     | MAC ID received: 613881628274, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628435',
+4|swap     |   incoming_mac_id: '613881628274',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628435, Incoming MAC ID: 613881628274
+4|swap     | Outgoing Battery ID: 7
+4|swap     | Incoming Battery ID: 3
+4|swap     | Outgoing SOC: 33
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1450 FCFA
+4|swap     | Battery-Moto Association ID: 12
+4|swap     | User Found: BEVO FERDOU Steve - Phone: 671682591
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | MAC ID received: 613881627896, Type: outgoing
+4|swap     | SOC retrieved: 25
+4|swap     | Price calculated: 1800 FCFA for battery with SOC 25%
+4|swap     | Battery ID retrieved: 16
+4|swap     | Association User Moto ID retrieved: 1
+4|swap     | Validated User ID retrieved: 1
+4|swap     | User retrieved: Nom=NDIO ANONG, Prenom=HERMANN
+4|swap     | MAC ID received: 613881627956, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881627896',
+4|swap     |   incoming_mac_id: '613881627956',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881627896, Incoming MAC ID: 613881627956
+4|swap     | Outgoing Battery ID: 16
+4|swap     | Incoming Battery ID: 17
+4|swap     | Outgoing SOC: 25
+4|swap     | Incoming SOC: 99
+4|swap     | Calculated Swap Price: 1600 FCFA
+4|swap     | Battery-Moto Association ID: 1
+4|swap     | User Found: NDIO ANONG HERMANN - Phone: 699188733
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | MAC ID received: 613881628592, Type: outgoing
+4|swap     | SOC retrieved: 56
+4|swap     | Price calculated: 1100 FCFA for battery with SOC 56%
+4|swap     | Battery ID retrieved: 22
+4|swap     | Association User Moto ID retrieved: 6
+4|swap     | Validated User ID retrieved: 6
+4|swap     | User retrieved: Nom=Mouaka, Prenom=John
+4|swap     | MAC ID received: 613881628287, Type: incoming
+4|swap     | SOC retrieved: 98
+4|swap     | Price calculated: 50 FCFA for battery with SOC 98%
+4|swap     | MAC ID received: 613881628592, Type: outgoing
+4|swap     | SOC retrieved: 56
+4|swap     | Price calculated: 1100 FCFA for battery with SOC 56%
+4|swap     | Battery ID retrieved: 22
+4|swap     | Association User Moto ID retrieved: 6
+4|swap     | Validated User ID retrieved: 6
+4|swap     | User retrieved: Nom=Mouaka, Prenom=John
+4|swap     | MAC ID received: 613881628390, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628592',
+4|swap     |   incoming_mac_id: '613881628390',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628592, Incoming MAC ID: 613881628390
+4|swap     | Outgoing Battery ID: 22
+4|swap     | Incoming Battery ID: 21
+4|swap     | Outgoing SOC: 56
+4|swap     | Incoming SOC: 99
+4|swap     | Calculated Swap Price: 950 FCFA
+4|swap     | Battery-Moto Association ID: 10
+4|swap     | User Found: Mouaka John - Phone: 670127668
+4|swap     | Battery association updated successfully
+4|swap     | Swap data inserted successfully
+4|swap     | Swap process completed successfully
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628021, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628370, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627896, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628592, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628609, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628530, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628287, Type: incoming
+4|swap     | SOC retrieved: 98
+4|swap     | Price calculated: 50 FCFA for battery with SOC 98%
+4|swap     | MAC ID received: 613881628435, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628037, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | MAC ID received: 613881627766, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | MAC ID received: 613881628287, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | Association User Moto ID retrieved: 2
+4|swap     | Validated User ID retrieved: 3
+4|swap     | User retrieved: Nom=Fon Njwe, Prenom=Dowely
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881627873',
+4|swap     |   incoming_mac_id: '613881628046',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881627873, Incoming MAC ID: 613881628046
+4|swap     | Outgoing Battery ID: 1
+4|swap     | Incoming Battery ID: 2
+4|swap     | Outgoing SOC: 23
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1700 FCFA
+4|swap     | Battery-Moto Association ID: 2
+4|swap     | User Found: Fon Njwe Dowely - Phone: 654471814
+4|swap     | Battery association updated successfully
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881627873, Type: outgoing
+4|swap     | SOC retrieved: 23
+4|swap     | Price calculated: 1850 FCFA for battery with SOC 23%
+4|swap     | Battery ID retrieved: 1
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628046, Type: outgoing
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Battery ID retrieved: 2
+4|swap     | Association User Moto ID retrieved: 2
+4|swap     | Validated User ID retrieved: 3
+4|swap     | User retrieved: Nom=Fon Njwe, Prenom=Dowely
+4|swap     | MAC ID received: 613881628274, Type: outgoing
+4|swap     | SOC retrieved: 28
+4|swap     | Price calculated: 1750 FCFA for battery with SOC 28%
+4|swap     | Battery ID retrieved: 3
+4|swap     | Association User Moto ID retrieved: 8
+4|swap     | Validated User ID retrieved: 9
+4|swap     | User retrieved: Nom=BEVO FERDOU, Prenom=Steve
+4|swap     | MAC ID received: 613881628021, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628274',
+4|swap     |   incoming_mac_id: '613881628021',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628274, Incoming MAC ID: 613881628021
+4|swap     | Outgoing Battery ID: 3
+4|swap     | Incoming Battery ID: 23
+4|swap     | Outgoing SOC: 28
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1550 FCFA
+4|swap     | Battery-Moto Association ID: 12
+4|swap     | User Found: BEVO FERDOU Steve - Phone: 671682591
+4|swap     | Battery association updated successfully
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628274',
+4|swap     |   incoming_mac_id: '613881628021',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628274, Incoming MAC ID: 613881628021
+4|swap     | Outgoing Battery ID: 3
+4|swap     | Incoming Battery ID: 23
+4|swap     | Outgoing SOC: 28
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1550 FCFA
+4|swap     | Outgoing battery not associated with any user
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628274, Type: incoming
+4|swap     | SOC retrieved: 28
+4|swap     | Price calculated: 1750 FCFA for battery with SOC 28%
+4|swap     | MAC ID received: 613881628021, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628274, Type: outgoing
+4|swap     | SOC retrieved: 28
+4|swap     | Price calculated: 1750 FCFA for battery with SOC 28%
+4|swap     | Battery ID retrieved: 3
+4|swap     | MAC ID received: 613881628274, Type: outgoing
+4|swap     | SOC retrieved: 28
+4|swap     | Price calculated: 1750 FCFA for battery with SOC 28%
+4|swap     | Battery ID retrieved: 3
+4|swap     | MAC ID received: 613881628021, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628274, Type: incoming
+4|swap     | SOC retrieved: 28
+4|swap     | Price calculated: 1750 FCFA for battery with SOC 28%
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628390, Type: outgoing
+4|swap     | SOC retrieved: 18
+4|swap     | Price calculated: 2000 FCFA for battery with SOC 18%
+4|swap     | Battery ID retrieved: 21
+4|swap     | Association User Moto ID retrieved: 6
+4|swap     | Validated User ID retrieved: 6
+4|swap     | User retrieved: Nom=Mouaka, Prenom=John
+4|swap     | MAC ID received: 613881628370, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628390',
+4|swap     |   incoming_mac_id: '613881628370',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628390, Incoming MAC ID: 613881628370
+4|swap     | Outgoing Battery ID: 21
+4|swap     | Incoming Battery ID: 24
+4|swap     | Outgoing SOC: 18
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1800 FCFA
+4|swap     | Battery-Moto Association ID: 10
+4|swap     | User Found: Mouaka John - Phone: 670127668
+4|swap     | Battery association updated successfully
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628390, Type: incoming
+4|swap     | SOC retrieved: 18
+4|swap     | Price calculated: 2000 FCFA for battery with SOC 18%
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628274, Type: incoming
+4|swap     | SOC retrieved: 82
+4|swap     | Price calculated: 450 FCFA for battery with SOC 82%
+4|swap     | MAC ID received: 613881627873, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627956, Type: incoming
+4|swap     | SOC retrieved: 65
+4|swap     | Price calculated: 850 FCFA for battery with SOC 65%
+4|swap     | MAC ID received: 613881628390, Type: incoming
+4|swap     | SOC retrieved: 67
+4|swap     | Price calculated: 800 FCFA for battery with SOC 67%
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 52
+4|swap     | Price calculated: 1200 FCFA for battery with SOC 52%
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+4|swap     | MAC ID received: 613881628046, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627873, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | MAC ID received: 613881626138, Type: incoming
+4|swap     | MAC ID received: 613881628274, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881626138, Type: incoming
+4|swap     | MAC ID received: 613881626138, Type: incoming
+4|swap     | MAC ID received: 613881626138, Type: incoming
+4|swap     | MAC ID received: 613881626138, Type: incoming
+4|swap     | MAC ID received: 613881626138, Type: incoming
+4|swap     | MAC ID received: 613881626138, Type: incoming
+4|swap     | MAC ID received: 613881627956, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628390, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628609, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881627896, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628592, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628435, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628037, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | MAC ID received: 613881627766, Type: incoming
+4|swap     | SOC retrieved: 99
+4|swap     | Price calculated: 50 FCFA for battery with SOC 99%
+4|swap     | MAC ID received: 613881628021, Type: outgoing
+4|swap     | SOC retrieved: 19
+4|swap     | Price calculated: 1950 FCFA for battery with SOC 19%
+4|swap     | Battery ID retrieved: 23
+4|swap     | Association User Moto ID retrieved: 8
+4|swap     | Validated User ID retrieved: 9
+4|swap     | User retrieved: Nom=BEVO FERDOU, Prenom=Steve
+4|swap     | MAC ID received: 613881628609, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628021',
+4|swap     |   incoming_mac_id: '613881628609',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628021, Incoming MAC ID: 613881628609
+4|swap     | Outgoing Battery ID: 23
+4|swap     | Incoming Battery ID: 14
+4|swap     | Outgoing SOC: 19
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1750 FCFA
+4|swap     | Battery-Moto Association ID: 12
+4|swap     | User Found: BEVO FERDOU Steve - Phone: 671682591
+4|swap     | Battery association updated successfully
+4|swap     | Received swap request with data: {
+4|swap     |   outgoing_mac_id: '613881628021',
+4|swap     |   incoming_mac_id: '613881628609',
+4|swap     |   agent: 'Group Proxym'
+4|swap     | }
+4|swap     | Outgoing MAC ID: 613881628021, Incoming MAC ID: 613881628609
+4|swap     | Outgoing Battery ID: 23
+4|swap     | Incoming Battery ID: 14
+4|swap     | Outgoing SOC: 19
+4|swap     | Incoming SOC: 100
+4|swap     | Calculated Swap Price: 1750 FCFA
+4|swap     | Outgoing battery not associated with any user
+4|swap     | MAC ID received: 613881628021, Type: outgoing
+4|swap     | SOC retrieved: 19
+4|swap     | Price calculated: 1950 FCFA for battery with SOC 19%
+4|swap     | Battery ID retrieved: 23
+4|swap     | MAC ID received: 613881628021, Type: outgoing
+4|swap     | SOC retrieved: 19
+4|swap     | Price calculated: 1950 FCFA for battery with SOC 19%
+4|swap     | Battery ID retrieved: 23
+4|swap     | MAC ID received: 613881628609, Type: incoming
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | MAC ID received: 613881628021, Type: outgoing
+4|swap     | SOC retrieved: 19
+4|swap     | Price calculated: 1950 FCFA for battery with SOC 19%
+4|swap     | Battery ID retrieved: 23
+4|swap     | MAC ID received: 613881628021, Type: outgoing
+4|swap     | SOC retrieved: 19
+4|swap     | Price calculated: 1950 FCFA for battery with SOC 19%
+4|swap     | Battery ID retrieved: 23
+4|swap     | MAC ID received: 613881628609, Type: outgoing
+4|swap     | SOC retrieved: 100
+4|swap     | Price calculated: 0 FCFA for battery with SOC 100%
+4|swap     | Battery ID retrieved: 14
+4|swap     | Association User Moto ID retrieved: 8
+4|swap     | Validated User ID retrieved: 9
+4|swap     | User retrieved: Nom=BEVO FERDOU, Prenom=Steve
+4|swap     | MAC ID received: 613881628021, Type: incoming
+4|swap     | SOC retrieved: 19
+4|swap     | Price calculated: 1950 FCFA for battery with SOC 19%
+4|swap     | Login attempt: phone=693289941, password=proxym2024
+4|swap     | Database query results: [
+4|swap     |   RowDataPacket {
+4|swap     |     id: 2,
+4|swap     |     nom: 'Proxym',
+4|swap     |     prenom: 'Group',
+4|swap     |     phone: '693289941'
+4|swap     |   }
+4|swap     | ]
+4|swap     | Login successful. Redirecting to dashboard...
+

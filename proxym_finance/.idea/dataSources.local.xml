@@ -15,7 +15,6 @@
           <node kind="schema">
             <name qname="@" />
             <name qname="authbd" />
-            <name qname="authbd-v2" />
           </node>
         </introspection-scope>
       </schema-mapping>

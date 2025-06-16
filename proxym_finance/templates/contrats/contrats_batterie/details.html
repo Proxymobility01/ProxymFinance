@@ -1,0 +1,472 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titre }}</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'payments:paiement_rapide' 'batterie' contrat.id %}?contrat_batterie_id={{ contrat.id }}" class="btn btn-primary">
+                            <i class="fas fa-money-bill-wave"></i> Enregistrer un paiement
+                        </a>
+                        
+                        <a href="{% url 'contrats:modifier_contrat_batterie' contrat.id %}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{% url 'contrats:liste_contrats_batterie' %}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Retour à la liste
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Informations du contrat</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Référence</th>
+                                    <td>{{ contrat.reference }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Propriétaire</th>
+                                    <td>
+                                        {% if contrat.chauffeur %}
+                                            <strong>Chauffeur:</strong> 
+                                            <a href="{% url 'contrats:details_chauffeur' contrat.chauffeur.id %}">
+                                                {{ contrat.chauffeur.nom_complet }}
+                                            </a>
+                                        {% else %}
+                                            <strong>Partenaire:</strong> 
+                                            <a href="{% url 'contrats:details_partenaire' contrat.partenaire.id %}">
+                                                {{ contrat.partenaire.prenom }} {{ contrat.partenaire.nom }}
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Montant total</th>
+                                    <td>{{ contrat.montant_total|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <th>Montant payé</th>
+                                    <td>{{ contrat.montant_paye|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <th>Montant restant</th>
+                                    <td>{{ contrat.montant_restant|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                
+                                <tr>
+                                    <th>Fréquence de paiement</th>
+                                    <td>
+                                        {% if contrat.frequence_paiement == 'journalier' %}
+                                            Journalier
+                                        {% elif contrat.frequence_paiement == 'hebdomadaire' %}
+                                            Hebdomadaire
+                                        {% elif contrat.frequence_paiement == 'mensuel' %}
+                                            Mensuel
+                                        {% elif contrat.frequence_paiement == 'trimestriel' %}
+                                            Trimestriel
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Montant par paiement</th>
+                                    <td>{{ contrat.montant_par_paiement|floatformat:"0" }} FCFA</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Dates et caution</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Date de signature</th>
+                                    <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date d'enregistrement</th>
+                                    <td>{{ contrat.date_enregistrement|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de début</th>
+                                    <td>{{ contrat.date_debut|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de fin</th>
+                                    <td>{{ contrat.date_fin|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Durée (semaines)</th>
+                                    <td>{{ contrat.duree_semaines }} semaines</td>
+                                </tr>
+                                <tr>
+                                    <th>Montant caution</th>
+                                    <td>{{ contrat.montant_caution|floatformat:"0" }} FCFA</td>
+                                </tr>
+                                <tr>
+                                    <th>Durée caution</th>
+                                    <td>{{ contrat.duree_caution }} jours</td>
+                                </tr>
+                                <tr>
+                                    <th>Statut</th>
+                                    <td>
+                                        {% if contrat.statut == 'actif' %}
+                                            <span class="badge badge-success">Actif</span>
+                                        {% elif contrat.statut == 'terminé' %}
+                                            <span class="badge badge-info">Terminé</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">Suspendu</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Barre de progression pour le paiement -->
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <h4>Progression du paiement</h4>
+                            {% if contrat.montant_total > 0 %}
+                                {% with pourcentage=contrat.montant_paye|floatformat:"0"|default:"0"|add:"0" %}
+                                    {% with pourcent_paye=pourcentage|floatformat:"0" %}
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                aria-valuenow="{{ pourcent_paye }}" aria-valuemin="0" aria-valuemax="100" 
+                                                style="width: {{ pourcent_paye }}%">
+                                                {{ pourcent_paye }}%
+                                            </div>
+                                        </div>
+                                        <small class="text-muted mt-1">
+                                            {{ contrat.montant_paye|floatformat:"0" }} FCFA sur {{ contrat.montant_total|floatformat:"0" }} FCFA
+                                        </small>
+                                    {% endwith %}
+                                {% endwith %}
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    Aucun montant à payer défini pour ce contrat.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="row mt-3">
+                        <div class="col-md-12 text-center">
+                            <a href="{% url 'payments:paiement_rapide' 'batterie' contrat.id %}" class="btn btn-success btn-lg">
+                                <i class="fas fa-money-bill-wave"></i> Enregistrer un paiement
+                            </a>
+                            
+                            {% if contrat.statut == 'actif' %}
+                                <a href="#" class="btn btn-warning btn-lg">
+                                    <i class="fas fa-pause"></i> Suspendre le contrat
+                                </a>
+                            {% elif contrat.statut == 'suspendu' %}
+                                <a href="#" class="btn btn-info btn-lg">
+                                    <i class="fas fa-play"></i> Réactiver le contrat
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Informations du propriétaire -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {% if contrat.chauffeur %}
+                            Informations du chauffeur
+                        {% else %}
+                            Informations du partenaire
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if contrat.chauffeur %}
+                            <!-- Informations du chauffeur -->
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th style="width: 200px;">Nom complet</th>
+                                        <td>{{ contrat.chauffeur.nom_complet }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>{{ contrat.chauffeur.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Téléphone</th>
+                                        <td>{{ contrat.chauffeur.phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Numéro CNI</th>
+                                        <td>{{ contrat.chauffeur.numero_cni }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Domicile</th>
+                                        <td>{{ contrat.chauffeur.domicile }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Documents du chauffeur -->
+                                <h5>Documents</h5>
+                                <div class="row">
+                                    {% if contrat.chauffeur.photo_cni_recto %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>CNI Recto:</strong>
+                                        <a href="{{ contrat.chauffeur.photo_cni_recto.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if contrat.chauffeur.photo_cni_verso %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>CNI Verso:</strong>
+                                        <a href="{{ contrat.chauffeur.photo_cni_verso.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if contrat.chauffeur.permis_conduire %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Permis:</strong>
+                                        <a href="{{ contrat.chauffeur.permis_conduire.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if contrat.chauffeur.plan_localisation %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Plan localisation:</strong>
+                                        <a href="{{ contrat.chauffeur.plan_localisation.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <!-- Informations du partenaire -->
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <th style="width: 200px;">Nom complet</th>
+                                        <td>{{ contrat.partenaire.prenom }} {{ contrat.partenaire.nom }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>{{ contrat.partenaire.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Téléphone</th>
+                                        <td>{{ contrat.partenaire.phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Numéro CNI</th>
+                                        <td>{{ contrat.partenaire.numero_cni }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Adresse</th>
+                                        <td>{{ contrat.partenaire.adresse }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Documents du partenaire -->
+                                <h5>Documents</h5>
+                                <div class="row">
+                                    {% if contrat.partenaire.photo_cni_recto %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>CNI Recto:</strong>
+                                        <a href="{{ contrat.partenaire.photo_cni_recto.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if contrat.partenaire.photo_cni_verso %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>CNI Verso:</strong>
+                                        <a href="{{ contrat.partenaire.photo_cni_verso.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if contrat.partenaire.justificatif_activite %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Justificatif d'activité:</strong>
+                                        <a href="{{ contrat.partenaire.justificatif_activite.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if contrat.partenaire.plan_localisation %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Plan localisation:</strong>
+                                        <a href="{{ contrat.partenaire.plan_localisation.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if contrat.partenaire.contrat_physique %}
+                                    <div class="col-md-6 mb-3">
+                                        <strong>Contrat physique:</strong>
+                                        <a href="{{ contrat.partenaire.contrat_physique.url }}" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Historique des paiements -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Historique des paiements</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'payments:paiement_rapide' 'batterie' contrat.id %}" class="btn btn-success btn-lg">
+                            <i class="fas fa-money-bill-wave"></i> Enregistrer un paiement
+                        </a>
+                        
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if contrat.paiements.all %}
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Référence</th>
+                                    <th>Montant</th>
+                                    <th>Méthode</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for paiement in contrat.paiements.all|dictsortreversed:"date_paiement" %}
+                                <tr>
+                                    <td>{{ paiement.date_paiement|date:"d/m/Y" }}</td>
+                                    <td>{{ paiement.reference }}</td>
+                                    <td>{{ paiement.montant|floatformat:0 }} FCFA</td>
+                                    <td>{{ paiement.get_methode_paiement_display }}</td>
+                                    <td>{{ paiement.notes|default:"" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Aucun paiement enregistré pour ce contrat.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Transactions de swap associées -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Transactions de swap</h3>
+                </div>
+                <div class="card-body">
+                    {% if swaps %}
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Station</th>
+                                    <th>Batterie entrée</th>
+                                    <th>Batterie sortie</th>
+                                    <th>Montant</th>
+                                    <th>SOC entrée</th>
+                                    <th>SOC sortie</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for swap in swaps|dictsortreversed:"swap_date" %}
+                                <tr>
+                                    <td>{{ swap.swap_date|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ swap.nom }} {{ swap.prenom }}</td>
+                                    <td>{{ swap.battery_in_id }}</td>
+                                    <td>{{ swap.battery_out_id }}</td>
+                                    <td>{{ swap.swap_price|floatformat:0 }} FCFA</td>
+                                    <td>{{ swap.battery_in_soc }}%</td>
+                                    <td>{{ swap.battery_out_soc }}%</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Aucune transaction de swap enregistrée pour ce contrat.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Contrat principal associé -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Contrat principal associé</h3>
+                </div>
+                <div class="card-body">
+                    {% if contrat.chauffeur %}
+                        {% with contrats_principaux=contrat.chauffeur.contrats_chauffeur.all %}
+                            {% if contrats_principaux %}
+                                <div class="alert alert-info">
+                                    <strong>Contrat chauffeur associé:</strong>
+                                    {% for contrat_chauffeur in contrats_principaux %}
+                                        <a href="{% url 'contrats:details_contrat_chauffeur' contrat_chauffeur.id %}">
+                                            {{ contrat_chauffeur.reference }}
+                                        </a>
+                                        {% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> Aucun contrat chauffeur associé à ce chauffeur.
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    {% elif contrat.partenaire %}
+                        {% with contrats_principaux=contrat.partenaire.contrats.all %}
+                            {% if contrats_principaux %}
+                                <div class="alert alert-info">
+                                    <strong>Contrat partenaire associé:</strong>
+                                    {% for contrat_partenaire in contrats_principaux %}
+                                        <a href="{% url 'contrats:details_contrat_partenaire' contrat_partenaire.id %}">
+                                            {{ contrat_partenaire.reference }}
+                                        </a>
+                                        {% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> Aucun contrat partenaire associé à ce partenaire.
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ {% endblock %}

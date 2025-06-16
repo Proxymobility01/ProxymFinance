@@ -1,0 +1,685 @@
+{% extends 'stations/base_stations.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    /* Modal */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        display: none;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        outline: 0;
+    }
+
+    .modal.show {
+        display: block;
+    }
+
+    .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: 0.5rem;
+        pointer-events: none;
+    }
+
+    @media (min-width: 576px) {
+        .modal-dialog {
+            max-width: 500px;
+            margin: 1.75rem auto;
+        }
+    }
+
+    .modal.show .modal-dialog {
+        transform: none;
+    }
+
+    .modal-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        pointer-events: auto;
+        background-color: var(--bg-color);
+        background-clip: padding-box;
+        border: 1px solid var(--border-color);
+        border-radius: 0.3rem;
+        outline: 0;
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1040;
+        width: 100vw;
+        height: 100vh;
+        background-color: var(--bg-color);
+        display: none;
+    }
+
+    .modal-backdrop.show {
+        display: block;
+        opacity: 0.5;
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 1rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+        border-top-left-radius: calc(0.3rem - 1px);
+        border-top-right-radius: calc(0.3rem - 1px);
+    }
+
+    .modal-title {
+        margin-bottom: 0;
+        line-height: 1.5;
+    }
+
+    .modal-body {
+        position: relative;
+        flex: 1 1 auto;
+        padding: 1rem;
+    }
+
+    .modal-footer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0.75rem;
+        border-top: 1px solid var(--border-color);
+        border-bottom-right-radius: calc(0.3rem - 1px);
+        border-bottom-left-radius: calc(0.3rem - 1px);
+    }
+
+    .btn-close {
+        background: transparent;
+        border: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--text-color);
+        text-shadow: 0 1px 0 #fff;
+        opacity: .5;
+        cursor: pointer;
+    }
+
+    .btn-close:hover {
+        opacity: .75;
+    }
+
+    /* Empêcher le scroll du body quand le modal est ouvert */
+    body.modal-open {
+        overflow: hidden;
+    }
+
+    /* Forms dans le modal */
+    #addChargeModal .form-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    #addChargeModal .form-group {
+        margin-bottom: 1rem;
+    }
+
+    #addChargeModal .form-label {
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+        display: flex;
+    }
+
+    .nav-tabs .nav-link {
+        margin-bottom: -1px;
+        border: 1px solid transparent;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        display: flex;
+    }
+    .nav-item
+    {
+        list-style: none;
+    }
+
+    .nav-tabs .nav-link:hover {
+        border-color: #e9ecef #e9ecef #dee2e6;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+    }
+
+    .tab-content {
+        padding-top: 1rem;
+    }
+
+    .tab-pane {
+        display: none;
+    }
+
+    .tab-pane.show.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <!-- Page header -->
+    <div class="page-header">
+        <h2 class="page-title">{{ station.nom_agence }}</h2>
+        <div>
+            <button type="button" class="btn btn-success" id="addChargeBtn">
+                Ajouter une charge
+            </button>
+            <a href="{% url 'stations:station-update' station.pk %}" class="btn btn-primary">
+                Modifier
+            </a>
+            <a href="{% url 'stations:station-list' %}" class="btn btn-secondary">
+                Retour
+            </a>
+        </div>
+    </div>
+
+    <!-- Informations principales -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Informations générales</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Propriétaire:</strong> {{ station.nom_proprietaire }}</p>
+                            <p><strong>Adresse:</strong> 
+                                {% if station.adresse_complete %}
+                                    {{ station.adresse_complete }}
+                                {% else %}
+                                    {{ station.quartier }}, {{ station.ville }}
+                                {% endif %}
+                            </p>
+                            <p><strong>Code postal:</strong> {{ station.code_postal|default:"-" }}</p>
+                            <p><strong>Téléphone:</strong> {{ station.telephone }}</p>
+                            <p><strong>Email:</strong> {{ station.email }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Statut:</strong> 
+                                <span class="badge bg-{{ station.statut|yesno:'success,warning,danger' }}">
+                                    {{ station.get_statut_display }}
+                                </span>
+                            </p>
+                            <p><strong>Capacité:</strong> {{ station.capacite }} batteries</p>
+                            <p><strong>Coût initial:</strong> {{ station.cout_initial }} Fcfa</p>
+                            <p><strong>Coût mensuel:</strong> {{ station.cout_mensuel }} Fcfa</p>
+                        </div>
+                    </div>
+                    {% if station.notes %}
+                    <div class="mt-3">
+                        <h6>Notes:</h6>
+                        <p>{{ station.notes }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Statistiques du mois</h5>
+                    <div class="stat-item mb-3">
+                        <div class="stat-value">{{ swaps_mois }}</div>
+                        <div class="stat-label">Swaps effectués</div>
+                    </div>
+                    <div class="stat-item mb-3">
+                        <div class="stat-value">{{ charges_mois }} Fcfa</div>
+                        <div class="stat-label">Charges totales</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">
+                            {% if rentabilite %}
+                                {{ rentabilite.rentabilite }} Fcfa
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                        <div class="stat-label">Rentabilité</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+       <!-- Tabs -->
+       <ul class="nav nav-tabs mb-4" id="stationTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="agents-tab" data-tab="agents" href="#agents">
+                Agents ({{ agents.count }})
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="batteries-tab" data-tab="batteries" href="#batteries">
+                Batteries ({{ batteries.count }})
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="charges-tab" data-tab="charges" href="#charges">
+                Charges ({{ charges.count }})
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="maintenance-tab" data-tab="maintenance" href="#maintenance">
+                Maintenance
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="inventaire-tab" data-tab="inventaire" href="#inventaire">
+                Inventaire
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="notifications-tab" data-tab="notifications" href="#notifications">
+                Notifications
+                {% if notifications.count > 0 %}
+                <span class="badge bg-danger">{{ notifications.count }}</span>
+                {% endif %}
+            </a>
+        </li>
+    </ul>
+
+
+ 
+    <div class="tab-content" id="stationTabContent">
+        <!-- Agents -->
+        <div class="tab-pane show active" id="agents">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Agents de la station</h5>
+                    {% if agents %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for agent in agents %}
+                                <tr>
+                                    <td>{{ agent.nom }}</td>
+                                    <td>{{ agent.prenom }}</td>
+                                    <td>{{ agent.email }}</td>
+                                    <td>{{ agent.phone }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p>Aucun agent assigné à cette station.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Batteries -->
+        <div class="tab-pane" id="batteries">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Batteries de la station</h5>
+                    <p>{{ batteries.count }} batteries assignées à cette station.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charges -->
+        <div class="tab-pane" id="charges">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title">Charges de la station</h5>
+                        <button type="button" class="btn btn-primary btn-sm" id="addChargeTabBtn">
+                            Ajouter une charge
+                        </button>
+                    </div>
+                    
+                    {% if charges %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Type</th>
+                                    <th>Montant</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for charge in charges %}
+                                <tr>
+                                    <td>{{ charge.titre }}</td>
+                                    <td>{{ charge.get_type_charge_display }}</td>
+                                    <td>{{ charge.montant }} Fcfa</td>
+                                    <td>{{ charge.date_charge|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'stations:charge-update' charge.pk %}" class="btn btn-sm btn-primary">
+                                            Modifier
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p>Aucune charge enregistrée pour cette station.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Les autres tabs suivent le même pattern -->
+    </div>
+
+    
+    <!-- Graphiques -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Évolution des swaps</h5>
+                    <div class="chart-container">
+                        <canvas id="swapsEvolutionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Évolution de la rentabilité</h5>
+                    <div class="chart-container">
+                        <canvas id="rentabiliteChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal pour ajouter une charge -->
+<div class="modal fade" id="addChargeModal" tabindex="-1">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter une charge</h5>
+                <button type="button" class="btn-close" id="closeModal">×</button>
+            </div>
+            <form method="post" action="{% url 'stations:charge-create' %}?station={{ station.pk }}" id="addChargeForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="station" value="{{ station.pk }}">
+                    
+                    <div class="form-group">
+                        <label for="id_titre" class="form-label">Titre</label>
+                        <input type="text" name="titre" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_description" class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_type_charge" class="form-label">Type de charge</label>
+                            <select name="type_charge" class="form-select" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="loyer">Loyer</option>
+                                <option value="electricite">Électricité</option>
+                                <option value="salaire">Salaire</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="autre">Autre</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_categorie" class="form-label">Catégorie</label>
+                            <select name="categorie" class="form-select" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="fixe">Fixe</option>
+                                <option value="variable">Variable</option>
+                                <option value="exceptionnelle">Exceptionnelle</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_montant" class="form-label">Montant</label>
+                            <input type="number" name="montant" class="form-control" step="0.01" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_date_charge" class="form-label">Date</label>
+                            <input type="date" name="date_charge" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_justificatif" class="form-label">Justificatif</label>
+                        <input type="file" name="justificatif" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelModal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter la charge</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion des tabs
+    const tabs = document.querySelectorAll('.nav-link');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Retirer active de tous les tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            tabPanes.forEach(p => {
+                p.classList.remove('show', 'active');
+            });
+            
+            // Activer le tab cliqué
+            this.classList.add('active');
+            const tabId = this.getAttribute('data-tab');
+            const tabPane = document.getElementById(tabId);
+            if (tabPane) {
+                tabPane.classList.add('show', 'active');
+            }
+        });
+    });
+
+    // Gestion du modal
+    const modal = document.getElementById('addChargeModal');
+    const addChargeBtn = document.getElementById('addChargeBtn');
+    const addChargeTabBtn = document.getElementById('addChargeTabBtn');
+    const closeModal = document.getElementById('closeModal');
+    const cancelModal = document.getElementById('cancelModal');
+    const backdrop = modal.querySelector('.modal-backdrop');
+
+    function showModal() {
+        modal.classList.add('show');
+        modal.style.display = 'block';
+        document.body.classList.add('modal-open');
+    }
+
+    function hideModal() {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
+
+    if (addChargeBtn) {
+        addChargeBtn.addEventListener('click', showModal);
+    }
+
+    if (addChargeTabBtn) {
+        addChargeTabBtn.addEventListener('click', showModal);
+    }
+
+    if (closeModal) {
+        closeModal.addEventListener('click', hideModal);
+    }
+
+    if (cancelModal) {
+        cancelModal.addEventListener('click', hideModal);
+    }
+
+    if (backdrop) {
+        backdrop.addEventListener('click', hideModal);
+    }
+
+    // Empêcher la fermeture quand on clique sur le contenu du modal
+    modal.querySelector('.modal-dialog').addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+
+    // Charts
+    const swapsData = {{ swaps_chart_data|safe }};
+    const swapsCtx = document.getElementById('swapsEvolutionChart');
+    if (swapsCtx) {
+        new Chart(swapsCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: swapsData.map(item => item.month),
+                datasets: [{
+                    label: 'Nombre de swaps',
+                    data: swapsData.map(item => item.count),
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    const rentabiliteData = {{ rentabilite_chart_data|safe }};
+    const rentabiliteCtx = document.getElementById('rentabiliteChart');
+    if (rentabiliteCtx) {
+        new Chart(rentabiliteCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: rentabiliteData.map(item => item.month),
+                datasets: [{
+                    label: 'Revenus',
+                    data: rentabiliteData.map(item => item.revenue),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Rentabilité',
+                    data: rentabiliteData.map(item => item.profit),
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Soumission du formulaire
+    const addChargeForm = document.getElementById('addChargeForm');
+    if (addChargeForm) {
+        addChargeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    hideModal();
+                    location.reload();
+                } else {
+                    alert('Erreur: ' + JSON.stringify(data.errors));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Si ce n'est pas du JSON, soumettre le formulaire normalement
+                addChargeForm.submit();
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

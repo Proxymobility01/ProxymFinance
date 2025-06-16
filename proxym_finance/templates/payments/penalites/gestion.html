@@ -1,0 +1,1381 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header section -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-exclamation-circle text-warning mr-2"></i> Gestion des pénalités
+            </h1>
+            <p class="text-muted small mt-2 mb-0">
+                <i class="fas fa-info-circle mr-1"></i> 
+                {{ total_penalites }} pénalités {{ statut_filtre_affichage }} | Total: {{ montant_total|floatformat:0 }} FCFA
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-right d-flex justify-content-lg-end mt-3 mt-lg-0">
+            <button type="button" class="btn btn-outline-primary mr-2" data-toggle="modal" data-target="#modalExport">
+                <i class="fas fa-file-export fa-sm mr-1"></i> Exporter
+            </button>
+            <a href="{% url 'payments:centre_paiements' %}" class="btn btn-primary shadow-sm">
+                <i class="fas fa-money-bill-wave fa-sm text-white-50 mr-1"></i> Centre de paiements
+            </a>
+        </div>
+    </div>
+
+    <!-- Main card with tabs and filters -->
+    <div class="card shadow mb-4">
+        <!-- Status tabs -->
+        <div class="card-header p-0">
+            <ul class="nav nav-tabs nav-fill" id="statusTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link {% if statut_filtre == 'en_attente' %}active{% endif %}" 
+                       href="{% url 'payments:gestion_penalites' %}?statut=en_attente">
+                        <i class="fas fa-clock text-warning mr-1"></i> En attente 
+                        <span class="badge badge-warning rounded-pill ml-1">{{ stats.en_attente }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if statut_filtre == 'payee' %}active{% endif %}"
+                       href="{% url 'payments:gestion_penalites' %}?statut=payee">
+                        <i class="fas fa-check-circle text-success mr-1"></i> Payées
+                        <span class="badge badge-success rounded-pill ml-1">{{ stats.payees }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if statut_filtre == 'annulee' %}active{% endif %}"
+                       href="{% url 'payments:gestion_penalites' %}?statut=annulee">
+                        <i class="fas fa-ban text-danger mr-1"></i> Annulées
+                        <span class="badge badge-danger rounded-pill ml-1">{{ stats.annulees }}</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if statut_filtre == 'reportee' %}active{% endif %}"
+                       href="{% url 'payments:gestion_penalites' %}?statut=reportee">
+                        <i class="fas fa-calendar-alt text-info mr-1"></i> Reportées
+                        <span class="badge badge-info rounded-pill ml-1">{{ stats.reportees }}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="card-body">
+            <!-- Filter section -->
+            <div class="bg-light p-3 rounded mb-4 border">
+                <form method="get" id="filterForm">
+                    <input type="hidden" name="statut" value="{{ statut_filtre }}">
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-2 mb-md-0">
+                            <label for="searchInput" class="small text-muted mb-1 font-weight-bold">Rechercher</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white border-right-0">
+                                        <i class="fas fa-search text-primary"></i>
+                                    </span>
+                                </div>
+                                <input type="text" id="searchInput" name="q" class="form-control border-left-0" 
+                                       placeholder="Nom, prénom ou identifiant..." value="{{ recherche }}">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-3 mb-2 mb-md-0">
+                            <label for="dateRange" class="small text-muted mb-1 font-weight-bold">Période</label>
+                            <select id="dateRange" name="periode" class="form-control select2">
+                                <option value="">Toutes les périodes</option>
+                                <option value="aujourdhui" {% if periode == 'aujourdhui' %}selected{% endif %}>Aujourd'hui</option>
+                                <option value="7jours" {% if periode == '7jours' %}selected{% endif %}>7 derniers jours</option>
+                                <option value="30jours" {% if periode == '30jours' %}selected{% endif %}>30 derniers jours</option>
+                                <option value="custom" {% if periode == 'custom' %}selected{% endif %}>Personnalisé...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-3 mb-2 mb-md-0">
+                            <label for="sortBy" class="small text-muted mb-1 font-weight-bold">Trier par</label>
+                            <select id="sortBy" name="tri" class="form-control select2">
+                                <option value="date_desc" {% if tri == 'date_desc' %}selected{% endif %}>Plus récent d'abord</option>
+                                <option value="date_asc" {% if tri == 'date_asc' %}selected{% endif %}>Plus ancien d'abord</option>
+                                <option value="montant_desc" {% if tri == 'montant_desc' %}selected{% endif %}>Montant décroissant</option>
+                                <option value="montant_asc" {% if tri == 'montant_asc' %}selected{% endif %}>Montant croissant</option>
+                                <option value="client_nom" {% if tri == 'client_nom' %}selected{% endif %}>Nom du client</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary mr-2">
+                                <i class="fas fa-filter mr-1"></i> Filtrer
+                            </button>
+                            <a href="{% url 'payments:gestion_penalites' %}?statut={{ statut_filtre }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Custom date range picker (hidden by default) -->
+                    <div id="customDateRange" class="row mt-3" style="display: none;">
+                        <div class="col-md-4">
+                            <label class="small text-muted mb-1 font-weight-bold">Date de début</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white border-right-0">
+                                        <i class="fas fa-calendar-alt text-primary"></i>
+                                    </span>
+                                </div>
+                                <input type="date" name="date_debut" class="form-control border-left-0" value="{{ date_debut }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="small text-muted mb-1 font-weight-bold">Date de fin</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white border-right-0">
+                                        <i class="fas fa-calendar-alt text-primary"></i>
+                                    </span>
+                                </div>
+                                <input type="date" name="date_fin" class="form-control border-left-0" value="{{ date_fin }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="button" id="applyDateRange" class="btn btn-primary">
+                                <i class="fas fa-check mr-1"></i> Appliquer
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Bulk actions bar -->
+            <div id="bulkActionsBar" class="bg-light p-3 rounded mb-4 border" style="display: none;">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <span class="mr-2">
+                                <input type="checkbox" id="selectAllClients" class="mr-1">
+                                <label for="selectAllClients" class="mb-0">Tout sélectionner</label>
+                            </span>
+                            <span id="selectedCount" class="badge badge-primary rounded-pill">0</span> clients sélectionnés
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-md-right mt-2 mt-md-0">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success bulk-action" data-action="payer">
+                                <i class="fas fa-money-bill-wave mr-1"></i> Payer
+                            </button>
+                            <button type="button" class="btn btn-info bulk-action" data-action="reporter">
+                                <i class="fas fa-calendar-alt mr-1"></i> Reporter
+                            </button>
+                            <button type="button" class="btn btn-danger bulk-action" data-action="annuler">
+                                <i class="fas fa-ban mr-1"></i> Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Penalties list view with cards -->
+            {% if penalites_par_client %}
+            <div id="penaltiesCardView">
+                <div class="row">
+                    {% for client in penalites_par_client %}
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card client-card h-100 border-left-warning">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                                <div class="form-check">
+                                    <input class="form-check-input client-checkbox" type="checkbox" 
+                                           data-client-id="{{ client.type }}_{{ client.id }}">
+                                    <label class="form-check-label font-weight-bold text-primary mb-0 cursor-pointer">
+                                        {{ client.prenom }} {{ client.nom }}
+                                    </label>
+                                </div>
+                                <button class="btn btn-sm btn-link toggle-details text-primary" 
+                                        data-target="details-{{ client.type }}_{{ client.id }}">
+                                    <i class="fas fa-chevron-down rotate-icon"></i>
+                                </button>
+                            </div>
+                            <div class="card-body pt-3 pb-0">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="small text-muted">ID: <span class="text-dark">{{ client.identifiant }}</span></div>
+                                    <div class="small">
+                                        <span class="badge badge-warning px-2 py-1">{{ client.count }} pénalités</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ client.montant_total|floatformat:0 }} FCFA
+                                    </div>
+                                    <div class="small text-muted">
+                                        Dernière pénalité: {{ client.derniere_date|date:"d/m/Y" }}
+                                    </div>
+                                </div>
+                                <div class="btn-group w-100 mb-3">
+                                    <button type="button" class="btn btn-sm btn-outline-primary action-btn flex-grow-1" 
+                                            data-action="payer" data-client-type="{{ client.type }}" 
+                                            data-client-id="{{ client.id }}">
+                                        <i class="fas fa-money-bill-wave mr-1"></i> Payer tout
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" 
+                                            data-toggle="dropdown" aria-expanded="false">
+                                        <span class="sr-only">Plus</span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="#" class="dropdown-item action-btn" data-action="reporter" 
+                                           data-client-type="{{ client.type }}" data-client-id="{{ client.id }}">
+                                            <i class="fas fa-calendar-alt mr-1"></i> Reporter tout
+                                        </a>
+                                        <a href="#" class="dropdown-item action-btn" data-action="annuler" 
+                                           data-client-type="{{ client.type }}" data-client-id="{{ client.id }}">
+                                            <i class="fas fa-ban mr-1"></i> Annuler tout
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="{% url 'clients:details' type=client.type id=client.id %}" class="dropdown-item">
+                                            <i class="fas fa-user mr-1"></i> Voir profil client
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Collapsible details section -->
+                            <div id="details-{{ client.type }}_{{ client.id }}" class="details-section px-3" style="display: none;">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-borderless penalties-table mb-0">
+                                        <thead class="small text-muted">
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Motif</th>
+                                                <th class="text-right">Montant</th>
+                                                <th class="text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for penalite in client.penalites %}
+                                            <tr>
+                                                <td class="small">{{ penalite.date_creation|date:"d/m/Y" }}</td>
+                                                <td class="small">
+                                                    <span data-toggle="tooltip" title="{{ penalite.description|default:'' }}">
+                                                        {{ penalite.motif|truncatechars:15 }}
+                                                    </span>
+                                                </td>
+                                                <td class="small text-right font-weight-bold">
+                                                    {{ penalite.montant|floatformat:0 }} FCFA
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="{% url 'payments:gerer_penalite' penalite_id=penalite.id %}" 
+                                                           class="btn btn-sm btn-outline-primary">
+                                                            <i class="fas fa-cog"></i>
+                                                        </a>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split" 
+                                                                data-toggle="dropdown" aria-expanded="false">
+                                                            <span class="sr-only">Plus</span>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a href="#" class="dropdown-item single-action-btn" 
+                                                               data-action="payer" data-penalite-id="{{ penalite.id }}">
+                                                                <i class="fas fa-money-bill-wave mr-1"></i> Payer
+                                                            </a>
+                                                            <a href="#" class="dropdown-item single-action-btn" 
+                                                               data-action="reporter" data-penalite-id="{{ penalite.id }}">
+                                                                <i class="fas fa-calendar-alt mr-1"></i> Reporter
+                                                            </a>
+                                                            <a href="#" class="dropdown-item single-action-btn" 
+                                                               data-action="annuler" data-penalite-id="{{ penalite.id }}">
+                                                                <i class="fas fa-ban mr-1"></i> Annuler
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center py-2 border-top">
+                                    <a href="{% url 'clients:details' type=client.type id=client.id %}" class="small">
+                                        Voir toutes les pénalités <i class="fas fa-chevron-right ml-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Alternative list view with table -->
+            <div id="penaltiesTableView" style="display: none;">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th style="width: 3%">
+                                    <input type="checkbox" id="selectAllClientsTable">
+                                </th>
+                                <th style="width: 25%">Client</th>
+                                <th style="width: 10%">Pénalités</th>
+                                <th style="width: 15%">Montant total</th>
+                                <th style="width: 15%">Dernière pénalité</th>
+                                <th style="width: 25%" class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for client in penalites_par_client %}
+                            <tr class="client-row" data-client-id="{{ client.type }}_{{ client.id }}">
+                                <td>
+                                    <input class="client-checkbox-table" type="checkbox" 
+                                           data-client-id="{{ client.type }}_{{ client.id }}">
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar bg-light rounded-circle text-primary mr-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-weight-bold text-truncate">{{ client.prenom }} {{ client.nom }}</div>
+                                            <div class="small text-muted">{{ client.identifiant }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge badge-pill badge-warning px-2 py-1">{{ client.count }}</span></td>
+                                <td>
+                                    <div class="font-weight-bold">{{ client.montant_total|floatformat:0 }} FCFA</div>
+                                </td>
+                                <td>{{ client.derniere_date|date:"d/m/Y" }}</td>
+                                <td class="text-right">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary action-btn" 
+                                                data-action="payer" data-client-type="{{ client.type }}" data-client-id="{{ client.id }}">
+                                            <i class="fas fa-money-bill-wave mr-1"></i> Payer tout
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split" 
+                                                data-toggle="dropdown" aria-expanded="false">
+                                            <span class="sr-only">Plus</span>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a href="#" class="dropdown-item action-btn" data-action="reporter" 
+                                               data-client-type="{{ client.type }}" data-client-id="{{ client.id }}">
+                                                <i class="fas fa-calendar-alt mr-1"></i> Reporter tout
+                                            </a>
+                                            <a href="#" class="dropdown-item action-btn" data-action="annuler" 
+                                               data-client-type="{{ client.type }}" data-client-id="{{ client.id }}">
+                                                <i class="fas fa-ban mr-1"></i> Annuler tout
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a href="{% url 'clients:details' type=client.type id=client.id %}" class="dropdown-item">
+                                                <i class="fas fa-user mr-1"></i> Voir profil client
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- View toggle buttons -->
+            <div class="text-center mb-3">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary active" id="cardViewBtn">
+                        <i class="fas fa-th-large mr-1"></i> Vue cartes
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" id="tableViewBtn">
+                        <i class="fas fa-table mr-1"></i> Vue tableau
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Pagination des pénalités">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}{% if recherche %}&q={{ recherche }}{% endif %}" aria-label="First">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}{% if recherche %}&q={{ recherche }}{% endif %}" aria-label="Previous">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for i in paginator.page_range %}
+                            {% if page_obj.number == i %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ i }}</span>
+                            </li>
+                            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}{% if recherche %}&q={{ recherche }}{% endif %}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}{% if recherche %}&q={{ recherche }}{% endif %}" aria-label="Next">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ paginator.num_pages }}{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}{% if recherche %}&q={{ recherche }}{% endif %}" aria-label="Last">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <!-- Empty state -->
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-search fa-3x text-muted"></i>
+                </div>
+                <h4 class="text-muted">Aucune pénalité {{ statut_filtre_affichage }} trouvée</h4>
+                <p class="text-muted">Essayez de modifier vos filtres ou de réinitialiser la recherche.</p>
+                <a href="{% url 'payments:gestion_penalites' %}" class="btn btn-outline-primary mt-2">
+                    <i class="fas fa-sync-alt mr-1"></i> Réinitialiser les filtres
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Stats and quick insights card -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-chart-bar mr-1"></i> Aperçu des pénalités
+                    </h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="#" id="refreshStats">
+                                <i class="fas fa-sync-alt mr-1"></i> Rafraîchir
+                            </a>
+                            <a class="dropdown-item" href="#" id="exportStats">
+                                <i class="fas fa-file-export mr-1"></i> Exporter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card mb-4 border-left-warning shadow-sm">
+                                <div class="card-body py-3">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                En attente
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.en_attente }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-ban fa-2x text-danger-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card mb-4 border-left-info shadow-sm">
+                                <div class="card-body py-3">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Reportées
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ stats.reportees }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar-alt fa-2x text-info-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h6 class="font-weight-bold small mb-3">Pénalités par type</h6>
+                            <div class="chart-pie mb-4">
+                                <canvas id="penaltiesByTypeChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <h6 class="font-weight-bold small mb-3">Évolution des pénalités</h6>
+                            <div class="chart-area mb-4">
+                                <canvas id="penaltiesTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'action groupée -->
+<div class="modal fade" id="modalActionGroupe" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="modalLabel">Action groupée</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formActionGroupe">
+                    <input type="hidden" id="actionType" name="action">
+                    <input type="hidden" id="clientType" name="client_type">
+                    <input type="hidden" id="clientId" name="client_id">
+                    <input type="hidden" id="penaliteId" name="penalite_id">
+                    <input type="hidden" id="selectedClientIds" name="selected_client_ids">
+                    
+                    <div class="alert alert-info" id="actionSummary">
+                        <!-- Rempli par JavaScript -->
+                    </div>
+                    
+                    <div class="form-group" id="groupPaiement">
+                        <label for="montantGroupe" class="font-weight-bold">Montant total</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-money-bill-wave text-primary"></i>
+                                </span>
+                            </div>
+                            <input type="number" class="form-control" id="montantGroupe" name="montant" readonly>
+                            <div class="input-group-append">
+                                <span class="input-group-text">FCFA</span>
+                            </div>
+                        </div>
+                        
+                        <label for="methodeGroupe" class="mt-3 font-weight-bold">Méthode de paiement</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-credit-card text-primary"></i>
+                                </span>
+                            </div>
+                            <select class="form-control" id="methodeGroupe" name="methode">
+                                <option value="espece">Espèces</option>
+                                <option value="mobile_money">Mobile Money</option>
+                                <option value="virement">Virement bancaire</option>
+                                <option value="cheque">Chèque</option>
+                            </select>
+                        </div>
+                        
+                        <div id="groupMobileMoney" class="mt-3" style="display: none;">
+                            <label for="numeroMM" class="font-weight-bold">Numéro Mobile Money</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-mobile-alt text-primary"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" id="numeroMM" name="numero_mm" placeholder="Ex: 70123456">
+                            </div>
+                            
+                            <label for="operateurMM" class="mt-2 font-weight-bold">Opérateur</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-broadcast-tower text-primary"></i>
+                                    </span>
+                                </div>
+                                <select class="form-control" id="operateurMM" name="operateur_mm">
+                                    <option value="orange">Orange Money</option>
+                                    <option value="mtn">MTN Mobile Money</option>
+                                    <option value="moov">Moov Money</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="groupReferencePaiement" class="mt-3">
+                            <label for="referencePaiement" class="font-weight-bold">Référence du paiement</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fas fa-hashtag text-primary"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" id="referencePaiement" name="reference_paiement" 
+                                       placeholder="Numéro de transaction, chèque...">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="groupReport" style="display: none;">
+                        <label for="dateReport" class="font-weight-bold">Reporter au</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-calendar-alt text-primary"></i>
+                                </span>
+                            </div>
+                            <input type="date" class="form-control" id="dateReport" name="date_report">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="raisonGroupe" class="font-weight-bold">Commentaire (optionnel)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-comment-alt text-primary"></i>
+                                </span>
+                            </div>
+                            <textarea class="form-control" id="raisonGroupe" name="raison" rows="3" 
+                                      placeholder="Ajoutez un commentaire sur cette opération..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="custom-control custom-checkbox mt-3">
+                        <input type="checkbox" class="custom-control-input" id="envoiNotification" name="envoyer_notification">
+                        <label class="custom-control-label" for="envoiNotification">
+                            Envoyer une notification au client
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i> Annuler
+                </button>
+                <button type="button" class="btn btn-primary" id="btnConfirmAction">
+                    <i class="fas fa-check mr-1"></i> Confirmer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'exportation -->
+<div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalExportLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title" id="modalExportLabel">
+                    <i class="fas fa-file-export mr-2"></i> Exporter les données
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formExport" action="#" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="statut" value="{{ statut_filtre }}">
+                    <input type="hidden" name="recherche" value="{{ recherche }}">
+                    
+                    <div class="form-group">
+                        <label for="formatExport" class="font-weight-bold">Format d'exportation</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-light">
+                                    <i class="fas fa-file text-primary"></i>
+                                </span>
+                            </div>
+                            <select class="form-control" id="formatExport" name="format">
+                                <option value="excel">Excel (.xlsx)</option>
+                                <option value="csv">CSV</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="font-weight-bold">Période à exporter</label>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="periodeAll" name="periode_export" value="all" class="custom-control-input" checked>
+                            <label class="custom-control-label" for="periodeAll">Toutes les pénalités visibles</label>
+                        </div>
+                        <div class="custom-control custom-radio mt-2">
+                            <input type="radio" id="periodeCustom" name="periode_export" value="custom" class="custom-control-input">
+                            <label class="custom-control-label" for="periodeCustom">Période personnalisée</label>
+                        </div>
+                        
+                        <div id="exportDateRange" class="mt-3" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="exportDateDebut" class="small font-weight-bold">Date de début</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-light">
+                                                <i class="fas fa-calendar-alt text-primary"></i>
+                                            </span>
+                                        </div>
+                                        <input type="date" id="exportDateDebut" name="export_date_debut" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="exportDateFin" class="small font-weight-bold">Date de fin</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-light">
+                                                <i class="fas fa-calendar-alt text-primary"></i>
+                                            </span>
+                                        </div>
+                                        <input type="date" id="exportDateFin" name="export_date_fin" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="font-weight-bold">Colonnes à inclure</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="colClient" name="colonnes" value="client" checked>
+                                    <label class="custom-control-label" for="colClient">Informations client</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="colContrat" name="colonnes" value="contrat" checked>
+                                    <label class="custom-control-label" for="colContrat">Informations contrat</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="colMontant" name="colonnes" value="montant" checked>
+                                    <label class="custom-control-label" for="colMontant">Montant et statut</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="colDates" name="colonnes" value="dates" checked>
+                                    <label class="custom-control-label" for="colDates">Dates (création, paiement)</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="colCommentaires" name="colonnes" value="commentaires" checked>
+                                    <label class="custom-control-label" for="colCommentaires">Motifs et commentaires</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i> Annuler
+                </button>
+                <button type="button" class="btn btn-primary" id="btnConfirmExport">
+                    <i class="fas fa-download mr-1"></i> Exporter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Tooltip initialization
+    $('[data-toggle="tooltip"]').tooltip();
+    
+    // Toggle details rows
+    $('.toggle-details').click(function() {
+        const targetId = $(this).data('target');
+        const icon = $(this).find('.rotate-icon');
+        
+        $('#' + targetId).toggle();
+        
+        if (icon.hasClass('fa-rotate-180')) {
+            icon.removeClass('fa-rotate-180');
+        } else {
+            icon.addClass('fa-rotate-180');
+        }
+    });
+    
+    // View toggle (cards/table)
+    $('#cardViewBtn').click(function() {
+        $('#penaltiesCardView').show();
+        $('#penaltiesTableView').hide();
+        $(this).addClass('active');
+        $('#tableViewBtn').removeClass('active');
+    });
+    
+    $('#tableViewBtn').click(function() {
+        $('#penaltiesCardView').hide();
+        $('#penaltiesTableView').show();
+        $(this).addClass('active');
+        $('#cardViewBtn').removeClass('active');
+    });
+    
+    // Selection checkboxes functionality
+    $('#selectAllClients').change(function() {
+        $('.client-checkbox').prop('checked', $(this).is(':checked'));
+        updateBulkActionsBar();
+    });
+    
+    $('#selectAllClientsTable').change(function() {
+        $('.client-checkbox-table').prop('checked', $(this).is(':checked'));
+        updateBulkActionsBar();
+    });
+    
+    $('.client-checkbox, .client-checkbox-table').change(function() {
+        updateBulkActionsBar();
+    });
+    
+    function updateBulkActionsBar() {
+        const checkedCount = $('.client-checkbox:checked, .client-checkbox-table:checked').length;
+        $('#selectedCount').text(checkedCount);
+        
+        if (checkedCount > 0) {
+            $('#bulkActionsBar').slideDown();
+        } else {
+            $('#bulkActionsBar').slideUp();
+        }
+    }
+    
+    // Bulk actions
+    $('.bulk-action').click(function() {
+        const action = $(this).data('action');
+        
+        // Collect selected client IDs
+        const selectedIds = [];
+        $('.client-checkbox:checked, .client-checkbox-table:checked').each(function() {
+            selectedIds.push($(this).data('client-id'));
+        });
+        
+        if (selectedIds.length > 0) {
+            // Reset form
+            $('#formActionGroupe')[0].reset();
+            $('#selectedClientIds').val(selectedIds.join(','));
+            $('#actionType').val(action);
+            
+            // Calculate total amount for selected clients
+            let totalAmount = 0;
+            selectedIds.forEach(clientId => {
+                // Find the client card with this ID and extract amount
+                const amountText = $(`[data-client-id="${clientId}"]`).closest('.client-card, .client-row').find('.font-weight-bold:contains("FCFA")').text();
+                const amount = parseInt(amountText.replace(/[^\d]/g, '')) || 0;
+                totalAmount += amount;
+            });
+            
+            // Configure modal based on action
+            if (action === 'payer') {
+                $('#modalLabel').text('Payer toutes les pénalités');
+                $('#groupPaiement').show();
+                $('#groupReport').hide();
+                $('#montantGroupe').val(totalAmount);
+                $('#actionSummary').html(`<i class="fas fa-info-circle mr-1"></i> Vous êtes sur le point de payer les pénalités de <strong>${selectedIds.length} clients</strong> pour un montant total de <strong>${totalAmount.toLocaleString()} FCFA</strong>.`);
+                $('#btnConfirmAction').text('Confirmer le paiement').removeClass('btn-secondary btn-danger btn-info').addClass('btn-primary');
+            } else if (action === 'annuler') {
+                $('#modalLabel').text('Annuler toutes les pénalités');
+                $('#groupPaiement').hide();
+                $('#groupReport').hide();
+                $('#actionSummary').html(`<i class="fas fa-exclamation-triangle mr-1"></i> Vous êtes sur le point d'<strong>annuler définitivement</strong> les pénalités de <strong>${selectedIds.length} clients</strong>. Cette action est irréversible.`);
+                $('#btnConfirmAction').text('Confirmer l\'annulation').removeClass('btn-primary btn-secondary btn-info').addClass('btn-danger');
+            } else if (action === 'reporter') {
+                $('#modalLabel').text('Reporter toutes les pénalités');
+                $('#groupPaiement').hide();
+                $('#groupReport').show();
+                
+                // Définir la date par défaut à +30 jours
+                const defaultDate = new Date();
+                defaultDate.setDate(defaultDate.getDate() + 30);
+                $('#dateReport').val(defaultDate.toISOString().split('T')[0]);
+                
+                $('#actionSummary').html(`<i class="fas fa-calendar-alt mr-1"></i> Vous êtes sur le point de reporter les pénalités de <strong>${selectedIds.length} clients</strong>.`);
+                $('#btnConfirmAction').text('Confirmer le report').removeClass('btn-primary btn-danger btn-secondary').addClass('btn-info');
+            }
+            
+            $('#modalActionGroupe').modal('show');
+        }
+    });
+    
+    // Date range picker visibility toggle
+    $('#dateRange').change(function() {
+        if ($(this).val() === 'custom') {
+            $('#customDateRange').slideDown();
+        } else {
+            $('#customDateRange').slideUp();
+        }
+    });
+    
+    // Export date range toggle
+    $('input[name="periode_export"]').change(function() {
+        if ($('#periodeCustom').is(':checked')) {
+            $('#exportDateRange').slideDown();
+        } else {
+            $('#exportDateRange').slideUp();
+        }
+    });
+    
+    // Mobile Money fields toggle
+    $('#methodeGroupe').change(function() {
+        if ($(this).val() === 'mobile_money') {
+            $('#groupMobileMoney').slideDown();
+        } else {
+            $('#groupMobileMoney').slideUp();
+        }
+    });
+    
+    // Action buttons (client group actions)
+    $('.action-btn').click(function(e) {
+        e.preventDefault();
+        
+        const action = $(this).data('action');
+        const clientType = $(this).data('client-type');
+        const clientId = $(this).data('client-id');
+        
+        // Reset form
+        $('#formActionGroupe')[0].reset();
+        $('#penaliteId').val('');
+        $('#actionType').val(action);
+        $('#clientType').val(clientType);
+        $('#clientId').val(clientId);
+        
+        // Récupérer le nom du client et le montant pour l'affichage
+        const clientName = $(this).closest('.client-card, .client-row').find('.font-weight-bold').first().text().trim();
+        let montant = $(this).closest('.client-card').find('.h5:contains("FCFA")').text().trim();
+        if (!montant) {
+            montant = $(this).closest('.client-row').find('td:eq(3)').text().trim();
+        }
+        
+        // Configure modal based on action
+        if (action === 'payer') {
+            $('#modalLabel').text('Payer toutes les pénalités');
+            $('#groupPaiement').show();
+            $('#groupReport').hide();
+            $('#montantGroupe').val(montant.replace(/[^\d]/g, '')); // Garder uniquement les chiffres
+            $('#actionSummary').html(`<i class="fas fa-info-circle mr-1"></i> Vous êtes sur le point de payer toutes les pénalités de <strong>${clientName}</strong> pour un montant total de <strong>${montant}</strong>.`);
+            $('#btnConfirmAction').text('Confirmer le paiement').removeClass('btn-secondary btn-danger btn-info').addClass('btn-primary');
+        } else if (action === 'annuler') {
+            $('#modalLabel').text('Annuler toutes les pénalités');
+            $('#groupPaiement').hide();
+            $('#groupReport').hide();
+            $('#actionSummary').html(`<i class="fas fa-exclamation-triangle mr-1"></i> Vous êtes sur le point d'<strong>annuler définitivement</strong> toutes les pénalités de <strong>${clientName}</strong>. Cette action est irréversible.`);
+            $('#btnConfirmAction').text('Confirmer l\'annulation').removeClass('btn-primary btn-secondary btn-info').addClass('btn-danger');
+        } else if (action === 'reporter') {
+            $('#modalLabel').text('Reporter toutes les pénalités');
+            $('#groupPaiement').hide();
+            $('#groupReport').show();
+            
+            // Définir la date par défaut à +30 jours
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() + 30);
+            $('#dateReport').val(defaultDate.toISOString().split('T')[0]);
+            
+            $('#actionSummary').html(`<i class="fas fa-calendar-alt mr-1"></i> Vous êtes sur le point de reporter toutes les pénalités de <strong>${clientName}</strong>.`);
+            $('#btnConfirmAction').text('Confirmer le report').removeClass('btn-primary btn-danger btn-secondary').addClass('btn-info');
+        }
+        
+        $('#modalActionGroupe').modal('show');
+    });
+    
+    // Action buttons (single penalty actions)
+    $('.single-action-btn').click(function(e) {
+        e.preventDefault();
+        
+        const action = $(this).data('action');
+        const penaliteId = $(this).data('penalite-id');
+        
+        // Reset form
+        $('#formActionGroupe')[0].reset();
+        $('#clientType').val('');
+        $('#clientId').val('');
+        $('#penaliteId').val(penaliteId);
+        $('#actionType').val(action);
+        
+        // Récupérer les informations de la pénalité
+        const motif = $(this).closest('tr').find('td:eq(1)').text().trim();
+        const montant = $(this).closest('tr').find('td:eq(2)').text().trim();
+        
+        // Configure modal based on action
+        if (action === 'payer') {
+            $('#modalLabel').text('Payer une pénalité');
+            $('#groupPaiement').show();
+            $('#groupReport').hide();
+            $('#montantGroupe').val(montant.replace(/[^\d]/g, '')); // Keep only digits
+            $('#actionSummary').html(`<i class="fas fa-info-circle mr-1"></i> Vous êtes sur le point de payer une pénalité pour <strong>${motif}</strong> d'un montant de <strong>${montant}</strong>.`);
+            $('#btnConfirmAction').text('Confirmer le paiement').removeClass('btn-secondary btn-danger btn-info').addClass('btn-primary');
+        } else if (action === 'annuler') {
+            $('#modalLabel').text('Annuler une pénalité');
+            $('#groupPaiement').hide();
+            $('#groupReport').hide();
+            $('#actionSummary').html(`<i class="fas fa-exclamation-triangle mr-1"></i> Vous êtes sur le point d'<strong>annuler définitivement</strong> la pénalité pour <strong>${motif}</strong>. Cette action est irréversible.`);
+            $('#btnConfirmAction').text('Confirmer l\'annulation').removeClass('btn-primary btn-secondary btn-info').addClass('btn-danger');
+        } else if (action === 'reporter') {
+            $('#modalLabel').text('Reporter une pénalité');
+            $('#groupPaiement').hide();
+            $('#groupReport').show();
+            
+            // Définir la date par défaut à +30 jours
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() + 30);
+            $('#dateReport').val(defaultDate.toISOString().split('T')[0]);
+            
+            $('#actionSummary').html(`<i class="fas fa-calendar-alt mr-1"></i> Vous êtes sur le point de reporter la pénalité pour <strong>${motif}</strong>.`);
+            $('#btnConfirmAction').text('Confirmer le report').removeClass('btn-primary btn-danger btn-secondary').addClass('btn-info');
+        }
+        
+        $('#modalActionGroupe').modal('show');
+    });
+    
+    // Submit action form
+    $('#btnConfirmAction').click(function() {
+        // Animation de chargement sur le bouton
+        const originalText = $(this).text();
+        $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Traitement en cours...');
+        $(this).prop('disabled', true);
+        
+        // Soumettre le formulaire
+        setTimeout(function() {
+            $('#formActionGroupe').submit();
+        }, 500); // Délai fictif pour l'exemple
+    });
+    
+    // Export confirmation
+    $('#btnConfirmExport').click(function() {
+        // Animation de chargement sur le bouton
+        $(this).html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Préparation...');
+        $(this).prop('disabled', true);
+        
+        // Soumettre le formulaire
+        setTimeout(function() {
+            $('#formExport').submit();
+        }, 500);
+    });
+    
+    // Apply custom date range
+    $('#applyDateRange').click(function() {
+        // Ajouter les dates au formulaire principal et le soumettre
+        $('form').first().submit();
+    });
+    
+    // Si une période personnalisée est déjà sélectionnée, afficher les champs de date
+    if ($('#dateRange').val() === 'custom') {
+        $('#customDateRange').show();
+    }
+    
+    // Si le export en période personnalisée est sélectionné, afficher les champs de date
+    if ($('#periodeCustom').is(':checked')) {
+        $('#exportDateRange').show();
+    }
+    
+    // Charts initialization
+    function initCharts() {
+        // Chart for penalties by type
+        const penaltiesByTypeCtx = document.getElementById('penaltiesByTypeChart');
+        if (penaltiesByTypeCtx) {
+            new Chart(penaltiesByTypeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Retard de paiement', 'Non-respect des conditions', 'Dommages matériels', 'Autres'],
+                    datasets: [{
+                        data: [{{ stats.en_attente }}, {{ stats.payees }}, {{ stats.annulees }}, {{ stats.reportees }}],
+                        backgroundColor: ['#f6c23e', '#36b9cc', '#e74a3b', '#4e73df'],
+                        hoverBackgroundColor: ['#dca822', '#2a9faf', '#d32f1e', '#2653ce'],
+                        hoverBorderColor: "rgba(234, 236, 244, 1)",
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        caretPadding: 10,
+                    },
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    },
+                    cutoutPercentage: 70,
+                },
+            });
+        }
+        
+        // Chart for penalties trend
+        const penaltiesTrendCtx = document.getElementById('penaltiesTrendChart');
+        if (penaltiesTrendCtx) {
+            new Chart(penaltiesTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"],
+                    datasets: [{
+                        label: "Pénalités",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(78, 115, 223, 0.05)",
+                        borderColor: "rgba(78, 115, 223, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Remplacer par des données réelles
+                    }],
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 10,
+                            right: 25,
+                            top: 25,
+                            bottom: 0
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            time: {
+                                unit: 'date'
+                            },
+                            gridLines: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                maxTicksLimit: 7
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                maxTicksLimit: 5,
+                                padding: 10,
+                                callback: function(value, index, values) {
+                                    return value + ' FCFA';
+                                }
+                            },
+                            gridLines: {
+                                color: "rgb(234, 236, 244)",
+                                zeroLineColor: "rgb(234, 236, 244)",
+                                drawBorder: false,
+                                borderDash: [2],
+                                zeroLineBorderDash: [2]
+                            }
+                        }],
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        titleMarginBottom: 10,
+                        titleFontColor: '#6e707e',
+                        titleFontSize: 14,
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        intersect: false,
+                        mode: 'index',
+                        caretPadding: 10,
+                        callbacks: {
+                            label: function(tooltipItem, chart) {
+                                var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                                return datasetLabel + ': ' + tooltipItem.yLabel + ' FCFA';
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+    
+    // Initialize charts
+    initCharts();
+    
+    // Card hover effects
+    $('.client-card').hover(
+        function() { $(this).addClass('shadow-lg').css('transition', 'all 0.3s ease'); },
+        function() { $(this).removeClass('shadow-lg').css('transition', 'all 0.3s ease'); }
+    );
+    
+    // Make entire client card clickable to see details
+    $('.client-card').click(function(e) {
+        // If clicked on a button or checkbox, don't toggle
+        if ($(e.target).closest('button, a, input[type="checkbox"]').length === 0) {
+            $(this).find('.toggle-details').click();
+        }
+    });
+});
+</script>
+
+<style>
+/* Main theme colors */
+:root {
+    --primary: #4e73df;
+    --secondary: #6c757d;
+    --success: #1cc88a;
+    --info: #36b9cc;
+    --warning: #f6c23e;
+    --danger: #e74a3b;
+    --light: #f8f9fc;
+    --dark: #5a5c69;
+}
+
+/* Client card styling */
+.client-card {
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border-left-width: 0.25rem !important;
+}
+
+.client-card:hover {
+    transform: translateY(-2px);
+}
+
+.client-checkbox, .client-checkbox-table {
+    cursor: pointer;
+}
+
+/* Toggle icon animation */
+.rotate-icon {
+    transition: transform 0.3s ease;
+}
+
+.rotate-icon.fa-rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* Details section styling */
+.details-section {
+    background-color: var(--light);
+    border-top: 1px solid rgba(0,0,0,.1);
+    transition: all 0.3s ease;
+}
+
+.penalties-table {
+    font-size: 0.85rem;
+}
+
+/* Custom badges */
+.badge-pill {
+    padding: 0.35em 0.65em;
+    border-radius: 10rem;
+}
+
+/* Action buttons hover effect */
+.action-btn:hover, .bulk-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+/* Tab styling */
+.nav-tabs .nav-link {
+    border-top-left-radius: 0.35rem;
+    border-top-right-radius: 0.35rem;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    border-bottom-color: transparent;
+    background-color: #fff;
+}
+
+/* Improved focus styling */
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+/* Modal styling */
+.modal-dialog {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.modal-header {
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.modal-footer {
+    border-top: 1px solid #e3e6f0;
+}
+
+/* Empty state styling */
+.text-center.py-5 {
+    padding: 3rem 0;
+}
+
+/* Input group with icons */
+.input-group-text {
+    border-right: 0;
+}
+
+.form-control.border-left-0 {
+    border-left: 0;
+}
+
+/* Cursor pointer */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Bulk actions bar */
+#bulkActionsBar {
+    transition: all 0.3s ease;
+}
+
+/* Filter section styling */
+#filterForm .select2-container {
+    width: 100% !important;
+}
+
+/* Chart containers */
+.chart-area, .chart-pie {
+    position: relative;
+    height: 20rem;
+    width: 100%;
+}
+
+/* Card view/table view buttons */
+#cardViewBtn.active, #tableViewBtn.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Animation for loading */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-border {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-bottom;
+    border: 0.2em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin .75s linear infinite;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.2em;
+}
+</style>
+{% endblock %}
