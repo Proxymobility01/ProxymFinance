@@ -256,8 +256,8 @@
                             </td>
                             <td>
                                 {% if penalite.contrat_chauffeur %}
-                                    <strong>{{ penalite.contrat_chauffeur.chauffeur.prenom }} {{ penalite.contrat_chauffeur.chauffeur.nom }}</strong><br>
-                                    <small class="text-muted">{{ penalite.contrat_chauffeur.chauffeur.phone }}</small>
+                                    <strong>{{ penalite.contrat_chauffeur.association.validated_user.prenom }} {{ penalite.contrat_chauffeur.association.validated_user.nom }}</strong><br>
+                                    <small class="text-muted">{{ penalite.contrat_chauffeur.association.validated_user.phone }}</small>
                                 {% elif penalite.contrat_partenaire %}
                                     <strong>{{ penalite.contrat_partenaire.partenaire.prenom }} {{ penalite.contrat_partenaire.partenaire.nom }}</strong><br>
                                     <small class="text-muted">{{ penalite.contrat_partenaire.partenaire.phone }}</small>
@@ -291,14 +291,20 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <span class="badge 
-                                    {% if penalite.motif == 'retard_leger' %}badge-warning
-                                    {% elif penalite.motif == 'retard_grave' %}badge-danger
-                                    {% elif penalite.motif == 'retard_paiement' %}badge-dark
-                                    {% else %}badge-secondary
-                                    {% endif %}">
-                                    {{ penalite.get_motif_display }}
-                                </span>
+                                {% with total_paye=penalite.montant_total_paye %}
+                                    {% if penalite.statut == 'payee' %}
+                                        <span class="badge badge-success">Payée</span>
+                                    {% elif total_paye > 0 %}
+                                        <span class="badge badge-warning">Partiellement payée</span>
+                                    {% elif penalite.statut == 'reportee' %}
+                                        <span class="badge badge-info">Reportée</span>
+                                    {% elif penalite.statut == 'annulee' %}
+                                        <span class="badge badge-secondary">Annulée</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Non réglée</span>
+                                    {% endif %}
+                                {% endwith %}
+
                             </td>
                             <td>
                                 <span class="badge 

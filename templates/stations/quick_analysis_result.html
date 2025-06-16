@@ -1,0 +1,176 @@
+<!-- templates/stations/quick_analysis_result.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Résultat - Analyse Rapide{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1>Résultat de l'Analyse</h1>
+                <p class="text-muted">{{ station.nom_agence }} - {{ start_date|date:"d/m/Y" }} au {{ end_date|date:"d/m/Y" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métriques principales -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5 class="card-title">Revenus</h5>
+                    <h3 class="metric-value text-success">{{ metrics.revenus|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">{{ metrics.swaps }} swaps</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5 class="card-title">Charges</h5>
+                    <h3 class="metric-value text-danger">{{ metrics.charges|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Coûts opérationnels</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5 class="card-title">Bénéfice</h5>
+                    <h3 class="metric-value {% if metrics.benefice >= 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ metrics.benefice|floatformat:0|intcomma }} FCFA
+                    </h3>
+                    <small class="text-muted">
+                        {% if metrics.benefice >= 0 %}Rentable{% else %}Déficitaire{% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5 class="card-title">Marge</h5>
+                    <h3 class="metric-value {% if metrics.marge >= 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ metrics.marge|floatformat:1 }}%
+                    </h3>
+                    <small class="text-muted">Marge bénéficiaire</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Détails et KPIs -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Indicateurs de Performance</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td>Revenus par jour</td>
+                                <td class="text-end fw-bold">
+                                    {% widthratio metrics.revenus analysis.period_days 1 %} FCFA
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Charges par jour</td>
+                                <td class="text-end fw-bold">
+                                    {% widthratio metrics.charges analysis.period_days 1 %} FCFA
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Revenus par swap</td>
+                                <td class="text-end fw-bold">
+                                    {% if metrics.swaps > 0 %}
+                                        {% widthratio metrics.revenus metrics.swaps 1 %} FCFA
+                                    {% else %}
+                                        0 FCFA
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Swaps par jour</td>
+                                <td class="text-end fw-bold">
+                                    {% widthratio metrics.swaps analysis.period_days 1 %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Évaluation de Performance</h5>
+                </div>
+                <div class="card-body">
+                    {% if metrics.benefice > 0 %}
+                        <div class="alert alert-success">
+                            <h6>Station Rentable</h6>
+                            <p class="mb-0">Cette station génère un bénéfice positif avec une marge de {{ metrics.marge|floatformat:1 }}%</p>
+                        </div>
+                    {% elif metrics.benefice == 0 %}
+                        <div class="alert alert-warning">
+                            <h6>Station à l'Équilibre</h6>
+                            <p class="mb-0">Cette station couvre exactement ses coûts sans générer de bénéfice</p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger">
+                            <h6>Station Déficitaire</h6>
+                            <p class="mb-0">Cette station génère des pertes. Une optimisation est nécessaire.</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="mt-3">
+                        <h6>Recommandations:</h6>
+                        <ul class="list-unstyled">
+                            {% if metrics.marge < 10 %}
+                                <li>• Optimiser les coûts opérationnels</li>
+                            {% endif %}
+                            {% if metrics.swaps < 50 %}
+                                <li>• Augmenter la fréquentation de la station</li>
+                            {% endif %}
+                            {% if metrics.benefice < 0 %}
+                                <li>• Réviser la stratégie tarifaire</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a href="{% url 'stations:quick_analysis' %}" class="btn btn-outline-primary">
+                                Nouvelle Analyse
+                            </a>
+                            <a href="{% url 'stations:station_detail' station.id %}" class="btn btn-outline-info">
+                                Voir Détails Station
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{% url 'stations:rentability_analysis_create' %}?station={{ station.id }}" class="btn btn-primary">
+                                Créer Analyse Complète
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

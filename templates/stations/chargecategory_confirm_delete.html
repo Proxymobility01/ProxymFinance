@@ -1,0 +1,56 @@
+<!-- templates/stations/chargecategory_confirm_delete.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer la Catégorie{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmer la Suppression
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-warning"></i>
+                        <strong>Attention !</strong> Cette action est irréversible.
+                    </div>
+
+                    <p>Êtes-vous sûr de vouloir supprimer la catégorie :</p>
+
+                    <div class="bg-light p-3 rounded mb-3">
+                        <h5><span class="badge badge-primary">{{ category.code }}</span> {{ category.nom }}</h5>
+                        {% if category.description %}
+                            <p class="text-muted mb-0">{{ category.description }}</p>
+                        {% endif %}
+                    </div>
+
+                    {% if category.charges.exists %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Cette catégorie contient <strong>{{ category.charges.count }}</strong> charge(s).
+                            Toutes les charges associées seront également supprimées.
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'stations:charge_category_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Oui, supprimer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

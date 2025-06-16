@@ -70,6 +70,24 @@
                 </div>
             </li>
 
+            <!-- Stations dropdown - NOUVEAU -->
+            <li class="nav-item nav-dropdown">
+                <a href="{% url 'stations:station_list' %}" class="nav-link {% if 'stations' in request.path %}active{% endif %}">
+                    Stations
+                </a>
+                <div class="nav-dropdown-content user-dropdown-content">
+                    <a href="{% url 'stations:station_list' %}" class="nav-dropdown-item {% if 'stations' in request.path and 'charges' in request.path and 'categories' not in request.path %}active{% endif %}">
+                        Liste des stations
+                    </a>
+                    <a href="{% url 'stations:station_charge_list' %}" class="nav-dropdown-item {% if 'stations' in request.path and 'charges' in request.path and 'categories' not in request.path %}active{% endif %}">
+                        Gestion des charges
+                    </a>
+                    <a href="{% url 'stations:dashboard_rentability' %}" class="nav-dropdown-item {% if 'stations' in request.path %}active{% endif %}">
+                        Rentabilité de Stations
+                    </a>
+
+                </div>
+            </li>
 
             <!-- Other menu items -->
             <li class="nav-item">
@@ -115,7 +133,7 @@
                     {#% endif %#}
                 </div-->
             </li>
-            
+
             <!-- User profile -->
             <li class="nav-item user-dropdown">
                 <div class="user-profile">
@@ -144,7 +162,7 @@
                     </a>
                 </div>
             </li>
-            
+
             <!-- Theme toggle -->
             <li class="nav-item">
                 <button id="theme-toggle" class="btn btn-secondary" title="Changer de thème">
@@ -156,7 +174,7 @@
 </nav>
 
 <script>
-    
+
     document.addEventListener('DOMContentLoaded', function() {
   // Add mobile menu toggle to the DOM
   const navbarContent = document.querySelector('.navbar-content');
@@ -164,13 +182,13 @@
   toggle.className = 'navbar-toggle d-none d-md-none';
   toggle.innerHTML = '<span></span><span></span><span></span>';
   navbarContent.insertBefore(toggle, navbarContent.firstChild);
-  
+
   // Mobile menu toggle functionality
   toggle.addEventListener('click', function() {
     this.classList.toggle('active');
     document.querySelector('.navbar-nav:first-of-type').classList.toggle('show');
   });
-  
+
   // Make dropdown toggles work on mobile
   const dropdownLinks = document.querySelectorAll('.nav-dropdown > .nav-link');
   dropdownLinks.forEach(link => {
@@ -183,7 +201,7 @@
       }
     });
   });
-  
+
   // Close mobile menu when clicking outside
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.navbar') && window.innerWidth < 992) {
@@ -194,7 +212,7 @@
       });
     }
   });
-  
+
   // Handle window resize
   window.addEventListener('resize', function() {
     if (window.innerWidth >= 992) {
@@ -211,23 +229,23 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Highlight current page in navigation
         highlightActiveNavItems();
-        
+
         // Set up theme switcher
         setupThemeSwitcher();
     });
-    
+
     /**
      * Highlights the active navigation items based on current URL
      */
     function highlightActiveNavItems() {
         const currentPath = window.location.pathname;
-        
+
         // Check main nav items
         document.querySelectorAll('.nav-link').forEach(link => {
             const href = link.getAttribute('href');
             if (href && currentPath.includes(href) && href !== '/') {
                 link.classList.add('active');
-                
+
                 // If this is in a dropdown, also highlight the parent
                 const parentDropdown = link.closest('.nav-dropdown');
                 if (parentDropdown) {
@@ -238,13 +256,13 @@
                 }
             }
         });
-        
+
         // Check dropdown items
         document.querySelectorAll('.nav-dropdown-item').forEach(link => {
             const href = link.getAttribute('href');
             if (href && currentPath.includes(href) && href !== '/') {
                 link.classList.add('active');
-                
+
                 // Also highlight the parent dropdown
                 const parentDropdown = link.closest('.nav-dropdown');
                 if (parentDropdown) {
@@ -256,32 +274,32 @@
             }
         });
     }
-    
+
     /**
      * Sets up the theme switcher
      */
     function setupThemeSwitcher() {
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
-        
+
         // Check user preference from localStorage
         const currentTheme = localStorage.getItem('theme') || 'light';
         htmlElement.setAttribute('data-theme', currentTheme);
         updateThemeIcon(currentTheme);
-        
+
         themeToggle.addEventListener('click', function() {
             const currentTheme = htmlElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
+
             // Update theme and save to localStorage
             htmlElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
+
             // Update icon
             updateThemeIcon(newTheme);
         });
     }
-    
+
     /**
      * Updates the theme icon based on current theme
      */
@@ -296,32 +314,32 @@
         }
     }
 </script>
-    
+
     <!-- Scripts communs -->
     <script>
-        
+
         // Gestion des dropdowns de navigation
         const navDropdowns = document.querySelectorAll('.nav-dropdown');
 
         navDropdowns.forEach(dropdown => {
             const dropdownLink = dropdown.querySelector('.nav-link');
             const dropdownContent = dropdown.querySelector('.nav-dropdown-content');
-            
+
             // Sur les appareils tactiles, ouvrir le menu au clic
             dropdownLink.addEventListener('click', function(e) {
                 e.preventDefault();
-                
+
                 // Fermer les autres menus
                 document.querySelectorAll('.nav-dropdown-content.show').forEach(content => {
                     if (content !== dropdownContent) {
                         content.classList.remove('show');
                     }
                 });
-                
+
                 // Ouvrir/fermer ce menu
                 dropdownContent.classList.toggle('show');
             });
-            
+
             // Fermer le menu en cliquant en dehors
             document.addEventListener('click', function(event) {
                 if (!dropdown.contains(event.target)) {
@@ -346,7 +364,7 @@
   .d-none-xs {
     display: none !important;
   }
-  
+
   .d-block-xs {
     display: block !important;
   }
@@ -356,7 +374,7 @@
   .d-none-sm {
     display: none !important;
   }
-  
+
   .d-block-sm {
     display: block !important;
   }
@@ -366,7 +384,7 @@
   .d-none-md {
     display: none !important;
   }
-  
+
   .d-block-md {
     display: block !important;
   }
@@ -374,7 +392,7 @@
     .nav-dropdown {
         position: relative;
     }
- 
+
     .nav-dropdown-content {
         position: absolute;
         top: 100%;
@@ -406,15 +424,25 @@
 
     .nav-dropdown-item:hover {
         color: var(--primary-color);
+        background-color: var(--bg-secondary);
     }
 
     .nav-dropdown-item.active {
         color: var(--primary-color);
+        background-color: var(--bg-secondary);
     }
-    
+
     /* Style pour maintenir l'alignement lorsqu'il n'y a pas de menu */
     .navbar-nav-placeholder {
         flex: 1;
+    }
+
+    /* Séparateur dans les dropdowns */
+    .dropdown-divider {
+        height: 0;
+        margin: 0.5rem 0;
+        overflow: hidden;
+        border-top: 1px solid var(--border-color);
     }
 
     /* Base navbar styles you already have */
@@ -566,4 +594,3 @@
   }
 }
 </style>
-

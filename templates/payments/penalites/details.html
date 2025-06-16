@@ -23,12 +23,25 @@
                     <h6 class="m-0 font-weight-bold text-primary">Détails de la pénalité</h6>
                 </div>
                 <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-6 form-label text-left">Montant total</div>
+                        <div class="col-6 text-left">
+                            {{ penalite.montant|floatformat:0 }} FCFA
+                        </div>
+                    </div>
 
                     <div class="row mb-2">
-                    <div class="col-6 form-label text-left">Montant</div>
-                    <div class="col-6 text-left">
-                        {{ penalite.montant|floatformat:0 }} FCFA
+                        <div class="col-6 form-label text-left">Montant déjà payé</div>
+                        <div class="col-6 text-left text-success font-weight-bold">
+                            {{ penalite.montant_total_paye|floatformat:0 }} FCFA
+                        </div>
                     </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6 form-label text-left">Reste à payer</div>
+                        <div class="col-6 text-left text-danger font-weight-bold">
+                            {{ restant_a_payer|floatformat:0 }} FCFA
+                        </div>
                     </div>
 
                     <div class="row mb-2">
@@ -71,8 +84,6 @@
                     </div>
                     </div>
 
-
-
                     {% if penalite.description %}
                     <div class="row">
                         <div class="col-md-12">
@@ -97,6 +108,9 @@
                     </div>
                     {% endif %}
                 </div>
+
+
+
             </div>
             
             <!-- Actions sur la pénalité -->

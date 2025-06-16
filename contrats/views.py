@@ -471,7 +471,7 @@ def details_conge(request, conge_id):
     conge = get_object_or_404(CongesChauffeur, id=conge_id)
     return render(request, 'contrats/conges/details.html', {
         'conge': conge,
-        'titre': f"Détails du congé: {conge.contrat.chauffeur.nom_complet}"
+        'titre': f"Détails du congé: {conge.contrat.association.validated_user.nom} . {conge.contrat.association.validated_user.prenom}"
     })
 
 

@@ -493,7 +493,6 @@ class ContratChauffeurForm(forms.ModelForm):
         self.fields['association'].label_from_instance = format_association_label
 
 
-
 class ContratPartenaireForm(forms.ModelForm):
     """Formulaire pour ajouter/modifier un contrat partenaire."""
     class Meta:
@@ -623,8 +622,6 @@ class ContratBatterieForm(forms.ModelForm):
         cleaned_data = super().clean()
         # Plus aucune vérification de batterie ici !
         return cleaned_data
-
-
 
 
 class CongesChauffeurForm(forms.ModelForm):

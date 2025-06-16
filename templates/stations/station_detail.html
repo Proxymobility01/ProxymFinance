@@ -1,684 +1,490 @@
-{% extends 'stations/base_stations.html' %}
-{% load static %}
+<!-- templates/stations/station_detail.html -->
+{% extends 'base.html' %}
+{% load humanize %}
 
-{% block extra_css %}
-<style>
-    /* Modal */
-    .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1050;
-        display: none;
-        width: 100%;
-        height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        outline: 0;
-    }
+{% block title %}{{ station.nom_agence }} - Détails{% endblock %}
 
-    .modal.show {
-        display: block;
-    }
-
-    .modal-dialog {
-        position: relative;
-        width: auto;
-        margin: 0.5rem;
-        pointer-events: none;
-    }
-
-    @media (min-width: 576px) {
-        .modal-dialog {
-            max-width: 500px;
-            margin: 1.75rem auto;
-        }
-    }
-
-    .modal.show .modal-dialog {
-        transform: none;
-    }
-
-    .modal-content {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        pointer-events: auto;
-        background-color: var(--bg-color);
-        background-clip: padding-box;
-        border: 1px solid var(--border-color);
-        border-radius: 0.3rem;
-        outline: 0;
-    }
-
-    .modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1040;
-        width: 100vw;
-        height: 100vh;
-        background-color: var(--bg-color);
-        display: none;
-    }
-
-    .modal-backdrop.show {
-        display: block;
-        opacity: 0.5;
-    }
-
-    .modal-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        padding: 1rem 1rem;
-        border-bottom: 1px solid var(--border-color);
-        border-top-left-radius: calc(0.3rem - 1px);
-        border-top-right-radius: calc(0.3rem - 1px);
-    }
-
-    .modal-title {
-        margin-bottom: 0;
-        line-height: 1.5;
-    }
-
-    .modal-body {
-        position: relative;
-        flex: 1 1 auto;
-        padding: 1rem;
-    }
-
-    .modal-footer {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
-        padding: 0.75rem;
-        border-top: 1px solid var(--border-color);
-        border-bottom-right-radius: calc(0.3rem - 1px);
-        border-bottom-left-radius: calc(0.3rem - 1px);
-    }
-
-    .btn-close {
-        background: transparent;
-        border: 0;
-        font-size: 1.5rem;
-        font-weight: 700;
-        line-height: 1;
-        color: var(--text-color);
-        text-shadow: 0 1px 0 #fff;
-        opacity: .5;
-        cursor: pointer;
-    }
-
-    .btn-close:hover {
-        opacity: .75;
-    }
-
-    /* Empêcher le scroll du body quand le modal est ouvert */
-    body.modal-open {
-        overflow: hidden;
-    }
-
-    /* Forms dans le modal */
-    #addChargeModal .form-row {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-
-    #addChargeModal .form-group {
-        margin-bottom: 1rem;
-    }
-
-    #addChargeModal .form-label {
-        margin-bottom: 0.5rem;
-        font-weight: 500;
-    }
-
-    /* Tabs */
-    .nav-tabs {
-        border-bottom: 1px solid #dee2e6;
-        margin-bottom: 1rem;
-        display: flex;
-    }
-
-    .nav-tabs .nav-link {
-        margin-bottom: -1px;
-        border: 1px solid transparent;
-        border-top-left-radius: 0.25rem;
-        border-top-right-radius: 0.25rem;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        display: flex;
-    }
-    .nav-item
-    {
-        list-style: none;
-    }
-
-    .nav-tabs .nav-link:hover {
-        border-color: #e9ecef #e9ecef #dee2e6;
-    }
-
-    .nav-tabs .nav-link.active {
-        color: #495057;
-        background-color: #fff;
-        border-color: #dee2e6 #dee2e6 #fff;
-    }
-
-    .tab-content {
-        padding-top: 1rem;
-    }
-
-    .tab-pane {
-        display: none;
-    }
-
-    .tab-pane.show.active {
-        display: block;
-    }
-</style>
-{% endblock %}
 {% block content %}
 <div class="container">
-    <!-- Page header -->
-    <div class="page-header">
-        <h2 class="page-title">{{ station.nom_agence }}</h2>
-        <div>
-            <button type="button" class="btn btn-success" id="addChargeBtn">
-                Ajouter une charge
-            </button>
-            <a href="{% url 'stations:station-update' station.pk %}" class="btn btn-primary">
-                Modifier
-            </a>
-            <a href="{% url 'stations:station-list' %}" class="btn btn-secondary">
-                Retour
-            </a>
-        </div>
-    </div>
-
-    <!-- Informations principales -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Informations générales</h5>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p><strong>Propriétaire:</strong> {{ station.nom_proprietaire }}</p>
-                            <p><strong>Adresse:</strong> 
-                                {% if station.adresse_complete %}
-                                    {{ station.adresse_complete }}
-                                {% else %}
-                                    {{ station.quartier }}, {{ station.ville }}
-                                {% endif %}
-                            </p>
-                            <p><strong>Code postal:</strong> {{ station.code_postal|default:"-" }}</p>
-                            <p><strong>Téléphone:</strong> {{ station.telephone }}</p>
-                            <p><strong>Email:</strong> {{ station.email }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <p><strong>Statut:</strong> 
-                                <span class="badge bg-{{ station.statut|yesno:'success,warning,danger' }}">
-                                    {{ station.get_statut_display }}
-                                </span>
-                            </p>
-                            <p><strong>Capacité:</strong> {{ station.capacite }} batteries</p>
-                            <p><strong>Coût initial:</strong> {{ station.cout_initial }} Fcfa</p>
-                            <p><strong>Coût mensuel:</strong> {{ station.cout_mensuel }} Fcfa</p>
-                        </div>
-                    </div>
-                    {% if station.notes %}
-                    <div class="mt-3">
-                        <h6>Notes:</h6>
-                        <p>{{ station.notes }}</p>
-                    </div>
-                    {% endif %}
+    <!-- En-tête avec le style Proxym -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1>{{ station.nom_agence }}</h1>
+                <p class="text-muted">
+                    {% if station.ville %}{{ station.ville }}{% endif %}
+                    {% if station.adresse %} - {{ station.adresse }}{% endif %}
+                </p>
+                <div class="header-actions">
+                    <a href="{% url 'stations:station_specific_charge_list' station.id %}" class="btn btn-secondary">
+                        Voir Charges
+                    </a>
+                    <a href="{% url 'stations:rentability_analysis_create' %}?station={{ station.id }}" class="btn btn-primary">
+                        Analyser
+                    </a>
+                    <a href="{% url 'stations:station_charge_create' %}" class="btn btn-success" data-modal="charge" data-station-id="{{ station.id }}">
+                        Ajouter une charge
+                    </a>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Filtres avec le système Proxym -->
+    <div class="row">
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Filtres de période</h3>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Période</label>
+                            {{ filter_form.periode }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Date début</label>
+                            {{ filter_form.date_debut }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Date fin</label>
+                            {{ filter_form.date_fin }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-flex">
+                                <button type="submit" class="btn btn-primary">Filtrer</button>
+                                <a href="{% url 'stations:station_detail' station.id %}" class="btn btn-secondary" style="margin-left: 0.5rem;">Reset</a>
+                            </div>
+                        </div>
+                    </form>
+                    <small class="text-muted">
+                        Période analysée: {{ start_date|date:"d/m/Y" }} - {{ end_date|date:"d/m/Y" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métriques principales avec le style Proxym -->
+    <div class="row">
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Revenus</h5>
+                    <h3 class="text-success">{{ revenue|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">{{ swap_count }} swaps</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Charges</h5>
+                    <h3 class="text-danger">{{ total_charges|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Coûts opérationnels</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Bénéfice</h5>
+                    <h3 class="{% if profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ profit|floatformat:0|intcomma }} FCFA
+                    </h3>
+                    <small class="text-muted">Marge: {{ profit_margin|floatformat:1 }}%</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Prix moyen/swap</h5>
+                    <h3 class="text-info">{{ avg_swap_price|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Tarif moyen</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques et données -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <div class="chart-header">
+                        <h3>Évolution quotidienne</h3>
+                        <div class="chart-period-buttons">
+                            <button type="button" class="btn btn-secondary active" onclick="updateChart(7)">7j</button>
+                            <button type="button" class="btn btn-secondary" onclick="updateChart(30)">30j</button>
+                            <button type="button" class="btn btn-secondary" onclick="updateChart(90)">90j</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="evolutionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-4">
             <div class="card">
+                <div class="card-header">
+                    <h3>Répartition des charges</h3>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Statistiques du mois</h5>
-                    <div class="stat-item mb-3">
-                        <div class="stat-value">{{ swaps_mois }}</div>
-                        <div class="stat-label">Swaps effectués</div>
-                    </div>
-                    <div class="stat-item mb-3">
-                        <div class="stat-value">{{ charges_mois }} Fcfa</div>
-                        <div class="stat-label">Charges totales</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">
-                            {% if rentabilite %}
-                                {{ rentabilite.rentabilite }} Fcfa
-                            {% else %}
-                                -
-                            {% endif %}
+                    {% if charges_by_category %}
+                        <div class="charges-chart-container">
+                            <canvas id="chargesChart"></canvas>
                         </div>
-                        <div class="stat-label">Rentabilité</div>
-                    </div>
+                        <div class="charges-legend mt-3">
+                            {% for category in charges_by_category %}
+                            <div class="charges-legend-item">
+                                <div class="d-flex align-items-center">
+                                    <span class="charges-legend-color" style="background-color: {% cycle '#FF6384' '#36A2EB' '#FFCE56' '#4BC0C0' '#9966FF' '#FF9F40' %}"></span>
+                                    <span>{{ category.categorie__nom }}</span>
+                                </div>
+                                <strong>{{ category.total|floatformat:0|intcomma }} FCFA</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <p>Aucune charge pour cette période</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-       <!-- Tabs -->
-       <ul class="nav nav-tabs mb-4" id="stationTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="agents-tab" data-tab="agents" href="#agents">
-                Agents ({{ agents.count }})
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="batteries-tab" data-tab="batteries" href="#batteries">
-                Batteries ({{ batteries.count }})
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="charges-tab" data-tab="charges" href="#charges">
-                Charges ({{ charges.count }})
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="maintenance-tab" data-tab="maintenance" href="#maintenance">
-                Maintenance
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="inventaire-tab" data-tab="inventaire" href="#inventaire">
-                Inventaire
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="notifications-tab" data-tab="notifications" href="#notifications">
-                Notifications
-                {% if notifications.count > 0 %}
-                <span class="badge bg-danger">{{ notifications.count }}</span>
-                {% endif %}
-            </a>
-        </li>
-    </ul>
-
-
- 
-    <div class="tab-content" id="stationTabContent">
-        <!-- Agents -->
-        <div class="tab-pane show active" id="agents">
+    <!-- Transactions récentes -->
+    <div class="row">
+        <div class="col-md-6">
             <div class="card">
+                <div class="card-header">
+                    <h3>Swaps récents</h3>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title">Agents de la station</h5>
-                    {% if agents %}
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Prénom</th>
-                                    <th>Email</th>
-                                    <th>Téléphone</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for agent in agents %}
-                                <tr>
-                                    <td>{{ agent.nom }}</td>
-                                    <td>{{ agent.prenom }}</td>
-                                    <td>{{ agent.email }}</td>
-                                    <td>{{ agent.phone }}</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    {% if recent_swaps %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Client</th>
+                                        <th>Prix</th>
+                                        <th>Agent</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for swap in recent_swaps %}
+                                    <tr>
+                                        <td>{{ swap.swap_date|date:"d/m H:i" }}</td>
+                                        <td>
+                                            {% if swap.nom or swap.prenom %}
+                                                {{ swap.prenom|default:"" }} {{ swap.nom|default:"" }}
+                                            {% else %}
+                                                <span class="text-muted">Client anonyme</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-success montant-value">{{ swap.swap_price|default:0|floatformat:0 }} FCFA</td>
+                                        <td>
+                                            <small class="text-muted">Agent #{{ swap.agent_user_id }}</small>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     {% else %}
-                    <p>Aucun agent assigné à cette station.</p>
+                        <div class="text-center text-muted py-4">
+                            <p>Aucun swap pour cette période</p>
+                        </div>
                     {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Batteries -->
-        <div class="tab-pane" id="batteries">
+        <div class="col-md-6">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Batteries de la station</h5>
-                    <p>{{ batteries.count }} batteries assignées à cette station.</p>
+                <div class="card-header">
+                    <h3>Charges récentes</h3>
                 </div>
-            </div>
-        </div>
-
-        <!-- Charges -->
-        <div class="tab-pane" id="charges">
-            <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="card-title">Charges de la station</h5>
-                        <button type="button" class="btn btn-primary btn-sm" id="addChargeTabBtn">
-                            Ajouter une charge
-                        </button>
-                    </div>
-                    
-                    {% if charges %}
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Titre</th>
-                                    <th>Type</th>
-                                    <th>Montant</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for charge in charges %}
-                                <tr>
-                                    <td>{{ charge.titre }}</td>
-                                    <td>{{ charge.get_type_charge_display }}</td>
-                                    <td>{{ charge.montant }} Fcfa</td>
-                                    <td>{{ charge.date_charge|date:"d/m/Y" }}</td>
-                                    <td>
-                                        <a href="{% url 'stations:charge-update' charge.pk %}" class="btn btn-sm btn-primary">
-                                            Modifier
-                                        </a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                    {% if recent_charges %}
+                        {% for charge in recent_charges %}
+                        <div class="transaction-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ charge.intitule }}</h6>
+                                    <small class="text-muted">{{ charge.categorie.nom }} - {{ charge.date_charge|date:"d/m/Y" }}</small>
+                                    {% if charge.commentaire %}
+                                        <br><small class="text-info">{{ charge.commentaire|truncatewords:10 }}</small>
+                                    {% endif %}
+                                </div>
+                                <div class="text-right">
+                                    <strong class="text-danger">{{ charge.montant|floatformat:0|intcomma }} FCFA</strong>
+                                    <br><small class="text-muted">{{ charge.periode }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <div class="text-center mt-3">
+                            <a href="{% url 'stations:station_specific_charge_list' station.id %}" class="btn btn-secondary btn-sm">
+                                Voir toutes les charges
+                            </a>
+                        </div>
                     {% else %}
-                    <p>Aucune charge enregistrée pour cette station.</p>
+                        <div class="text-center text-muted py-4">
+                            <p>Aucune charge pour cette période</p>
+                            <a href="{% url 'stations:station_charge_create' %}?station={{ station.id }}" class="btn btn-primary btn-sm">
+                                Ajouter une charge
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>
-        </div>
-
-        <!-- Les autres tabs suivent le même pattern -->
-    </div>
-
-    
-    <!-- Graphiques -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Évolution des swaps</h5>
-                    <div class="chart-container">
-                        <canvas id="swapsEvolutionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Évolution de la rentabilité</h5>
-                    <div class="chart-container">
-                        <canvas id="rentabiliteChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- Modal pour ajouter une charge -->
-<div class="modal fade" id="addChargeModal" tabindex="-1">
-    <div class="modal-backdrop"></div>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Ajouter une charge</h5>
-                <button type="button" class="btn-close" id="closeModal">×</button>
-            </div>
-            <form method="post" action="{% url 'stations:charge-create' %}?station={{ station.pk }}" id="addChargeForm">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <input type="hidden" name="station" value="{{ station.pk }}">
-                    
-                    <div class="form-group">
-                        <label for="id_titre" class="form-label">Titre</label>
-                        <input type="text" name="titre" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="id_description" class="form-label">Description</label>
-                        <textarea name="description" class="form-control" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="id_type_charge" class="form-label">Type de charge</label>
-                            <select name="type_charge" class="form-select" required>
-                                <option value="">Sélectionner...</option>
-                                <option value="loyer">Loyer</option>
-                                <option value="electricite">Électricité</option>
-                                <option value="salaire">Salaire</option>
-                                <option value="maintenance">Maintenance</option>
-                                <option value="autre">Autre</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="id_categorie" class="form-label">Catégorie</label>
-                            <select name="categorie" class="form-select" required>
-                                <option value="">Sélectionner...</option>
-                                <option value="fixe">Fixe</option>
-                                <option value="variable">Variable</option>
-                                <option value="exceptionnelle">Exceptionnelle</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="id_montant" class="form-label">Montant</label>
-                            <input type="number" name="montant" class="form-control" step="0.01" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="id_date_charge" class="form-label">Date</label>
-                            <input type="date" name="date_charge" class="form-control" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="id_justificatif" class="form-label">Justificatif</label>
-                        <input type="file" name="justificatif" class="form-control">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="cancelModal">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Ajouter la charge</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
 {% endblock %}
 
-
-
-
 {% block extra_js %}
-{{ block.super }}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script>
+let evolutionChart;
+let chargesChart;
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion des tabs
-    const tabs = document.querySelectorAll('.nav-link');
-    const tabPanes = document.querySelectorAll('.tab-pane');
-    
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Retirer active de tous les tabs
-            tabs.forEach(t => t.classList.remove('active'));
-            tabPanes.forEach(p => {
-                p.classList.remove('show', 'active');
-            });
-            
-            // Activer le tab cliqué
-            this.classList.add('active');
-            const tabId = this.getAttribute('data-tab');
-            const tabPane = document.getElementById(tabId);
-            if (tabPane) {
-                tabPane.classList.add('show', 'active');
-            }
-        });
+    initEvolutionChart();
+    initChargesChart();
+});
+
+function initEvolutionChart() {
+    const ctx = document.getElementById('evolutionChart').getContext('2d');
+    const dailyData = {{ daily_data_json|safe }};
+
+    const labels = dailyData.map(d => {
+        const date = new Date(d.date);
+        return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' });
     });
 
-    // Gestion du modal
-    const modal = document.getElementById('addChargeModal');
-    const addChargeBtn = document.getElementById('addChargeBtn');
-    const addChargeTabBtn = document.getElementById('addChargeTabBtn');
-    const closeModal = document.getElementById('closeModal');
-    const cancelModal = document.getElementById('cancelModal');
-    const backdrop = modal.querySelector('.modal-backdrop');
+    const revenues = dailyData.map(d => d.revenue);
+    const charges = dailyData.map(d => d.charges);
+    const profits = dailyData.map(d => d.profit);
 
-    function showModal() {
-        modal.classList.add('show');
-        modal.style.display = 'block';
-        document.body.classList.add('modal-open');
-    }
-
-    function hideModal() {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-        document.body.classList.remove('modal-open');
-    }
-
-    if (addChargeBtn) {
-        addChargeBtn.addEventListener('click', showModal);
-    }
-
-    if (addChargeTabBtn) {
-        addChargeTabBtn.addEventListener('click', showModal);
-    }
-
-    if (closeModal) {
-        closeModal.addEventListener('click', hideModal);
-    }
-
-    if (cancelModal) {
-        cancelModal.addEventListener('click', hideModal);
-    }
-
-    if (backdrop) {
-        backdrop.addEventListener('click', hideModal);
-    }
-
-    // Empêcher la fermeture quand on clique sur le contenu du modal
-    modal.querySelector('.modal-dialog').addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
-
-    // Charts
-    const swapsData = {{ swaps_chart_data|safe }};
-    const swapsCtx = document.getElementById('swapsEvolutionChart');
-    if (swapsCtx) {
-        new Chart(swapsCtx.getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: swapsData.map(item => item.month),
-                datasets: [{
-                    label: 'Nombre de swaps',
-                    data: swapsData.map(item => item.count),
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
+    evolutionChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Revenus',
+                data: revenues,
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#4CAF50',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.4,
+                fill: false
+            }, {
+                label: 'Charges',
+                data: charges,
+                borderColor: '#F44336',
+                backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#F44336',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.4,
+                fill: false
+            }, {
+                label: 'Bénéfice',
+                data: profits,
+                borderColor: '#DCDC34',
+                backgroundColor: 'rgba(220, 220, 52, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#DCDC34',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            size: 14,
+                            family: 'Arial'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#DCDC34',
+                    borderWidth: 1,
+                    cornerRadius: 6,
+                    displayColors: true,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' +
+                                   new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' FCFA';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 12,
+                            family: 'Arial'
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 12,
+                            family: 'Arial'
+                        },
+                        callback: function(value) {
+                            return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
+                        }
+                    }
+                }
+            },
+            elements: {
+                line: {
+                    borderJoinStyle: 'round'
+                }
+            }
+        }
+    });
+}
+
+function initChargesChart() {
+    {% if charges_by_category %}
+    const ctx = document.getElementById('chargesChart').getContext('2d');
+
+    const labels = [{% for category in charges_by_category %}'{{ category.categorie__nom|escapejs }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+    const data = [{% for category in charges_by_category %}{{ category.total|floatformat:0 }}{% if not forloop.last %},{% endif %}{% endfor %}];
+
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+
+    chargesChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors.slice(0, labels.length),
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#DCDC34',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' +
+                                   new Intl.NumberFormat('fr-FR').format(context.parsed) + ' FCFA';
+                        }
                     }
                 }
             }
-        });
-    }
+        }
+    });
+    {% endif %}
+}
 
-    const rentabiliteData = {{ rentabilite_chart_data|safe }};
-    const rentabiliteCtx = document.getElementById('rentabiliteChart');
-    if (rentabiliteCtx) {
-        new Chart(rentabiliteCtx.getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: rentabiliteData.map(item => item.month),
-                datasets: [{
-                    label: 'Revenus',
-                    data: rentabiliteData.map(item => item.revenue),
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Rentabilité',
-                    data: rentabiliteData.map(item => item.profit),
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
+function updateChart(days) {
+    document.querySelectorAll('.chart-period-buttons .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
 
-    // Soumission du formulaire
-    const addChargeForm = document.getElementById('addChargeForm');
-    if (addChargeForm) {
-        addChargeForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    hideModal();
-                    location.reload();
-                } else {
-                    alert('Erreur: ' + JSON.stringify(data.errors));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Si ce n'est pas du JSON, soumettre le formulaire normalement
-                addChargeForm.submit();
+    fetch(`{% url 'stations:api_station_evolution' station.id %}?days=${days}`)
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.data.map(d => {
+                const date = new Date(d.date);
+                return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' });
+            });
+
+            evolutionChart.data.labels = labels;
+            evolutionChart.data.datasets[0].data = data.data.map(d => d.revenue);
+            evolutionChart.data.datasets[1].data = data.data.map(d => d.charges);
+            evolutionChart.data.datasets[2].data = data.data.map(d => d.profit);
+            evolutionChart.update();
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des données:', error);
+        });
+}
+
+// Gestion du formulaire de filtre
+document.addEventListener('DOMContentLoaded', function() {
+    const periodeSelect = document.querySelector('select[name="periode"]');
+    const dateFields = document.querySelectorAll('input[type="date"]');
+
+    if (periodeSelect) {
+        periodeSelect.addEventListener('change', function() {
+            const isCustom = this.value === 'custom';
+            dateFields.forEach(field => {
+                field.style.display = isCustom ? 'block' : 'none';
+                field.required = isCustom;
             });
         });
+
+        // Déclencher l'événement au chargement
+        periodeSelect.dispatchEvent(new Event('change'));
     }
 });
 </script>

@@ -39,17 +39,21 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.admin',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'mathfilters',
+    'authentication',
     'dashboard',
     'payments',
     'contrats',
-    'authentication',
+    'stations',
+
 ]
 
 MIDDLEWARE = [
@@ -173,3 +177,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Ajoute ce bloc pour forcer un nom temporaire (juste pour déboguer)
+TEST = {
+    'NAME': 'proxym_test_db'
+}
+DATABASES['default']['TEST'] = {'NAME': 'proxym_test_db'}
+

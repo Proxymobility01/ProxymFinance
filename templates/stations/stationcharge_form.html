@@ -1,0 +1,133 @@
+<!-- templates/stations/stationcharge_form.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if charge %}Modifier la Charge{% else %}Nouvelle Charge{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        {% if charge %}
+                            <i class="fas fa-edit"></i> Modifier la Charge
+                        {% else %}
+                            <i class="fas fa-plus"></i> Nouvelle Charge de Station
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.station.id_for_label }}" class="form-label required">Station</label>
+                                    {{ form.station }}
+                                    {% if form.station.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.station.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.categorie.id_for_label }}" class="form-label required">Catégorie</label>
+                                    {{ form.categorie }}
+                                    {% if form.categorie.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.categorie.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <small class="form-text text-muted">
+                                        <a href="{% url 'stations:charge_category_list' %}" target="_blank">
+                                            Gérer les catégories
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.intitule.id_for_label }}" class="form-label required">Intitulé</label>
+                            {{ form.intitule }}
+                            {% if form.intitule.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.intitule.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.montant.id_for_label }}" class="form-label required">Montant (FCFA)</label>
+                                    {{ form.montant }}
+                                    {% if form.montant.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.montant.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.periode.id_for_label }}" class="form-label required">Période</label>
+                                    {{ form.periode }}
+                                    {% if form.periode.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.periode.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.date_charge.id_for_label }}" class="form-label required">Date de la charge</label>
+                                    {{ form.date_charge }}
+                                    {% if form.date_charge.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_charge.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.commentaire.id_for_label }}" class="form-label">Commentaire</label>
+                            {{ form.commentaire }}
+                            {% if form.commentaire.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.commentaire.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Informations complémentaires sur cette charge (optionnel)
+                            </small>
+                        </div>
+
+                        <div class="card-footer bg-light">
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'stations:station_charge_list' %}" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Retour
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    {% if charge %}Modifier{% else %}Enregistrer{% endif %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

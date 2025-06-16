@@ -13,6 +13,9 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/login/', permanent=False)),
     path('dashboard/', include('dashboard.urls')),
     path('', include('authentication.urls')),
+    path('contrats/', include('contrats.urls', namespace='contrats')),
+    path('payments/', include('payments.urls', namespace='payments')),
+    path('stations/', include('stations.urls')),
 ]
 
 if settings.DEBUG:

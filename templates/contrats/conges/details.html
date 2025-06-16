@@ -52,8 +52,8 @@ motif du rejet
                                 <tr>
                                     <th style="width: 40%;">Chauffeur</th>
                                     <td>
-                                        <a href="{% url 'contrats:details_chauffeur' conge.contrat.chauffeur.id %}">
-                                            {{ conge.contrat.chauffeur.nom_complet }}
+                                        <a href="{% url 'contrats:details_chauffeur' conge.contrat.association.validated_user.id %}">
+                                            {{conge.contrat.association.validated_user.nom}} . {{conge.contrat.association.validated_user.prenom}}
                                         </a>
                                     </td>
                                 </tr>
@@ -150,8 +150,8 @@ motif du rejet
         <div class="card mb-4">
             <div class="card-header">
                 <h4>
-                    <a href="{% url 'contrats:details_chauffeur' conge.contrat.chauffeur.id %}">
-                        {{ conge.contrat.chauffeur.nom_complet }}
+                    <a href="{% url 'contrats:details_chauffeur' conge.contrat.association.validated_user.id %}">
+                        {{conge.contrat.association.validated_user.nom}} . {{conge.contrat.association.validated_user.prenom}}
                     </a>
                 </h4>
             </div>

@@ -1133,3 +1133,340 @@ td.montant-value {
   text-align: right;
   padding-right: var(--spacing-md);
 }
+
+
+/* CSS pour graphiques - Compatible avec Proxym Finance Design System */
+
+/* Container du graphique avec variables Proxym */
+.chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 450px; /* Hauteur plus importante */
+    background: var(--card-bg);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow);
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+}
+
+/* Canvas du graphique - Forcer les dimensions */
+#evolutionChart {
+    width: 100% !important;
+    height: 450px !important; /* Hauteur fixe importante */
+    max-height: none !important; /* Supprimer toute limitation */
+    display: block !important;
+}
+
+/* Header du graphique compatible Proxym */
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.chart-header h5 {
+    margin: 0;
+    color: var(--text-color);
+    font-weight: 600;
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-lg);
+}
+
+/* Boutons de période - Style Proxym */
+.chart-period-buttons {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.chart-period-buttons .btn {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-speed);
+    font-family: var(--font-family-body);
+    min-width: 40px;
+}
+
+.chart-period-buttons .btn.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #000;
+}
+
+.chart-period-buttons .btn:not(.active) {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.chart-period-buttons .btn:hover {
+    background-color: var(--primary-dark);
+    color: #000;
+    transform: translateY(-2px);
+}
+
+/* Card spéciale pour graphiques */
+.chart-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow);
+    margin-bottom: var(--spacing-lg);
+    overflow: visible; /* Important pour les tooltips */
+    border: 1px solid var(--border-color);
+}
+
+.chart-card:hover {
+    transform: none; /* Désactiver l'animation hover des cards normales */
+    box-shadow: var(--shadow); /* Garder la même ombre */
+}
+
+.chart-card .card-header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+}
+
+.chart-card .card-body {
+    padding: 0; /* Pas de padding pour laisser place au chart-container */
+}
+
+/* Graphique des charges (doughnut) */
+#chargesChart {
+    width: 100% !important;
+    height: 300px !important;
+    max-height: none !important;
+    display: block !important;
+}
+
+.charges-chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 350px;
+    background: var(--card-bg);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+}
+
+/* Légende des charges */
+.charges-legend {
+    margin-top: var(--spacing-md);
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.charges-legend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--border-color);
+    font-family: var(--font-family-body);
+}
+
+.charges-legend-item:last-child {
+    border-bottom: none;
+}
+
+.charges-legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: var(--spacing-sm);
+    display: inline-block;
+}
+
+/* Métriques cards - Compatible Proxym */
+.metric-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow);
+    margin-bottom: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.metric-card .card-body {
+    padding: var(--spacing-lg);
+    text-align: center;
+}
+
+.metric-card h5 {
+    font-family: var(--font-family-body);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-md);
+}
+
+.metric-card h3 {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-xxl);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+}
+
+.metric-card small {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+/* Couleurs spécifiques */
+.metric-card .text-success {
+    color: var(--success) !important;
+}
+
+.metric-card .text-danger {
+    color: var(--danger) !important;
+}
+
+.metric-card .text-info {
+    color: var(--info) !important;
+}
+
+/* Page header compatible */
+.page-header {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.page-header h1 {
+    font-family: var(--font-family-heading);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Responsive adapté à Proxym */
+@media (max-width: 768px) {
+    .chart-container {
+        padding: var(--spacing-md);
+        min-height: 350px;
+    }
+
+    #evolutionChart {
+        height: 350px !important;
+    }
+
+    .chart-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: flex-start;
+    }
+
+    .chart-period-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .chart-period-buttons .btn {
+        flex: 1;
+        margin: 0 2px;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .header-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Fix pour les containers fluides Proxym */
+.container-fluid {
+    width: 96% !important; /* Adapter au système Proxym */
+    margin: 0 auto;
+    padding: 0 var(--spacing-md) !important;
+}
+
+/* Loading state compatible Proxym */
+.chart-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 450px;
+    color: var(--text-secondary);
+    font-size: var(--font-size-md);
+    font-family: var(--font-family-body);
+}
+
+.chart-loading::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: var(--spacing-sm);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Forcer la visibilité du canvas */
+canvas {
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+/* Surcharge spécifique pour Chart.js */
+.chartjs-render-monitor {
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+/* Tables responsive compatibles */
+.table-responsive {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+/* Transactions récentes */
+.transaction-item {
+    border-bottom: 1px solid var(--border-color);
+    padding: var(--spacing-md) 0;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-item h6 {
+    font-family: var(--font-family-body);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.transaction-item small {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.back-btn:hover {
+    transform: translateX(-2px);
+}

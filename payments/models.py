@@ -10,6 +10,8 @@ from decimal import Decimal
 from datetime import  timedelta, date, time
 from contrats.models import ValidatedUser
 
+from django.db.models import Sum
+
 
 class Paiement(models.Model):
     METHODE_CHOICES = [
@@ -226,6 +228,39 @@ class Paiement(models.Model):
         return f"Paiement {self.reference} - {self.montant_moto} FCFA"
 
 
+class PaiementPenalite(models.Model):
+    reference = models.CharField(max_length=100, unique=True)
+    penalite = models.ForeignKey('Penalite', on_delete=models.CASCADE, related_name='paiements')  # ✅ one-to-many
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    date_paiement = models.DateField()
+    date_enregistrement = models.DateTimeField(default=timezone.now)
+    methode_paiement = models.CharField(
+        max_length=50,
+        choices=[
+            ('espece', 'Espèces'),
+            ('mobile_money', 'Mobile Money'),
+            ('virement', 'Virement bancaire'),
+            ('cheque', 'Chèque')
+        ]
+    )
+    reference_transaction = models.CharField(max_length=100, blank=True, null=True)
+    enregistre_par = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+
+    def montant_total_paye(self):
+        return self.paiements.aggregate(total=Sum('montant'))['total'] or 0
+
+    def est_payee_completement(self):
+        return self.montant_total_paye() >= self.montant
+
+    class Meta:
+        db_table = 'payments_paiementpenalite'
+        ordering = ['-date_paiement', '-date_enregistrement']
+
+    def __str__(self):
+        return f"Pénalité payée {self.reference} - {self.montant} FCFA"
+
+
+
 class Penalite(models.Model):
     STATUT_CHOICES = [
         ('en_attente', 'En attente'),
@@ -256,13 +291,13 @@ class Penalite(models.Model):
     type_penalite = models.CharField(max_length=20, choices=TYPE_CONTRAT_CHOICES, default='combine')
 
     montant = models.DecimalField(max_digits=10, decimal_places=2)
+    montant_payé = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     date_creation = models.DateTimeField(default=timezone.now)
     motif = models.CharField(max_length=50, choices=MOTIF_CHOICES)
     description = models.TextField(blank=True, null=True)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
 
-    paiement = models.ForeignKey('Paiement', on_delete=models.SET_NULL, null=True, blank=True,
-                                 related_name='penalites_associees')
+
     cree_par = models.ForeignKey('authentication.Employe', on_delete=models.SET_NULL, null=True, related_name='penalites_creees')
 
     raison_annulation = models.TextField(blank=True, null=True)
@@ -319,6 +354,12 @@ class Penalite(models.Model):
             return self.contrat_batterie.montant_par_paiement
         return Decimal('0.00')
 
+    def montant_total_paye(self):
+        return self.paiements.aggregate(total=Sum('montant'))['total'] or 0
+
+    def est_payee_completement(self):
+        return self.montant_total_paye() >= self.montant
+
     def get_contract_type_display(self):
         """Retourne le type de contrat pour l'affichage"""
         if self.contrat_chauffeur:
@@ -344,6 +385,7 @@ class Penalite(models.Model):
         if client:
             return f"Pénalité {self.id} - {client.prenom} {client.nom} - {self.montant} FCFA"
         return f"Pénalité {self.id} - {self.montant} FCFA"
+
 
 
 

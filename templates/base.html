@@ -64,21 +64,31 @@
     <script src="{% static 'js/theme-switcher.js' %}"></script>
     
     <!-- Page-specific JS -->
-    {% block extra_js %}{% endblock %}
+    {% block extra_js %}
     
-    <script>
-        // Initialize tooltips and other components
-        document.addEventListener('DOMContentLoaded', function() {
-            // Auto-close flash messages after 5 seconds
-            setTimeout(function() {
-                const alerts = document.querySelectorAll('.alert');
-                alerts.forEach(alert => {
-                    alert.style.display = 'none';
-                });
-            }, 5000);
-            
-            // Other initializations
-        });
-    </script>
+        <script>
+            // Initialize tooltips and other components
+            document.addEventListener('DOMContentLoaded', function() {
+                // Auto-close flash messages after 5 seconds
+                setTimeout(function() {
+                    const alerts = document.querySelectorAll('.alert');
+                    alerts.forEach(alert => {
+                        alert.style.display = 'none';
+                    });
+                }, 5000);
+
+                // Other initializations
+            });
+        </script>
+        <script>
+        window.universalGoBack = function(fallbackUrl = '/dashboard/') {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = fallbackUrl;
+            }
+        };
+        </script>
+{% endblock %}
 </body>
 </html>

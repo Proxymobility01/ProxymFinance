@@ -1,0 +1,406 @@
+<!-- templates/stations/stationcharge_list.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if station %}
+        Charges - {{ station.nom_agence }}
+    {% else %}
+        Charges des Stations
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>
+                    {% if station %}
+                        Charges - {{ station.nom_agence }}
+                    {% else %}
+                        Charges des Stations
+                    {% endif %}
+                </h1>
+                <div>
+                    {% if station %}
+                        <a href="{% url 'stations:station_charge_list' %}" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-list"></i> Toutes les charges
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'stations:station_charge_create' %}" class="btn btn-primary" data-modal="category">
+                        Nouvelle charge
+                    </a>
+                    <a href="{% url 'stations:charge_category_list' %}" class="btn btn-secondary" data-toggle="modal" data-target="#chargeModal">
+                        Catégorie des charges
+                    </a>
+                </div>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Statistiques rapides -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-money-bill-wave fa-2x me-3"></i>
+                                <div>
+                                    <h5 class="card-title mb-0">Total</h5>
+                                    <h3>{{ total_montant|floatformat:0 }} FCFA</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-list fa-2x me-3"></i>
+                                <div>
+                                    <h5 class="card-title mb-0">Nombre</h5>
+                                    <h3>{{ charges.count }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-calculator fa-2x me-3"></i>
+                                <div>
+                                    <h5 class="card-title mb-0">Moyenne</h5>
+                                    <h3>
+                                        {% if charges.count > 0 %}
+                                            {{ moyenne|floatformat:0 }} FCFA
+                                        {% else %}
+                                            0 FCFA
+                                        {% endif %}
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if station %}
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-building fa-2x me-3"></i>
+                                <div>
+                                    <h5 class="card-title mb-0">Station</h5>
+                                    <h6>{{ station.nom_agence }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Liste des Charges</h3>
+                </div>
+                <div class="card-body">
+                    {% if charges %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        {% if not station %}
+                                            <th>Station</th>
+                                        {% endif %}
+                                        <th>Catégorie</th>
+                                        <th>Intitulé</th>
+                                        <th>Montant</th>
+                                        <th>Période</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for charge in charges %}
+                                        <tr>
+                                            <td>
+                                                <span class="badge badge-info">
+                                                    {{ charge.date_charge|date:"d/m/Y" }}
+                                                </span>
+                                            </td>
+                                            {% if not station %}
+                                                <td>{{ charge.station.nom_agence }}</td>
+                                            {% endif %}
+                                            <td>
+                                                <span class="badge badge-secondary">
+                                                    {{ charge.categorie.code }}
+                                                </span>
+                                                <small class="text-muted d-block">{{ charge.categorie.nom }}</small>
+                                            </td>
+                                            <td>{{ charge.intitule }}</td>
+                                            <td>
+                                                <strong class="text-danger">{{ charge.montant|floatformat:0 }} FCFA</strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-outline-primary">{{ charge.get_periode_display }}</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <a href="{% url 'stations:station_charge_update' charge.pk %}"
+                                                       class="btn btn-sm btn-secondary me-2">
+                                                        <i class="fas fa-edit"></i> Modifier
+                                                    </a>
+                                                    <a href="{% url 'stations:station_charge_delete' charge.pk %}"
+                                                       class="btn btn-sm btn-outline-danger">
+                                                        <i class="fas fa-trash"></i> Supprimer
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
+                            <h4>Aucune charge trouvée</h4>
+                            <p class="text-muted">
+                                {% if station %}
+                                    Aucune charge enregistrée pour cette station.
+                                {% else %}
+                                    Commencez par enregistrer votre première charge.
+                                {% endif %}
+                            </p>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chargeModal">
+                                <i class="fas fa-plus"></i> Ajouter une charge
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour ajouter une charge -->
+<div class="modal fade" id="chargeModal" tabindex="-1" role="dialog" aria-labelledby="chargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="chargeModalContent">
+                <!-- Le contenu sera chargé ici via AJAX -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Nouvelle Charge de Station</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour ajouter une catégorie (imbriquée) -->
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="categoryModalContent">
+                <!-- Le contenu sera chargé ici via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script JavaScript pour gérer les modales -->
+<script>
+$(document).ready(function() {
+    // Charger le formulaire de charge dans la modale
+    $('#chargeModal').on('show.bs.modal', function() {
+        $('#chargeModalContent').load('{% url "stations:station_charge_create" %}', function(response, status, xhr) {
+            if (status === "error") {
+                $('#chargeModalContent').html('<div class="alert alert-danger">Erreur lors du chargement du formulaire.</div>');
+            }
+        });
+    });
+
+    // Gérer la soumission du formulaire de charge
+    $(document).on('submit', '#chargeModalForm', function(e) {
+        e.preventDefault();
+
+        const submitBtn = $(this).find('button[type="submit"]');
+        const spinner = submitBtn.find('.spinner-border');
+
+        // Afficher le spinner
+        spinner.removeClass('d-none');
+        submitBtn.prop('disabled', true);
+
+        // Effacer les erreurs précédentes
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').empty();
+
+        $.ajax({
+            url: '{% url "stations:station_charge_create" %}',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#chargeModal').modal('hide');
+                    location.reload(); // Recharger la page pour voir la nouvelle charge
+                } else {
+                    // Afficher les erreurs
+                    if (response.errors) {
+                        Object.keys(response.errors).forEach(function(field) {
+                            const fieldElement = $('#id_' + field);
+                            fieldElement.addClass('is-invalid');
+                            $('#' + field + '-error').text(response.errors[field][0]);
+                        });
+                    }
+                }
+            },
+            error: function() {
+                alert('Une erreur est survenue lors de l\'enregistrement.');
+            },
+            complete: function() {
+                // Masquer le spinner
+                spinner.addClass('d-none');
+                submitBtn.prop('disabled', false);
+            }
+        });
+    });
+
+    // Gérer le bouton d'ajout de catégorie dans le formulaire de charge
+    $(document).on('click', '#addCategoryBtn', function() {
+        $('#categoryModal').modal('show');
+    });
+
+    // Charger le formulaire de catégorie dans la modale imbriquée
+    $('#categoryModal').on('show.bs.modal', function() {
+        $('#categoryModalContent').load('{% url "stations:charge_category_create" %}', function(response, status, xhr) {
+            if (status === "error") {
+                $('#categoryModalContent').html('<div class="alert alert-danger">Erreur lors du chargement du formulaire.</div>');
+            }
+        });
+    });
+
+    // Gérer la soumission du formulaire de catégorie (depuis la modale imbriquée)
+    $(document).on('submit', '#categoryModalForm', function(e) {
+        e.preventDefault();
+
+        const submitBtn = $(this).find('button[type="submit"]');
+        const spinner = submitBtn.find('.spinner-border');
+
+        // Afficher le spinner
+        spinner.removeClass('d-none');
+        submitBtn.prop('disabled', true);
+
+        // Effacer les erreurs précédentes
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').empty();
+
+        $.ajax({
+            url: '{% url "stations:charge_category_create" %}',
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#categoryModal').modal('hide');
+                    // Recharger la liste des catégories dans le formulaire de charge
+                    const categorieSelect = $('#id_categorie');
+                    $.get('{% url "stations:api_categories" %}', function(data) {
+                        categorieSelect.empty();
+                        categorieSelect.append('<option value="">---------</option>');
+                        data.categories.forEach(function(cat) {
+                            categorieSelect.append(`<option value="${cat.id}">${cat.code} - ${cat.nom}</option>`);
+                        });
+                        // Sélectionner la nouvelle catégorie
+                        categorieSelect.val(response.category_id);
+                    });
+                } else {
+                    // Afficher les erreurs
+                    if (response.errors) {
+                        Object.keys(response.errors).forEach(function(field) {
+                            const fieldElement = $('#categoryModal #id_' + field);
+                            fieldElement.addClass('is-invalid');
+                            $('#categoryModal #' + field + '-error').text(response.errors[field][0]);
+                        });
+                    }
+                }
+            },
+            error: function() {
+                alert('Une erreur est survenue lors de l\'enregistrement de la catégorie.');
+            },
+            complete: function() {
+                // Masquer le spinner
+                spinner.addClass('d-none');
+                submitBtn.prop('disabled', false);
+            }
+        });
+    });
+
+    // Réinitialiser les modales lors de leur fermeture
+    $('#chargeModal').on('hidden.bs.modal', function() {
+        $(this).find('.modal-content').html(`
+            <div class="modal-header">
+                <h5 class="modal-title">Nouvelle Charge de Station</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Chargement...</span>
+                </div>
+            </div>
+        `);
+    });
+
+    $('#categoryModal').on('hidden.bs.modal', function() {
+        $(this).find('.modal-content').html('<div id="categoryModalContent"></div>');
+    });
+});
+</script>
+
+<style>
+.form-label.required::after {
+    content: " *";
+    color: #dc3545;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+.badge-outline-primary {
+    color: #007bff;
+    border: 1px solid #007bff;
+    background-color: transparent;
+}
+
+.me-2 {
+    margin-right: 0.5rem;
+}
+
+.me-3 {
+    margin-right: 1rem;
+}
+</style>
+{% endblock %}

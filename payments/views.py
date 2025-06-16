@@ -2,12 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.db.models import Sum, Count, Q, F, Case, When, Value, DecimalField
+from django.db.models import Sum, Count, Q, F, Case, Value, DecimalField
+
 from django.http import JsonResponse, HttpResponse
 from datetime import datetime, timedelta, date, time
 from django.urls import reverse
 from django.core.paginator import Paginator
 from decimal import Decimal
+from .models import PaiementPenalite
+
 import uuid
 import json
 import csv
@@ -291,9 +294,9 @@ def centre_paiements(request):
         # Vérifier si c'est un contrat batterie "standalone" (pas lié à un contrat chauffeur/partenaire)
         is_standalone = True
 
-        if contrat.chauffeur:
+        if contrat.chauffeur :
             # Vérifier si le chauffeur a un contrat actif
-            if ContratChauffeur.objects.filter(chauffeur=contrat.chauffeur, statut='actif').exists():
+            if ContratChauffeur.objects.filter(chauffeur=contrat.chauffeur , statut='actif').exists():
                 is_standalone = False
 
         if contrat.partenaire:
@@ -869,6 +872,7 @@ def paiement_rapide(request, contrat_type, contrat_id):
                 notes=data['notes'],
                 est_penalite=False,
                 type_contrat=contrat_type,
+                contrat_batterie=contrat_batterie,
                 enregistre_par=user,
                 reference=f"PMT-{uuid.uuid4().hex[:8].upper()}"
             )
@@ -877,27 +881,8 @@ def paiement_rapide(request, contrat_type, contrat_id):
             setattr(paiement_principal, f'contrat_{contrat_type}', contrat)
             paiement_principal.save()
 
-            # Enregistrer le paiement batterie si applicable
-            if contrat_batterie and contrat_type != 'batterie' and data['montant_batterie'] > 0:
-                paiement_batterie = Paiement(
-                    montant_moto=0,
-                    montant_batterie=data['montant_batterie'],
-                    montant_total=data['montant_batterie'],
 
-                    date_paiement=aujourd_hui,
-                    heure_paiement=now.time(),
-                    methode_paiement=data['methode_paiement'],
-                    reference_transaction=data['reference_transaction'],
-                    notes=f"Paiement batterie lié au contrat {contrat.reference}",
-                    est_penalite=False,
-                    type_contrat='batterie',
-                    contrat_batterie=contrat_batterie,
-                    enregistre_par=user,
-                    reference=f"PMT-{uuid.uuid4().hex[:8].upper()}"
-                )
-                paiement_batterie.save()
 
-            # Gérer la pénalité du jour si elle existe
             if penalite_du_jour and data['pardonner_penalite_jour']:
                 # Pardonner la pénalité
                 penalite_du_jour.statut = 'annulee'
@@ -1341,9 +1326,8 @@ def creer_penalite(request, contrat_type, contrat_id):
 def gerer_penalite(request, penalite_id):
     """Gérer une pénalité existante (payer, annuler, reporter, pardonner) avec interface améliorée"""
     penalite = get_object_or_404(Penalite, id=penalite_id)
-
-    # Déterminer le client et le contrat
     client = penalite.get_client()
+
     contrat = None
     contrat_type = None
 
@@ -1358,105 +1342,74 @@ def gerer_penalite(request, penalite_id):
         contrat_type = 'batterie'
 
     if request.method == 'POST':
-        # Récupérer l'action depuis les données POST
         action = request.POST.get('action')
 
-        # Gérer l'action "pardonner" directement depuis les données POST
         if action == 'pardonner':
             raison_pardon = request.POST.get('raison_pardon')
-
             if not raison_pardon:
                 messages.error(request, "Une raison est obligatoire pour pardonner une pénalité.")
-                # Rester sur la même page
                 form = GestionPenaliteForm(initial={'montant_paiement': penalite.montant}, penalite=penalite)
             else:
-                # Pardonner la pénalité
                 penalite.statut = 'annulee'
                 penalite.raison_annulation = raison_pardon
                 penalite.modifie_par = request.user if request.user.is_authenticated else None
                 penalite.date_modification = timezone.now()
-                # Ajouter les champs spécifiques au pardon si ils existent dans votre modèle
                 if hasattr(penalite, 'pardonnee_par'):
-                    penalite.pardonnee_par = request.user if request.user.is_authenticated else None
+                    penalite.pardonnee_par = request.user
                 if hasattr(penalite, 'date_pardon'):
                     penalite.date_pardon = timezone.now()
                 penalite.save()
 
                 client_nom = f"{client.prenom} {client.nom}" if client else "Client inconnu"
                 messages.success(request, f'Pénalité pardonnée pour {client_nom}')
-
-                # Rediriger vers la liste des pénalités
                 return redirect('payments:gestion_penalites')
 
         else:
-            # Utiliser le formulaire pour les autres actions (payer, annuler, reporter)
             form = GestionPenaliteForm(request.POST, penalite=penalite)
-
             if form.is_valid():
                 action = form.cleaned_data['action']
                 raison = form.cleaned_data['raison']
                 envoyer_notification = 'envoyer_notification' in request.POST
 
                 if action == 'payer':
-                    # Créer un paiement pour la pénalité
                     montant = form.cleaned_data['montant_paiement'] or penalite.montant
                     methode = form.cleaned_data['methode_paiement']
 
-                    paiement = Paiement()
-                    paiement.montant = montant
-                    paiement.date_paiement = date.today()
-                    paiement.heure_paiement = timezone.now().time()
-                    paiement.methode_paiement = methode
-                    paiement.reference_transaction = ''
-                    paiement.notes = f"Paiement de pénalité: {raison}" if raison else "Paiement de pénalité"
-                    paiement.est_penalite = True
-                    paiement.enregistre_par = request.user
+                    PaiementPenalite.objects.create(
+                        reference=f"PEN-{uuid.uuid4().hex[:8].upper()}",
+                        penalite=penalite,
+                        montant=montant,
+                        date_paiement=date.today(),
+                        methode_paiement=methode,
+                        reference_transaction='',
+                        enregistre_par=request.user
+                    )
 
-                    # Associer au bon type de contrat
-                    if contrat_type == 'chauffeur':
-                        paiement.contrat_chauffeur = contrat
-                        paiement.type_contrat = 'chauffeur'
-                    elif contrat_type == 'partenaire':
-                        paiement.contrat_partenaire = contrat
-                        paiement.type_contrat = 'partenaire'
-                    elif contrat_type == 'batterie':
-                        paiement.contrat_batterie = contrat
-                        paiement.type_contrat = 'batterie'
+                    # 🔁 Recalculer le total payé
+                    total_paye = penalite.paiements.aggregate(total=Sum('montant'))['total'] or 0
+                    if total_paye >= penalite.montant:
+                        penalite.statut = 'payee'
 
-                    # Générer une référence unique
-                    paiement.reference = f"PEN-{uuid.uuid4().hex[:8].upper()}"
-
-                    paiement.save()
-
-                    # Marquer la pénalité comme payée
-                    penalite.statut = 'payee'
-                    penalite.paiement = paiement
                     penalite.date_modification = timezone.now()
                     penalite.modifie_par = request.user
-                    penalite.raison_annulation = raison
                     penalite.save()
 
-                    messages.success(request, f"Pénalité marquée comme payée pour {client.prenom} {client.nom}.")
+                    messages.success(request, f"{montant} FCFA payés pour la pénalité de {client.prenom} {client.nom}.")
 
-                    # Envoyer une notification si demandé
                     if envoyer_notification and client:
                         notification = NotificationPaiement()
                         notification.type_notification = 'penalite'
                         notification.message = f"Votre pénalité de {montant} FCFA a été réglée. Merci."
                         notification.date_programmee = timezone.now()
                         notification.canal_notification = 'sms'
-
-                        # Associer au bon client et contrat
-                        if isinstance(client, Chauffeur):
+                        if isinstance(client, ValidatedUser):
                             notification.chauffeur = client
                         else:
                             notification.partenaire = client
-
                         notification.penalite = penalite
                         notification.save()
 
                 elif action == 'annuler':
-                    # Annuler la pénalité
                     penalite.statut = 'annulee'
                     penalite.date_modification = timezone.now()
                     penalite.modifie_par = request.user
@@ -1465,27 +1418,21 @@ def gerer_penalite(request, penalite_id):
 
                     messages.success(request, f"Pénalité annulée pour {client.prenom} {client.nom}.")
 
-                    # Envoyer une notification si demandé
                     if envoyer_notification and client:
                         notification = NotificationPaiement()
                         notification.type_notification = 'penalite'
                         notification.message = f"Votre pénalité de {penalite.montant} FCFA a été annulée. Raison: {raison}"
                         notification.date_programmee = timezone.now()
                         notification.canal_notification = 'sms'
-
-                        # Associer au bon client et contrat
-                        if isinstance(client, Chauffeur):
+                        if isinstance(client, ValidatedUser):
                             notification.chauffeur = client
                         else:
                             notification.partenaire = client
-
                         notification.penalite = penalite
                         notification.save()
 
                 elif action == 'reporter':
-                    # Reporter la pénalité
                     date_report = form.cleaned_data['date_report']
-
                     if date_report:
                         penalite.statut = 'reportee'
                         penalite.date_modification = timezone.now()
@@ -1496,40 +1443,33 @@ def gerer_penalite(request, penalite_id):
                         messages.success(request,
                                          f"Pénalité reportée au {date_report.strftime('%d/%m/%Y')} pour {client.prenom} {client.nom}.")
 
-                        # Envoyer une notification si demandé
                         if envoyer_notification and client:
                             notification = NotificationPaiement()
                             notification.type_notification = 'penalite'
                             notification.message = f"Votre pénalité de {penalite.montant} FCFA a été reportée au {date_report.strftime('%d/%m/%Y')}."
                             notification.date_programmee = timezone.now()
                             notification.canal_notification = 'sms'
-
-                            # Associer au bon client et contrat
-                            if isinstance(client, Chauffeur):
+                            if isinstance(client, ValidatedUser):
                                 notification.chauffeur = client
                             else:
                                 notification.partenaire = client
-
                             notification.penalite = penalite
                             notification.save()
                     else:
                         messages.error(request, "Une date de report est requise.")
                         return redirect('payments:gerer_penalite', penalite_id=penalite_id)
 
-                # Rediriger vers la liste des pénalités après traitement
                 return redirect('payments:gestion_penalites')
 
     else:
-        # GET request - afficher le formulaire
         form = GestionPenaliteForm(initial={'montant_paiement': penalite.montant}, penalite=penalite)
 
-    # Récupérer l'historique des pénalités pour ce client
+    # Historique des pénalités pour ce client
     historique_penalites = []
-
     if client:
-        if isinstance(client, Chauffeur):
+        if isinstance(client, ValidatedUser):
             historique_penalites = Penalite.objects.filter(
-                Q(contrat_chauffeur__chauffeur=client) |
+                Q(contrat_chauffeur__association__validated_user=client) |
                 Q(contrat_batterie__chauffeur=client)
             ).exclude(id=penalite.id).order_by('-date_creation')[:5]
         else:
@@ -1537,6 +1477,8 @@ def gerer_penalite(request, penalite_id):
                 Q(contrat_partenaire__partenaire=client) |
                 Q(contrat_batterie__partenaire=client)
             ).exclude(id=penalite.id).order_by('-date_creation')[:5]
+
+    restant_a_payer = penalite.montant - penalite.montant_total_paye()
 
     context = {
         'titre': f'Gérer la pénalité - {client.prenom if client else ""} {client.nom if client else ""}',
@@ -1546,6 +1488,7 @@ def gerer_penalite(request, penalite_id):
         'contrat': contrat,
         'contrat_type': contrat_type,
         'historique_penalites': historique_penalites,
+        'restant_a_payer': restant_a_payer,
     }
 
     return render(request, 'payments/penalites/details.html', context)

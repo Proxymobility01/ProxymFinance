@@ -4,259 +4,47 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/ajouter.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/formulaire.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/formulaire_ajax.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/liste.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/modal_ajouter.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/contrats/motos/modal_ajouter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/mysql.osA4Bg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
+    <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="adaptation apres modification de la base de donnée">
+      <change afterPath="$PROJECT_DIR$/stations/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/chargecategory_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/chargecategory_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/chargecategory_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/dashboard_rentability.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/quick_analysis.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/quick_analysis_result.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/rentability_analysis_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/rentability_analysis_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/rentability_analysis_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/stationcharge_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/stationcharge_form.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/stationcharge_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/stations/stations_comparison.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authentication/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/authentication/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contrats/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/contrats/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/payments/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payments/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/mysql.osA4Bg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/forms.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/authentication/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/contrats/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/dashboard/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/dashboard/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/dashboard/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/dashboard/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/dashboard/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/dashboard/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/dashboard/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/dashboard/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/db.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/manage.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/recto/Screenshot_2025-02-03_124935.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/recto/Screenshot_2025-02-03_125030.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/recto/Screenshot_2025-02-03_125030_HAdtpRO.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/recto/Screenshot_2025-02-10_171655.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/recto/coursUML2.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/verso/Screenshot_2025-02-03_124935.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/verso/Screenshot_2025-02-03_124935_N8UMSv7.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/verso/Screenshot_2025-02-03_124935_ocv9PFS.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/verso/Screenshot_2025-02-10_171655.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/cni/verso/coursUML3.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/COMPLETE_INFORMATION.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Part_of_Deck_for_IT.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Planning_Stagiaire_IT1.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Screenshot_2025-02-03_124935.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Screenshot_2025-02-03_125030.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Screenshot_2025-02-03_125030_uVLkCrr.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Screenshot_2025-02-10_171655.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Screenshot_2025-02-10_171655_Iwr8ONF.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Screenshot_2025-02-10_171820.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Screenshot_2025-02-18_172602.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/Screenshot_2025-02-18_172602_Hxmre9V.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_iiCt3Sw.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_jY3tKe9.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_q1nAjTi.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_r7c64eA.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/User_Flows_du_Projet_Proxym_Finance_2_zmZtXYT.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/coursUML11.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/coursUML3.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/coursUML9.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/swap_logs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/swap_logs_hnz6Ysh.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/swap_logs_jX08zq9.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/swap_logs_w8BqS0X.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/contrat/swap_logs_wyPeimM.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/localisation/Screenshot_2025-02-10_171820.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/localisation/Screenshot_2025-02-10_171916.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/localisation/Screenshot_2025-02-10_172125.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/localisation/Screenshot_2025-02-24_163251.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/localisation/coursUML2.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/permis/Screenshot_2025-02-10_171820.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/permis/Screenshot_2025-02-10_171820_Q5oh7YA.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/permis/Screenshot_2025-02-10_172125.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/permis/coursUML11.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/chauffeurs/permis/swap_logs.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/activite/AVANT.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/activite/MOTOPROXYM.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/activite/PROXYM_LOGO_TRACKING_Fond_Orange_FAVICON300x-100.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/activite/PROXYM_MOBILITY_LONG_COULEUR_Sans_Fond_1_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/activite/Screenshot_2025-02-03_125030.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/activite/coursUML2.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/activite/coursUML3.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/activite/coursUML9.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/cni/APRES.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/cni/OTP.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/cni/amitié_sur_fond_noir.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/cni/coursUML11.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/cni/playstore_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/contrat/CV_DASSI_PXM.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/contrat/LOGO_PROXYM_TRACKING_VERTICAL300x-100.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/contrat/Part_of_Deck_for_IT.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/contrat/authbd5.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/contrat/coursUML7.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/domicile/APRES.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/domicile/IMG-20241205-WA0098.webp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/domicile/PROXYM_MOBILITY_LONG_COULEUR_Sans_Fond_1_1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/domicile/amitié.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/garants/domicile/coursUML3.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/Screenshot_2025-02-03_125030.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/Screenshot_2025-02-10_171820.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/coursUML2.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/coursUML5.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/coursUML7.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/recto/amitié.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/recto/coursUML11.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/verso/APRES.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/cni/verso/coursUML9.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/contrat/Screenshot_2025-02-10_171655.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/contrat/Screenshot_2025-02-18_172602.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/contrat/coursUML11.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/contrat/coursUML11_qxOG4TC.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/contrat/coursUML2.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/contrat/coursUML3.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/contrat/coursUML7.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/localisation/Screenshot_2025-02-03_124935.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/localisation/Screenshot_2025-02-24_163251.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/localisation/amitié_sur_fond_noir.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/localisation/coursUML11.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/localisation/coursUML3.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/localisation/coursUML3_SEMKGF2.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/media/documents/partenaires/localisation/coursUML5.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/note" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/payments/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/payments/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/payments/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/payments/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/payments/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/payments/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/payments/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/payments/views.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/proxym_finance/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/proxym_finance/asgi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/proxym_finance/settings.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/proxym_finance/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/proxym_finance/wsgi.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/static/css/font.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/static/css/stations.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/static/css/styles.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/static/images/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/authentication/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/authentication/register.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/chauffeurs/details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/chauffeurs/formulaire.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/chauffeurs/formulaire_modal.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/chauffeurs/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/conges/details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/conges/formulaire.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/conges/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_batterie/details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_batterie/formulaire.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_batterie/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_chauffeur/details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_chauffeur/formulaire.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_chauffeur/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_partenaire/details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_partenaire/formulaire.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/contrats_partenaire/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/garants/details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/garants/formulaire.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/garants/formulaire_modal.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/garants/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/partenaires/details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/partenaires/formulaire.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/partenaires/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/contrats/recherche.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/dashboard/admin.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/dashboard/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/home.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/partials/navbar.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/analytique.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/base/base_payments.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/centre.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/details_paiement.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/historique.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/paiement_rapide.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/partials/payment_card.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/partials/stats_cards.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/penalites/centre.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/penalites/details.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/penalites/formulaire.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/penalites/gestion.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/penalites/gestion_detail.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/penalites/nouveau.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/recherche_avancee.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/swaps/liste.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/payments/test_penalites.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations template.rar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/agent_form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/agent_list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/base_stations.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/charge_form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/charge_list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/inventaire_list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/maintenance_form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/maintenance_list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/notification_list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/station_confirm_delete.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/station_detail.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/station_form.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/station_list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/chauffeurs/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/chauffeurs/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/chauffeurs/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/chauffeurs/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/conges/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/conges/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/conges/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/conges/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_batterie/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_batterie/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_batterie/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_batterie/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_partenaire/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_partenaire/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contrats/conges/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/conges/details.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/partials/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/partials/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/historique.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/historique.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payments/penalites/centre.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/penalites/centre.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/payments/penalites/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/penalites/details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/agent_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/stations/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/agent_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/base_stations.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/charge_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/charge_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/dashboard.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/inventaire_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/maintenance_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/maintenance_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/notification_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/station_confirm_delete.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/station_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/station_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/station_form.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/stations/station_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/station_list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -269,15 +57,27 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/proxym_finance" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="SYNC" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;manoukd&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/manoukd/proxym_finance.git&quot;,
+    &quot;accountId&quot;: &quot;2eafcaaf-9f73-4d88-9c77-96199a9c2284&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -289,32 +89,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Django Server.proxym_finance.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
-    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR_AND_PREVIEW&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/insta/PycharmProjects/proxym_finance/proxym_finance&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Django Server.proxym_finance.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
+    "database.data.extractors.current.export.id": "SQL Inserts",
+    "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
+    "git-widget-placeholder": "develop",
+    "last_opened_file_path": "C:/Users/insta/PycharmProjects/proxym_finance/proxym_finance",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\insta\PycharmProjects\proxym_finance\proxym_finance" />
@@ -375,12 +176,29 @@
       <workItem from="1749461282482" duration="5511000" />
       <workItem from="1749469519535" duration="7991000" />
       <workItem from="1749505920333" duration="24828000" />
-      <workItem from="1749631103997" duration="24088000" />
+      <workItem from="1749631103997" duration="26459000" />
+      <workItem from="1749804800265" duration="29651000" />
+      <workItem from="1749892058827" duration="17671000" />
+      <workItem from="1749994024899" duration="2414000" />
+      <workItem from="1750011269100" duration="33986000" />
     </task>
+    <task id="LOCAL-00001" summary="adaptation apres modification de la base de donnée">
+      <option name="closed" value="true" />
+      <created>1749743809772</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1749743809772</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="adaptation apres modification de la base de donnée" />
+    <option name="LAST_COMMIT_MESSAGE" value="adaptation apres modification de la base de donnée" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -422,11 +240,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/contrats/forms.py</url>
-          <line>252</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/contrats/forms.py</url>
           <line>426</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
@@ -452,42 +265,37 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>431</line>
+          <line>434</line>
           <option name="timeStamp" value="51" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>461</line>
+          <line>464</line>
           <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>2539</line>
+          <line>2482</line>
           <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>2039</line>
+          <line>1982</line>
           <option name="timeStamp" value="56" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>1645</line>
+          <line>1588</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>1662</line>
+          <line>1605</line>
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>1598</line>
-          <option name="timeStamp" value="59" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>2820</line>
+          <line>2763</line>
           <option name="timeStamp" value="61" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -497,17 +305,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>860</line>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>2811</line>
+          <line>2754</line>
           <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>2859</line>
+          <line>2802</line>
           <option name="timeStamp" value="67" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -517,8 +320,68 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/payments/views.py</url>
-          <line>2986</line>
+          <line>2929</line>
           <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/payments/views.py</url>
+          <line>1325</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/payments/views.py</url>
+          <line>789</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/payments/models.py</url>
+          <line>391</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/views.py</url>
+          <line>473</line>
+          <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/stations/forms.py</url>
+          <line>164</line>
+          <option name="timeStamp" value="78" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/stations/urls.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/stations/views.py</url>
+          <line>412</line>
+          <option name="timeStamp" value="83" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/stations/views.py</url>
+          <line>638</line>
+          <option name="timeStamp" value="84" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/stations/views.py</url>
+          <line>69</line>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/stations/views.py</url>
+          <line>26</line>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/stations/views.py</url>
+          <line>45</line>
+          <option name="timeStamp" value="87" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/stations/views.py</url>
+          <line>295</line>
+          <option name="timeStamp" value="88" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

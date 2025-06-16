@@ -1,0 +1,267 @@
+<!-- templates/stations/stations_comparison.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Comparaison des Stations{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1>Comparaison des Stations</h1>
+                <div class="header-actions">
+                    <a href="{% url 'stations:dashboard_rentability' %}" class="btn btn-secondary">
+                            Retour Dashboard
+                    </a>
+                </div>
+                <p class="text-muted">
+                    Période: {{ start_date|date:"d/m/Y" }} - {{ end_date|date:"d/m/Y" }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Filtres</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Station</label>
+                            {{ filter_form.station }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Période</label>
+                            {{ filter_form.periode }}
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Date début</label>
+                            {{ filter_form.date_debut }}
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Date fin</label>
+                            {{ filter_form.date_fin }}
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Filtrer</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Résumé global -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Revenus</h5>
+                    <h3 class="metric-value text-success">{{ total_revenue|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Toutes stations</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Charges</h5>
+                    <h3 class="metric-value text-danger">{{ total_charges|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Toutes stations</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5 class="card-title">Bénéfice Global</h5>
+                    <h3 class="metric-value {% if total_profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ total_profit|floatformat:0|intcomma }} FCFA
+                    </h3>
+                    <small class="text-muted">Net global</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Swaps</h5>
+                    <h3 class="metric-value text-info">{{ total_swaps|intcomma }}</h3>
+                    <small class="text-muted">Toutes stations</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau de comparaison -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Classement des Stations par Rentabilité</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Rang</th>
+                                    <th>Station</th>
+                                    <th>Revenus</th>
+                                    <th>Charges</th>
+                                    <th>Bénéfice</th>
+                                    <th>Marge (%)</th>
+                                    <th>Nb Swaps</th>
+                                    <th>Rev/Swap</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in stations_data %}
+                                <tr>
+                                    <td>
+                                        <span class="badge
+                                            {% if forloop.counter == 1 %}bg-warning{% elif forloop.counter <= 3 %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {{ forloop.counter }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <strong>{{ data.station.nom_agence }}</strong>
+                                            {% if data.station.ville %}
+                                                <br><small class="text-muted">{{ data.station.ville }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td class="text-success fw-bold">
+                                        {{ data.revenue|floatformat:0|intcomma }} FCFA
+                                    </td>
+                                    <td class="text-danger fw-bold">
+                                        {{ data.charges|floatformat:0|intcomma }} FCFA
+                                    </td>
+                                    <td class="fw-bold {% if data.profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ data.profit|floatformat:0|intcomma }} FCFA
+                                    </td>
+                                    <td class="fw-bold {% if data.margin >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ data.margin|floatformat:1 }}%
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ data.swaps_count }}</span>
+                                    </td>
+                                    <td>
+                                        {{ data.avg_per_swap|floatformat:0|intcomma }} FCFA
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="{% url 'stations:station_detail' data.station.id %}"
+                                               class="btn btn-outline-primary btn-sm" title="Voir détails">
+                                                Détails
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted">
+                                        Aucune donnée disponible pour cette période
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analyse et insights -->
+    {% if stations_data %}
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Top Performers</h5>
+                </div>
+                <div class="card-body">
+                    {% for data in stations_data|slice:":3" %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <strong>{{ data.station.nom_agence }}</strong>
+                            <br><small class="text-muted">{{ data.swaps_count }} swaps</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-success fw-bold">{{ data.profit|floatformat:0|intcomma }} FCFA</div>
+                            <small class="text-muted">{{ data.margin|floatformat:1 }}% marge</small>
+                        </div>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Stations à Optimiser</h5>
+                </div>
+                <div class="card-body">
+                    {% for data in stations_data %}
+                        {% if data.profit < 0 %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <strong>{{ data.station.nom_agence }}</strong>
+                                <br><small class="text-muted">{{ data.swaps_count }} swaps</small>
+                            </div>
+                            <div class="text-end">
+                                <div class="text-danger fw-bold">{{ data.profit|floatformat:0|intcomma }} FCFA</div>
+                                <small class="text-muted">{{ data.margin|floatformat:1 }}% marge</small>
+                            </div>
+                        </div>
+                        <hr>
+                        {% endif %}
+                    {% empty %}
+                        <div class="text-center text-muted">
+                            <p>Toutes les stations sont rentables !</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestion du formulaire de filtre
+    const periodeSelect = document.querySelector('select[name="periode"]');
+    const dateFields = document.querySelectorAll('input[type="date"]');
+
+    if (periodeSelect) {
+        periodeSelect.addEventListener('change', function() {
+            const isCustom = this.value === 'custom';
+            dateFields.forEach(field => {
+                field.style.display = isCustom ? 'block' : 'none';
+                field.required = isCustom;
+            });
+        });
+
+        // Déclencher l'événement au chargement
+        periodeSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
+{% endblock %}

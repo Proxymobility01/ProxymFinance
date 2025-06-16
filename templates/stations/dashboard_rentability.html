@@ -1,0 +1,311 @@
+<!-- templates/stations/dashboard_rentability.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Dashboard Rentabilité{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- En-tête avec le système Proxym -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1>Dashboard Rentabilité</h1>
+                <p class="text-muted">Aperçu de la performance pour {{ current_month }}</p>
+                <div class="header-actions">
+
+                    <a href="{% url 'stations:quick_analysis' %}" class="btn btn-primary">
+                        Analyse Rapide
+                    </a>
+                    <a href="{% url 'stations:stations_comparison' %}" class="btn btn-success">
+                        Comparer Stations
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métriques principales avec le style Proxym -->
+    <div class="row mt-4">
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Revenus du mois</h5>
+                    <h3 class="text-success">{{ current_month_revenue|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Total des swaps</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Charges du mois</h5>
+                    <h3 class="text-danger">{{ current_month_charges|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Coûts opérationnels</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Bénéfice net</h5>
+                    <h3 class="{% if current_month_profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ current_month_profit|floatformat:0|intcomma }} FCFA
+                    </h3>
+                    <small class="text-muted">
+                        {% if current_month_profit >= 0 %}Rentable{% else %}Déficitaire{% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Swaps effectués</h5>
+                    <h3 class="text-info">{{ current_month_swaps|intcomma }}</h3>
+                    <small class="text-muted">Ce mois</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Graphique d'évolution -->
+        <div class="col-md-8">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <div class="chart-header">
+                        <h3>Évolution des revenus (30 derniers jours)</h3>
+                        <div class="chart-period-buttons">
+                            <button type="button" class="btn btn-secondary active" onclick="updateChart(7)">7j</button>
+                            <button type="button" class="btn btn-secondary" onclick="updateChart(30)">30j</button>
+                            <button type="button" class="btn btn-secondary" onclick="updateChart(90)">90j</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="evolutionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top stations -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Top 5 Stations - {{ current_month }}</h3>
+                </div>
+                <div class="card-body">
+                    {% for station in top_stations %}
+                    <div class="station-item">
+                        <div class="d-flex justify-content-between align-items-center py-2">
+                            <div>
+                                <h6 class="mb-1">{{ station.nom_agence }}</h6>
+                                <small class="text-muted">{{ station.ville|default:"" }}</small>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-success">
+                                    <strong>{{ station.monthly_revenue|default:0|floatformat:0|intcomma }} FCFA</strong>
+                                </div>
+                                <small>
+                                    <a href="{% url 'stations:station_detail' station.id %}" class="text-primary">
+                                        Voir détails
+                                    </a>
+                                </small>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-4">
+                        <p>Aucune donnée disponible pour ce mois</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Actions Rapides</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 col-6 mb-3">
+                            <a href="{% url 'stations:rentability_analysis_create' %}" class="btn btn-primary btn-block py-3">
+                                <div class="text-center">
+                                    <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                                    <div>Nouvelle Analyse</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <a href="{% url 'stations:station_charge_create' %}" class="btn btn-secondary btn-block py-3">
+                                <div class="text-center">
+                                    <i class="fas fa-receipt fa-2x mb-2"></i>
+                                    <div>Ajouter Charge</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <a href="{% url 'stations:rentability_analysis_list' %}" class="btn btn-info btn-block py-3">
+                                <div class="text-center">
+                                    <i class="fas fa-list fa-2x mb-2"></i>
+                                    <div>Toutes les Analyses</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <a href="{% url 'stations:stations_comparison' %}" class="btn btn-success btn-block py-3">
+                                <div class="text-center">
+                                    <i class="fas fa-chart-bar fa-2x mb-2"></i>
+                                    <div>Comparaison</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Graphique d'évolution des revenus
+    const ctx = document.getElementById('evolutionChart').getContext('2d');
+
+    // Générer des données d'exemple pour le graphique
+    const labels = [];
+    const revenues = [];
+    const charges = [];
+
+    // Générer 30 jours de données
+    for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        labels.push(date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' }));
+
+        // Données simulées basées sur les valeurs réelles
+        const baseRevenue = {{ current_month_revenue|default:0 }} / 30;
+        const baseCharges = {{ current_month_charges|default:0 }} / 30;
+
+        revenues.push(baseRevenue * (0.8 + Math.random() * 0.4));
+        charges.push(baseCharges * (0.8 + Math.random() * 0.4));
+    }
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Revenus',
+                data: revenues,
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#4CAF50',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.4,
+                fill: false
+            }, {
+                label: 'Charges',
+                data: charges,
+                borderColor: '#F44336',
+                backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#F44336',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#DCDC34',
+                    borderWidth: 1,
+                    cornerRadius: 6,
+                    displayColors: true,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' +
+                                   new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' FCFA';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        },
+                        callback: function(value) {
+                            return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+
+function updateChart(days) {
+    // Mettre à jour les boutons actifs
+    document.querySelectorAll('.chart-period-buttons .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // Simuler le chargement de nouvelles données
+    console.log('Chargement des données pour ' + days + ' jours');
+}
+</script>
+{% endblock %}
