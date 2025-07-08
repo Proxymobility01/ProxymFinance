@@ -1,0 +1,118 @@
+{% extends 'stations/base_stations.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Page header -->
+    <div class="page-header">
+        <h2 class="page-title">Gestion des Charges</h2>
+        <div>
+            <a href="{% url 'stations:charge-create' %}" class="btn btn-primary">
+                Ajouter une charge
+            </a>
+            <a href="{% url 'stations:charge-export' %}" class="btn btn-secondary">
+                Exporter CSV
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                {{ filter_form.as_p }}
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <a href="{% url 'stations:charge-list' %}" class="btn btn-secondary">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Total des charges -->
+    <div class="alert alert-info">
+        <strong>Total des charges filtrées : {{ total_charges|floatformat:2 }} Fcfa</strong>
+    </div>
+
+    <!-- Liste des charges -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Station</th>
+                            <th>Titre</th>
+                            <th>Type</th>
+                            <th>Catégorie</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for charge in charges %}
+                        <tr>
+                            <td>{{ charge.station.nom_agence }}</td>
+                            <td>{{ charge.titre }}</td>
+                            <td>{{ charge.get_type_charge_display }}</td>
+                            <td>{{ charge.get_categorie_display }}</td>
+                            <td>{{ charge.montant }} Fcfa</td>
+                            <td>{{ charge.date_charge|date:"d/m/Y" }}</td>
+                            <td>
+                                <span class="badge bg-{{ charge.statut|yesno:'success,warning' }}">
+                                    {{ charge.statut }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'stations:charge-update' charge.pk %}" class="btn btn-sm btn-primary">
+                                    Modifier
+                                </a>
+                                <a href="{% url 'stations:charge-delete' charge.pk %}" class="btn btn-sm btn-danger">
+                                    Supprimer
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Aucune charge trouvée.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">Première</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+            </li>
+            {% endif %}
+            
+            <li class="page-item active">
+                <span class="page-link">
+                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Dernière</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

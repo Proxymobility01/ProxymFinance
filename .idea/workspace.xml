@@ -4,38 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="adaptation apres modification de la base de donnée">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f/storage_v2/_src_/schema/auth_bd.OdJ22Q.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f/storage_v2/_src_/schema/mysql.osA4Bg.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f/storage_v2/_src_/schema/proxym_test_db.ywY8-A.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f/storage_v2/_src_/schema/sys.zb4BAA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/proxym_finance.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/proxym_finance.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authentication/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/authentication/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/authentication/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authentication/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/authentication/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashboard/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashboard/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/migrations/0002_remove_penalite_paiement_penalite_montant_payé_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stations/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/stations/migrations/0002_rentabilityanalysis_swap.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/stations/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/partials/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/partials/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/historique.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/historique.html" afterDir="false" />
-    </list>
+    <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="adaptation apres modification de la base de donnée" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

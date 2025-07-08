@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Proxym Finance{% endblock %} | Gestion de Contrats</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    
+    <!-- Google Fonts - Orbitron for headings -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+    
+    <!-- CSS custom -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    <!-- Page-specific CSS -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% include 'partials/navbar.html' %}
+    
+    <!-- Flash messages -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'info' %}alert-info{% endif %} alert-dismissible">
+                    {{ message }}
+                    <button type="button" class="close" onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <!-- Page header -->
+    <div class="container mt-4">
+        <div class="page-header">
+            <h1 class="page-title">{% block page_title %}{% endblock %}</h1>
+            <div class="page-actions">
+                {% block page_actions %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main content -->
+    <main class="main-content container mt-3">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer mt-5 py-3">
+        <div class="container text-center">
+            <p>&copy; {% now "Y" %} Proxym Finance. Tous droits réservés.</p>
+        </div>
+    </footer>
+    
+    <!-- Core JS -->
+    <script src="{% static 'js/theme-switcher.js' %}"></script>
+    
+    <!-- Page-specific JS -->
+    {% block extra_js %}{% endblock %}
+    
+    <script>
+        // Initialize tooltips and other components
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-close flash messages after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.style.display = 'none';
+                });
+            }, 5000);
+            
+            // Other initializations
+        });
+    </script>
+</body>
+</html>

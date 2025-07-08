@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+{% block page_title %}{{ titre }}{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'contrats:liste_chauffeurs' %}" class="btn btn-secondary">
+    <i class="ti ti-arrow-left"></i> Retour
+</a>
+{% endblock %}
+
+{% block content %} 
+<div class="card">
+    <div class="card-header">
+        <h3>{{ action }} un chauffeur</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <strong>Des erreurs ont été détectées dans le formulaire:</strong>
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                <!-- Informations personnelles -->
+                <div class="col-md-6">
+                    <h4 class="mb-3">Informations personnelles</h4>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.nom.id_for_label }}">{{ form.nom.label }}</label>
+                        {{ form.nom }}
+                        {% if form.nom.help_text %}
+                            <small class="form-text text-muted">{{ form.nom.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.prenom.id_for_label }}">{{ form.prenom.label }}</label>
+                        {{ form.prenom }}
+                        {% if form.prenom.help_text %}
+                            <small class="form-text text-muted">{{ form.prenom.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% if form.email.help_text %}
+                            <small class="form-text text-muted">{{ form.email.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                        {{ form.phone }}
+                        {% if form.phone.help_text %}
+                            <small class="form-text text-muted">{{ form.phone.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.numero_cni.id_for_label }}">{{ form.numero_cni.label }}</label>
+                        {{ form.numero_cni }}
+                        {% if form.numero_cni.help_text %}
+                            <small class="form-text text-muted">{{ form.numero_cni.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.domicile.id_for_label }}">{{ form.domicile.label }}</label>
+                        {{ form.domicile }}
+                        {% if form.domicile.help_text %}
+                            <small class="form-text text-muted">{{ form.domicile.help_text }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Documents -->
+                <div class="col-md-6">
+                    <h4 class="mb-3">Documents</h4>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.photo_cni_recto.id_for_label }}">{{ form.photo_cni_recto.label }}</label>
+                        {% if chauffeur and chauffeur.photo_cni_recto %}
+                            <div class="mb-2">
+                                <a href="{{ chauffeur.photo_cni_recto.url }}" target="_blank" class="btn btn-sm btn-info">
+                                    <i class="ti ti-eye"></i> Voir le document actuel
+                                </a>
+                            </div>
+                        {% endif %}
+                        {{ form.photo_cni_recto }}
+                        {% if form.photo_cni_recto.help_text %}
+                            <small class="form-text text-muted">{{ form.photo_cni_recto.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.photo_cni_verso.id_for_label }}">{{ form.photo_cni_verso.label }}</label>
+                        {% if chauffeur and chauffeur.photo_cni_verso %}
+                            <div class="mb-2">
+                                <a href="{{ chauffeur.photo_cni_verso.url }}" target="_blank" class="btn btn-sm btn-info">
+                                    <i class="ti ti-eye"></i> Voir le document actuel
+                                </a>
+                            </div>
+                        {% endif %}
+                        {{ form.photo_cni_verso }}
+                        {% if form.photo_cni_verso.help_text %}
+                            <small class="form-text text-muted">{{ form.photo_cni_verso.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.permis_conduire.id_for_label }}">{{ form.permis_conduire.label }}</label>
+                        {% if chauffeur and chauffeur.permis_conduire %}
+                            <div class="mb-2">
+                                <a href="{{ chauffeur.permis_conduire.url }}" target="_blank" class="btn btn-sm btn-info">
+                                    <i class="ti ti-eye"></i> Voir le document actuel
+                                </a>
+                            </div>
+                        {% endif %}
+                        {{ form.permis_conduire }}
+                        {% if form.permis_conduire.help_text %}
+                            <small class="form-text text-muted">{{ form.permis_conduire.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.plan_localisation.id_for_label }}">{{ form.plan_localisation.label }}</label>
+                        {% if chauffeur and chauffeur.plan_localisation %}
+                            <div class="mb-2">
+                                <a href="{{ chauffeur.plan_localisation.url }}" target="_blank" class="btn btn-sm btn-info">
+                                    <i class="ti ti-eye"></i> Voir le document actuel
+                                </a>
+                            </div>
+                        {% endif %}
+                        {{ form.plan_localisation }}
+                        {% if form.plan_localisation.help_text %}
+                            <small class="form-text text-muted">{{ form.plan_localisation.help_text }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mt-4 text-center">
+                <button type="submit" class="btn btn-primary">
+                    <i class="ti ti-device-floppy"></i> {{ action }}
+                </button>
+                <a href="{% url 'contrats:liste_chauffeurs' %}" class="btn btn-secondary">
+                    <i class="ti ti-x"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ajouter la classe form-control à tous les champs du formulaire
+        const formInputs = document.querySelectorAll('input, select, textarea');
+        formInputs.forEach(input => {
+            if (!input.classList.contains('form-control')) {
+                input.classList.add('form-control');
+            }
+        });
+        
+        // Prévisualisation des fichiers avant upload
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const fileType = file.type;
+                    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+                    
+                    if (validTypes.includes(fileType)) {
+                        const previewId = `preview-${input.id}`;
+                        let previewElement = document.getElementById(previewId);
+                        
+                        if (!previewElement) {
+                            previewElement = document.createElement('div');
+                            previewElement.id = previewId;
+                            previewElement.className = 'file-preview mt-2';
+                            input.parentNode.insertBefore(previewElement, input.nextSibling);
+                        }
+                        
+                        if (fileType.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                previewElement.innerHTML = `
+                                    <img src="${e.target.result}" alt="Aperçu" style="max-width: 100%; max-height: 200px;">
+                                    <p class="mt-1 text-muted">${file.name} (${Math.round(file.size / 1024)} Ko)</p>
+                                `;
+                            }
+                            reader.readAsDataURL(file);
+                        } else {
+                            previewElement.innerHTML = `
+                                <div class="p-3 bg-light text-center">
+                                    <i class="ti ti-file-text" style="font-size: 32px;"></i>
+                                    <p class="mt-1">${file.name} (${Math.round(file.size / 1024)} Ko)</p>
+                                </div>
+                            `;
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

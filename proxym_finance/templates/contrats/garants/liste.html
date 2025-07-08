@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titre }}</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:ajouter_garant' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Ajouter un garant
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped" id="table-garants">
+                        <thead>
+                            <tr>
+                                <th>Nom complet</th>
+                                <th>Numéro CNI</th>
+                                <th>Téléphone</th>
+                                <th>Occupation</th>
+                                <th>Contrats garantis</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for garant in garants %}
+                            <tr>
+                                <td>{{ garant.prenom }} {{ garant.nom }}</td>
+                                <td>{{ garant.numero_cni }}</td>
+                                <td>{{ garant.telephone }}</td>
+                                <td>{{ garant.occupation }}</td>
+                                <td>
+                                    <span class="badge badge-info">
+                                        {{ garant.contrats_garantis.count }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'contrats:details_garant' garant.id %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'contrats:modifier_garant' garant.id %}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun garant trouvé</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#table-garants').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+            "url": "{% static 'datatables/fr.json' %}"
+        }
+    });
+});
+</script>
+{% endblock %}

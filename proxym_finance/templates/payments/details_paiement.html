@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ titre }}</h2>
+
+<div class="payment-details">
+  <div class="row mb-2">
+    <div class="col-2 form-label text-left">Référence</div>
+    <div class="col-2 text-left">
+      {{ paiement.reference }}
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-2 form-label text-left">Montant</div>
+    <div class="col-2 text-left">
+      {{ paiement.montant }} FCFA
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-2 form-label text-left">Date</div>
+    <div class="col-2 text-left">
+      {{ paiement.date_paiement }}
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-2 form-label text-left">Heure</div>
+    <div class="col-2 text-left">
+      {{ paiement.heure_paiement }}
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-2 form-label text-left">Méthode</div>
+    <div class="col-2 text-left">
+      {{ paiement.methode_paiement }}
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-2 form-label text-left">Référence transaction</div>
+    <div class="col-2 text-left">
+      {{ paiement.reference_transaction }}
+    </div>
+  </div>
+
+  <div class="row mb-2">
+    <div class="col-2 form-label text-left">Type de contrat</div>
+    <div class="col-2 text-left">
+      {{ paiement.type_contrat }}
+    </div>
+  </div>
+
+  {% if client %}
+    <div class="row mb-2">
+      <div class="col-2 form-label text-left">Client</div>
+      <div class="col-2 text-left">
+        {{ client.nom }} {{ client.prenom }}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-2 form-label text-left">Notes</div>
+    <div class="col-2 text-left">
+      {{ paiement.notes }}
+    </div>
+  </div>
+</div>
+
+<a href="{% url 'payments:centre_paiements' %}" class="btn btn-secondary">Retour</a>
+{% endblock %}

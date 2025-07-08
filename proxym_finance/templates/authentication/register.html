@@ -1,0 +1,286 @@
+{% comment %}
+templates/authentication/register.html
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxym Finance - Création de compte</title>
+    
+    <!-- Google Fonts - Orbitron pour les titres -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+    
+    <!-- CSS personnalisé -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+
+    <style>
+        /* Styles spécifiques à la page d'enregistrement */
+        body {
+            background-color: var(--bg-secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .register-container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 520px;
+            padding: 2rem;
+        }
+        
+        .register-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .register-logo h1 {
+            font-family: 'Orbitron', sans-serif !important;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 1rem;
+        }
+        
+        .register-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .register-form .form-control {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+        
+        .btn-register {
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-register:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Styles pour les messages d'erreur */
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Style pour les messages de Django */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        @media (max-width: 576px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bouton de changement de thème -->
+    <button id="theme-toggle" class="theme-toggle">
+        <i class="ti ti-moon"></i>
+    </button>
+
+    <div class="register-container">
+        <div class="register-logo">
+            <i class="ti ti-battery-charging" style="font-size: 3rem; color: var(--primary-color);"></i>
+            <h1>Proxym Finance</h1>
+            <p>Créez votre compte</p>
+        </div>
+        
+        <!-- Messages Django -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Erreurs de formulaire (si applicable) -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form class="register-form" id="register-form" method="POST" action="{% url 'authentication:register' %}">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Nom</label>
+                    {{ form.nom }}
+                    {% if form.nom.errors %}
+                        <div class="error-message">{{ form.nom.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Prénom</label>
+                    {{ form.prenom }}
+                    {% if form.prenom.errors %}
+                        <div class="error-message">{{ form.prenom.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="error-message">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Téléphone</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <div class="error-message">{{ form.phone.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Mot de passe</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="error-message">{{ form.password.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Confirmer le mot de passe</label>
+                    {{ form.confirm_password }}
+                    {% if form.confirm_password.errors %}
+                        <div class="error-message">{{ form.confirm_password.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-register">
+                <i class="ti ti-user-plus"></i> Créer mon compte
+            </button>
+        </form>
+        
+        <div class="login-link">
+            <p>Vous avez déjà un compte? <a href="{% url 'authentication:login' %}">Connectez-vous</a></p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Gestion du thème
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const htmlElement = document.documentElement;
+            
+            // Vérifier les préférences de l'utilisateur depuis localStorage
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            htmlElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                // Mettre à jour l'attribut et sauvegarder dans localStorage
+                htmlElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Mettre à jour l'icône
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                const iconElement = themeToggle.querySelector('i');
+                if (theme === 'dark') {
+                    iconElement.className = 'ti ti-sun';
+                    themeToggle.title = 'Passer au thème clair';
+                } else {
+                    iconElement.className = 'ti ti-moon';
+                    themeToggle.title = 'Passer au thème sombre';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

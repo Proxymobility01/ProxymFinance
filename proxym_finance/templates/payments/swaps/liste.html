@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Entête avec titre et statistiques -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Transactions de Swap (Échanges de batteries)</h1>
+        <div class="d-flex">
+            <a href="{% url 'payments:centre_paiements' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-2">
+                <i class="fas fa-money-bill-wave fa-sm text-white-50 mr-1"></i> Centre de paiements
+            </a>
+            <button class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm" id="btnExport">
+                <i class="fas fa-download fa-sm text-white-50 mr-1"></i> Exporter
+            </button>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-xl-4 col-md-12 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Nombre total de swaps</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_swaps }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exchange-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Montant total</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ montant_total|floatformat:0 }} FCFA</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Moyenne quotidienne</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ moyenne_swaps_jour|floatformat:1 }} swaps/jour</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Filtres de recherche</h6>
+        </div>
+        <div class="card-body">
+            <form method="get" class="form-inline mb-3">
+                <div class="input-group mr-2 mb-2">
+                    <input type="text" name="q" class="form-control" placeholder="Rechercher..." value="{{ filtres.q }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="input-group mr-2 mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Du</span>
+                    </div>
+                    <input type="date" name="date_debut" class="form-control" value="{{ filtres.date_debut }}">
+                </div>
+                
+                <div class="input-group mr-2 mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Au</span>
+                    </div>
+                    <input type="date" name="date_fin" class="form-control" value="{{ filtres.date_fin }}">
+                </div>
+                
+                <button type="submit" class="btn btn-primary mb-2">Filtrer</button>
+                <a href="{% url 'payments:liste_swaps' %}" class="btn btn-outline-secondary mb-2 ml-2">Réinitialiser</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des swaps -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Transactions ({{ swaps.paginator.count }})</h6>
+        </div>
+        <div class="card-body">
+            {% if swaps %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="tableSwaps">
+                    <thead>
+                        <tr>
+                            <th>ID Transaction</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Station</th>
+                            <th>Montant</th>
+                            <th>Méthode</th>
+                            <th>Statut</th>
+                            <th>Batteries (Entrée/Sortie)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for swap in swaps %}
+                        <tr>
+                            <td>{{ swap.transaction_id }}</td>
+                            <td>{{ swap.date_transaction|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if swap.chauffeur %}
+                                {{ swap.chauffeur.prenom }} {{ swap.chauffeur.nom }}
+                                {% elif swap.partenaire %}
+                                {{ swap.partenaire.prenom }} {{ swap.partenaire.nom }}
+                                {% else %}
+                                Non identifié
+                                {% endif %}
+                            </td>
+                            <td>{{ swap.station_nom }}</td>
+                            <td>{{ swap.montant|floatformat:0 }} FCFA</td>
+                            <td>{{ swap.methode_paiement }}</td>
+                            <td>
+                                {% if swap.statut_paiement == 'payé' %}
+                                <span class="badge badge-success">Payé</span>
+                                {% elif swap.statut_paiement == 'en_attente' %}
+                                <span class="badge badge-warning">En attente</span>
+                                {% else %}
+                                <span class="badge badge-secondary">{{ swap.statut_paiement }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ swap.batterie_entree_id }}
+                                <i class="fas fa-exchange-alt text-primary mx-2"></i>
+                                {{ swap.batterie_sortie_id }}
+                                <span class="badge badge-info ml-2">{{ swap.niveau_charge_entree }}%</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if swaps.paginator.num_pages > 1 %}
+            <div class="d-flex justify-content-center mt-4">
+                <ul class="pagination">
+                    {% if swaps.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ swaps.previous_page_number }}{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in swaps.paginator.page_range %}
+                    {% if swaps.number == num %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                    {% elif num > swaps.number|add:'-3' and num < swaps.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if swaps.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ swaps.next_page_number }}{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ swaps.paginator.num_pages }}{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i> Aucune transaction ne correspond aux critères de recherche.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,168 @@
+<!-- Ce template ne contient que le formulaire sans layout -->
+<form method="post" enctype="multipart/form-data" id="chauffeurModalForm" action="{% url 'contrats:ajouter_chauffeur' %}?ajax=1">
+    {% csrf_token %}
+    
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Des erreurs ont été détectées dans le formulaire:</strong>
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        <!-- Informations personnelles -->
+        <div class="col-md-6">
+            <h4 class="mb-3">Informations personnelles</h4>
+            
+            <div class="form-group">
+                <label for="{{ form.nom.id_for_label }}">{{ form.nom.label }}</label>
+                {{ form.nom }}
+                {% if form.nom.help_text %}
+                    <small class="form-text text-muted">{{ form.nom.help_text }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.prenom.id_for_label }}">{{ form.prenom.label }}</label>
+                {{ form.prenom }}
+                {% if form.prenom.help_text %}
+                    <small class="form-text text-muted">{{ form.prenom.help_text }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.help_text %}
+                    <small class="form-text text-muted">{{ form.email.help_text }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                {{ form.phone }}
+                {% if form.phone.help_text %}
+                    <small class="form-text text-muted">{{ form.phone.help_text }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.numero_cni.id_for_label }}">{{ form.numero_cni.label }}</label>
+                {{ form.numero_cni }}
+                {% if form.numero_cni.help_text %}
+                    <small class="form-text text-muted">{{ form.numero_cni.help_text }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.domicile.id_for_label }}">{{ form.domicile.label }}</label>
+                {{ form.domicile }}
+                {% if form.domicile.help_text %}
+                    <small class="form-text text-muted">{{ form.domicile.help_text }}</small>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Documents -->
+        <div class="col-md-6">
+            <h4 class="mb-3">Documents</h4>
+            
+            <div class="form-group">
+                <label for="{{ form.photo_cni_recto.id_for_label }}">{{ form.photo_cni_recto.label }}</label>
+                {% if chauffeur and chauffeur.photo_cni_recto %}
+                    <div class="mb-2">
+                        <a href="{{ chauffeur.photo_cni_recto.url }}" target="_blank" class="btn btn-sm btn-info">
+                            <i class="ti ti-eye"></i> Voir le document actuel
+                        </a>
+                    </div>
+                {% endif %}
+                {{ form.photo_cni_recto }}
+                {% if form.photo_cni_recto.help_text %}
+                    <small class="form-text text-muted">{{ form.photo_cni_recto.help_text }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.photo_cni_verso.id_for_label }}">{{ form.photo_cni_verso.label }}</label>
+                {% if chauffeur and chauffeur.photo_cni_verso %}
+                    <div class="mb-2">
+                        <a href="{{ chauffeur.photo_cni_verso.url }}" target="_blank" class="btn btn-sm btn-info">
+                            <i class="ti ti-eye"></i> Voir le document actuel
+                        </a>
+                    </div>
+                {% endif %}
+                {{ form.photo_cni_verso }}
+                {% if form.photo_cni_verso.help_text %}
+                    <small class="form-text text-muted">{{ form.photo_cni_verso.help_text }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.permis_conduire.id_for_label }}">{{ form.permis_conduire.label }}</label>
+                {% if chauffeur and chauffeur.permis_conduire %}
+                    <div class="mb-2">
+                        <a href="{{ chauffeur.permis_conduire.url }}" target="_blank" class="btn btn-sm btn-info">
+                            <i class="ti ti-eye"></i> Voir le document actuel
+                        </a>
+                    </div>
+                {% endif %}
+                {{ form.permis_conduire }}
+                {% if form.permis_conduire.help_text %}
+                    <small class="form-text text-muted">{{ form.permis_conduire.help_text }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.plan_localisation.id_for_label }}">{{ form.plan_localisation.label }}</label>
+                {% if chauffeur and chauffeur.plan_localisation %}
+                    <div class="mb-2">
+                        <a href="{{ chauffeur.plan_localisation.url }}" target="_blank" class="btn btn-sm btn-info">
+                            <i class="ti ti-eye"></i> Voir le document actuel
+                        </a>
+                    </div>
+                {% endif %}
+                {{ form.plan_localisation }}
+                {% if form.plan_localisation.help_text %}
+                    <small class="form-text text-muted">{{ form.plan_localisation.help_text }}</small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group mt-4 text-center">
+        <button type="submit" class="btn btn-primary">
+            <i class="ti ti-device-floppy"></i> Enregistrer
+        </button>
+        <button type="button" class="btn btn-secondary" id="fermerChauffeurFormBtn">
+            <i class="ti ti-x"></i> Annuler
+        </button>
+    </div>
+    
+    <input type="hidden" name="ajax" value="1">
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ajouter la classe form-control à tous les champs du formulaire
+        const formInputs = document.querySelectorAll('#chauffeurModalForm input, #chauffeurModalForm select, #chauffeurModalForm textarea');
+        formInputs.forEach(input => {
+            if (!input.classList.contains('form-control')) {
+                input.classList.add('form-control');
+            }
+        });
+        
+        // Fermer le modal en cliquant sur Annuler
+        document.getElementById('fermerChauffeurFormBtn').addEventListener('click', function() {
+            document.getElementById('ajoutChauffeurModal').style.display = 'none';
+        });
+    });
+</script>

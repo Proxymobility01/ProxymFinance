@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Gérer la pénalité
+                    </h6>
+                    <a href="{% url 'contrats:gestion_penalites' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-arrow-left mr-1"></i> Retour
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Informations sur le client et la pénalité -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Client</h5>
+                            <p class="mb-0"><strong>Nom:</strong> {{ client.prenom }} {{ client.nom }}</p>
+                            <p class="mb-0"><strong>CNI:</strong> {{ client.numero_cni }}</p>
+                            <p><strong>Contact:</strong> {{ client.phone|default:client.telephone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Pénalité</h5>
+                            <p class="mb-0"><strong>Date:</strong> {{ penalite.date_creation }}</p>
+                            <p class="mb-0"><strong>Montant:</strong> {{ penalite.montant|floatformat:0 }} FCFA</p>
+                            <p><strong>Motif:</strong> {{ penalite.get_motif_display }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle mr-2"></i> <strong>Description:</strong> {{ penalite.description|default:"Aucune description fournie." }}
+                    </div>
+                    
+                    <!-- Formulaire de gestion -->
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_action"><strong>Action à effectuer</strong></label>
+                            {{ form.action }}
+                        </div>
+                        
+                        <div id="paiementSection" class="form-group">
+                            <label for="id_montant_paiement"><strong>Montant du paiement</strong></label>
+                            <div class="input-group">
+                                {{ form.montant_paiement }}
+                                <div class="input-group-append">
+                                    <span class="input-group-text">FCFA</span>
+                                </div>
+                            </div>
+                            
+                            <label for="id_methode_paiement" class="mt-3"><strong>Méthode de paiement</strong></label>
+                            {{ form.methode_paiement }}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_raison"><strong>Raison / Commentaire</strong></label>
+                            {{ form.raison }}
+                            <small class="form-text text-muted">
+                                Fournissez une explication pour cette action (particulièrement important pour les annulations).
+                            </small>
+                        </div>
+                        
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg" id="btnSubmit">
+                                <i class="fas fa-check-circle mr-1"></i> Confirmer
+                            </button>
+                            <a href="{% url 'contrats:gestion_penalites' %}" class="btn btn-light btn-lg ml-2">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Afficher/masquer la section de paiement selon l'action
+        function togglePaiementSection() {
+            const action = $('#id_action').val();
+            if (action === 'payer') {
+                $('#paiementSection').show();
+                $('#btnSubmit').removeClass('btn-danger').addClass('btn-primary')
+                    .html('<i class="fas fa-money-bill-wave mr-1"></i> Confirmer le paiement');
+            } else {
+                $('#paiementSection').hide();
+                
+                if (action === 'annuler') {
+                    $('#btnSubmit').removeClass('btn-primary').addClass('btn-danger')
+                        .html('<i class="fas fa-ban mr-1"></i> Confirmer l\'annulation');
+                } else {
+                    $('#btnSubmit').removeClass('btn-danger').addClass('btn-primary')
+                        .html('<i class="fas fa-calendar-alt mr-1"></i> Confirmer le report');
+                }
+            }
+        }
+        
+        // Initialisation
+        togglePaiementSection();
+        
+        // Événement de changement d'action
+        $('#id_action').change(togglePaiementSection);
+    });
+</script>
+{% endblock %}
