@@ -299,8 +299,6 @@ class Contrat(models.Model):
 
 
 # Contrat Chauffeur
-
-
 class ContratChauffeur(Contrat):
     association = models.ForeignKey(AssociationUserMoto, on_delete=models.SET_NULL, null=True,
                                     related_name='association_user_motos')
@@ -409,7 +407,6 @@ class ContratPartenaire(Contrat):
 
 
 # Dans models.py de l'application contrats
-
 class ContratBatterie(Contrat):
     chauffeur = models.ForeignKey(ValidatedUser, on_delete=models.CASCADE, related_name='contrats_batterie', null=True,
                                   blank=True)

@@ -61,7 +61,8 @@ class LoginView(View):
                     if role.title == 'Gestionnaire de Station':
                         return redirect('station:index')
                     elif role.title == 'Gestionnaire des Opérations':
-                        return redirect('rapports:index')
+                        #return redirect('rapports:index')
+                        return redirect('stations:station_list')
                     elif role.title == 'Responsable des Leases':
                         return redirect('investisseurs:index')
                     elif role.title == 'Manager Financier':

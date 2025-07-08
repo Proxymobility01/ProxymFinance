@@ -157,8 +157,14 @@
                                             </a>
                                         {% endif %}
                                     </td>
-                                    <td style="text-align: right;">
-                                        {{ paiement.montant|floatformat:0|intcomma }} FCFA
+                                    <td style="align-content: start ">
+                                        <span >
+                                            Moto: {{ paiement.montant_moto|floatformat:0|intcomma }} FCFA
+                                        </span>
+                                        <span >
+                                            Batterie: {{ paiement.montant_batterie|floatformat:0|intcomma }}
+                                        </span>
+
                                     </td>
 
 
@@ -174,7 +180,7 @@
                                         {% if paiement.enregistre_par %}
                                             {{ paiement.enregistre_par.prenom }} {{ paiement.enregistre_par.nom }}
                                         {% else %}
-                                            <span class="text-muted">-</span>
+                                            {{ paiement.user_agence.prenom }} {{ paiement.user_agence.nom }}
                                         {% endif %}
                                     </td>
                                 </tr>

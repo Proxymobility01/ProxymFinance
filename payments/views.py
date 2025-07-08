@@ -296,7 +296,10 @@ def centre_paiements(request):
 
         if contrat.chauffeur :
             # Vérifier si le chauffeur a un contrat actif
-            if ContratChauffeur.objects.filter(chauffeur=contrat.chauffeur , statut='actif').exists():
+            if ContratChauffeur.objects.filter(
+                    association__validated_user=contrat.chauffeur,
+                    statut='actif'
+            ).exists():
                 is_standalone = False
 
         if contrat.partenaire:
@@ -649,7 +652,10 @@ def centre_paiements(request):
         is_standalone = True
 
         if contrat.chauffeur:
-            if ContratChauffeur.objects.filter(chauffeur=contrat.chauffeur, statut='actif').exists():
+            if ContratChauffeur.objects.filter(
+                    association__validated_user=contrat.chauffeur,
+                    statut='actif'
+            ).exists():
                 is_standalone = False
 
         if contrat.partenaire:

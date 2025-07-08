@@ -112,6 +112,9 @@ class Agence(models.Model):
     nom_proprietaire = models.CharField(max_length=255)
     ville = models.CharField(max_length=255)
     quartier = models.CharField(max_length=255, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=10, decimal_places=8, null=True, blank=True)
+    latitude = models.DecimalField(max_digits=10, decimal_places=8, null=True, blank=True)
+
     telephone = models.CharField(max_length=255, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
@@ -142,8 +145,6 @@ class UserAgence(models.Model):
     password = models.CharField(max_length=255)
     ville = models.CharField(max_length=255)
     quartier = models.CharField(max_length=255)
-    longitude = models.DecimalField(max_digits=10, decimal_places=8, null=False)
-    latitude = models.DecimalField(max_digits=10, decimal_places=8, null=False)
 
     photo = models.CharField(max_length=255, null=True, blank=True)
     id_role_entite = models.BigIntegerField()  # Lien vers role_entites
