@@ -11,6 +11,7 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('', RedirectView.as_view(url='/login/', permanent=False)),
+
     path('dashboard/', include('dashboard.urls')),
     path('', include('authentication.urls')),
     path('contrats/', include('contrats.urls', namespace='contrats')),

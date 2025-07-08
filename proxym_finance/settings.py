@@ -106,7 +106,7 @@ WSGI_APPLICATION = 'proxym_finance.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'authbd',
+        'NAME': 'finance',
         'USER': 'root',  # Remplace par ton utilisateur MySQL
         'PASSWORD': 'root',  # Mets ton vrai mot de passe
         'HOST': 'localhost',
