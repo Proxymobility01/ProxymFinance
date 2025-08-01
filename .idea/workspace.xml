@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="adaptation apres modification de la base de donnée">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" afterDir="false" />
