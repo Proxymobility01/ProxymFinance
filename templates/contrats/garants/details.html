@@ -128,7 +128,13 @@
                             {% for contrat in contrats_garantis %}
                             <tr>
                                 <td>{{ contrat.reference }}</td>
-                                <td>{{ contrat.chauffeur.nom_complet }}</td>
+                                <td>
+                                    {% if contrat.association %}
+                                        {{ contrat.association.validated_user.nom }} {{ contrat.association.validated_user.prenom }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
                                 <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
                                 <td>{{ contrat.montant_total|floatformat:"0" }} FCFA</td>
                                 <td>

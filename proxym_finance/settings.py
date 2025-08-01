@@ -30,7 +30,7 @@ LOGGING = {
     },
 }
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['finance.proxymgroup.com', '127.0.0.1', 'localhost']
 ALLOWED_ORIGINS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     "https://231d-129-0-60-36.ngrok-free.app",
@@ -106,7 +106,7 @@ WSGI_APPLICATION = 'proxym_finance.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'finance',
+        'NAME': 'authbd',
         'USER': 'root',  # Remplace par ton utilisateur MySQL
         'PASSWORD': 'root',  # Mets ton vrai mot de passe
         'HOST': 'localhost',

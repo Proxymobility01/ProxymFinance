@@ -383,128 +383,144 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Combiner tous les paiements pour l'affichage unifié -->
-                {% for paiement in paiements_attendus %}
-                    <tr class="payment-row" data-status="a_traiter" data-type="{{ paiement.contrat_type|lower }}">
-                        <td>
-                            {% if paiement.photo_client %}
-                                <img src="{{ paiement.photo_client }}" alt="{{ paiement.client_nom }}" width="30" height="30" class="rounded-circle">
+    {% for paiement in paiements %}
+        <tr class="payment-row"
+            data-status="{{ paiement.display_status }}"
+            data-type="{{ paiement.contrat_type|lower }}">
+            <!-- Avatar / Photo -->
+            <td>
+                {% if paiement.photo_client %}
+                    <img src="{{ paiement.photo_client }}" alt="{{ paiement.client_nom }}" width="30" height="30" class="rounded-circle">
+                {% else %}
+                    <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                        <i class="fas fa-user small"></i>
+                    </div>
+                {% endif %}
+            </td>
+            <!-- Nom client -->
+            <td>
+                <div class="fw-bold">{{ paiement.client_nom }}</div>
+                {% if paiement.est_en_conge %}
+                    <span class="badge badge-info">En congé</span>
+                {% endif %}
+                <div class="small text-muted">{{ paiement.client_telephone }}</div>
+            </td>
+            <!-- Type -->
+            <td>
+                <span class="type-badge type-{{ paiement.contrat_type|lower }}">
+                    {% if paiement.display_status == 'deja_traites' and paiement.est_penalite %}Pénalité
+                    {% else %}{{ paiement.contrat_type|title }}{% endif %}
+                </span>
+            </td>
+            <!-- Référence -->
+            <td>{{ paiement.reference }}</td>
+            <!-- Date -->
+            <td>
+                {% if paiement.display_status == 'retards' %}
+                    {{ paiement.date_manquee|date:"d/m/Y" }}
+                {% elif paiement.display_status == 'deja_traites' %}
+                    {{ paiement.heure }}
+                {% else %}
+                    Aujourd'hui
+                {% endif %}
+            </td>
+            <!-- Montant -->
+            <td>
+                <div class="fw-bold">
+                    {% if paiement.display_status == 'retards' %}
+                        {{ paiement.montant|add:paiement.montant_batterie|floatformat:0|intcomma  }} FCFA
+                    {% else %}
+                        {{ paiement.montant_total|floatformat:0|intcomma  }} FCFA
+                    {% endif %}
+                </div>
+                {% if paiement.montant_batterie > 0 %}
+                    <div class="small text-muted">dont batterie: {{ paiement.montant_batterie|floatformat:0|intcomma  }} FCFA</div>
+                {% endif %}
+            </td>
+            <!-- Statut -->
+            <td>
+                {% if paiement.display_status == 'retards' %}
+                    <span class="status-pill status-danger">{{ paiement.jours_retard }} jours de retard</span>
+                {% elif paiement.display_status == 'deja_traites' %}
+                    <span class="status-pill status-normal">Payé</span>
+                {% elif paiement.retard_grave %}
+                    <span class="status-pill status-danger">Retard grave</span>
+                {% elif paiement.retard %}
+                    <span class="status-pill status-late">En retard</span>
+                {% else %}
+                    <span class="status-pill status-pending">À traiter</span>
+                {% endif %}
+            </td>
+            <!-- Actions -->
+            <td>
+                {% if paiement.display_status == 'deja_traites' %}
+                    <a href="{% url 'payments:details_paiement' paiement.id %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-print"></i>
+                    </a>
+                {% else %}
+                    <div class="btn-group btn-group-sm">
+                        <a href="{% url 'payments:paiement_rapide' paiement.contrat_type paiement.contrat_id %}{% if paiement.contrat_batterie_id %}?contrat_batterie_id={{ paiement.contrat_batterie_id }}{% endif %}" class="btn {% if paiement.display_status == 'retards' %}btn-danger{% else %}btn-primary{% endif %}">
+                            {% if paiement.display_status == 'retards' %}
+                                <i class="fas fa-exclamation-circle"></i> Régulariser
                             {% else %}
-                                <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
-                                    <i class="fas fa-user small"></i>
-                                </div>
+                                <i class="fas fa-money-bill-wave"></i> Payer
                             {% endif %}
-                        </td>
-                        <td>
-                            <div class="fw-bold">{{ paiement.client_nom }}</div>
-                            {% if paiement.est_en_conge %}
-                            <span class="badge badge-info">En congé</span>
-                            {% endif %}
-                            <div class="small text-muted">{{ paiement.client_telephone }}</div>
-                        </td>
-                        <td>
-                            <span class="type-badge type-{{ paiement.contrat_type|lower }}">{{ paiement.contrat_type|title }}</span>
-                        </td>
-                        <td>{{ paiement.reference }}</td>
-                        <td>Aujourd'hui</td>
-                        <td>
-                            <div class="fw-bold">{{ paiement.montant_total|floatformat:0|intcomma  }} FCFA</div>
-                            {% if paiement.montant_batterie > 0 %}
-                                <div class="small text-muted">dont batterie: {{ paiement.montant_batterie|floatformat:0|intcomma  }} FCFA</div>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if paiement.retard_grave %}
-                                <span class="status-pill status-danger">Retard grave</span>
-                            {% elif paiement.retard %}
-                                <span class="status-pill status-late">En retard</span>
-                            {% else %}
-                                <span class="status-pill status-pending">À traiter</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{% url 'payments:paiement_rapide' paiement.contrat_type paiement.contrat_id %}{% if paiement.contrat_batterie_id %}?contrat_batterie_id={{ paiement.contrat_batterie_id }}{% endif %}" class="btn btn-primary">
-                                    <i class="fas fa-money-bill-wave"></i> Payer
-                                </a>
-                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-phone me-2"></i> Appeler</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-exclamation-circle me-2"></i> Pénalité</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                
-                {% for paiement in paiements_effectues %}
-                    <tr class="payment-row" data-status="deja_traites" data-type="{{ paiement.contrat_type|lower }}">
-                        <td>
-                            <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
-                                <i class="fas fa-user small"></i>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="fw-bold">{{ paiement.client_nom }}</div>
-                        </td>
-                        <td>
-                            <span class="type-badge type-{{ paiement.contrat_type|lower }}">
-                                {% if paiement.est_penalite %}Pénalité{% else %}{{ paiement.contrat_type|title }}{% endif %}
-                            </span>
-                        </td>
-                        <td>{{ paiement.reference }}</td>
-                        <td>{{ paiement.heure }}</td>
-                        <td class="fw-bold">{{ paiement.montant|floatformat:0 }} FCFA</td>
-                        <td>
-                            <span class="status-pill status-normal">Payé</span>
-                        </td>
-                        <td>
-                            <a href="{% url 'payments:details_paiement' paiement.id %}" class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-print"></i>
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                
-                {% for retard in paiements_retard %}
-                    <tr class="payment-row" data-status="retards" data-type="{{ retard.contrat_type|lower }}">
-                        <td>
-                            <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
-                                <i class="fas fa-user small"></i>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="fw-bold">{{ retard.client_nom }}</div>
-                        </td>
-                        <td>
-                            <span class="type-badge type-{{ retard.contrat_type|lower }}">{{ retard.contrat_type|title }}</span>
-                        </td>
-                        <td>{{ retard.reference }}</td>
-                        <td>{{ retard.date_manquee|date:"d/m/Y" }}</td>
-                        <td class="fw-bold">{{ retard.montant|add:retard.montant_batterie|floatformat:0 }} FCFA</td>
-                        <td>
-                            <span class="status-pill status-danger">{{ retard.jours_retard }} jours de retard</span>
-                        </td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{% url 'payments:paiement_rapide' retard.contrat_type retard.contrat_id %}{% if retard.contrat_batterie_id %}?contrat_batterie_id={{ retard.contrat_batterie_id }}{% endif %}" class="btn btn-danger">
-                                    <i class="fas fa-exclamation-circle"></i> Régulariser
-                                </a>
-                                <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-phone me-2"></i> Appeler</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-exclamation-circle me-2"></i> Pénalité</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+                        </a>
+                        <button type="button" class="btn {% if paiement.display_status == 'retards' %}btn-danger{% else %}btn-primary{% endif %} dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-phone me-2"></i> Appeler</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-exclamation-circle me-2"></i> Pénalité</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</tbody>
+
+
+
+
         </table>
-        
+
+{% if paiements.has_other_pages %}
+<div class="pagination-container">
+    <ul class="pagination">
+        {% if paiements.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" title="Première page">&laquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paiements.previous_page_number }}" title="Page précédente">&lsaquo;</a>
+            </li>
+        {% endif %}
+        {% for num in paiements.paginator.page_range %}
+            {% if paiements.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% elif num > paiements.number|add:'-3' and num < paiements.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        {% if paiements.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paiements.next_page_number }}" title="Page suivante">&rsaquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paiements.paginator.num_pages }}" title="Dernière page">&raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+
         <!-- Message si aucun résultat -->
         <div class="empty-state" id="empty-state" style="display: none;">
             <i class="fas fa-search"></i>

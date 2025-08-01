@@ -56,6 +56,48 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    {% if garants.paginator.num_pages > 1 %}
+                    <div class="pagination-container mt-4">
+                        <nav aria-label="Pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if garants.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevrons-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ garants.previous_page_number }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevron-left"></i>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% for num in garants.paginator.page_range %}
+                                    {% if num > garants.number|add:'-3' and num < garants.number|add:'3' %}
+                                    <li class="page-item {% if garants.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">{{ num }}</a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if garants.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ garants.next_page_number }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevron-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ garants.paginator.num_pages }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevrons-right"></i>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

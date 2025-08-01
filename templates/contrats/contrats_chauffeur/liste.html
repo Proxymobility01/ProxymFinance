@@ -96,7 +96,7 @@
                                 title="{{ contrat.montant_paye|floatformat:'0' }} / {{ contrat.montant_total|floatformat:'0' }} FCFA">
                             </div>
                             </div>
-                            <small>{{ contrat.montant_paye|floatformat:'0' }} / {{ contrat.montant_total|floatformat:'0' }} FCFA</small>
+                            <small>{{ contrat.montant_paye|floatformat:0 }} / {{ contrat.montant_total|floatformat:0 }} FCFA</small>
                         </td>
                         
                         <td>
@@ -120,6 +120,49 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            {% if contrats.paginator.num_pages > 1 %}
+            <div class="pagination-container mt-4">
+                <nav aria-label="Pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if contrats.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                <i class="ti ti-chevrons-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ contrats.previous_page_number }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                <i class="ti ti-chevron-left"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in contrats.paginator.page_range %}
+                            {% if num > contrats.number|add:'-3' and num < contrats.number|add:'3' %}
+                            <li class="page-item {% if contrats.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">{{ num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if contrats.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ contrats.next_page_number }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                <i class="ti ti-chevron-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ contrats.paginator.num_pages }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                <i class="ti ti-chevrons-right"></i>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+
         </div>
         {% else %}
         <div class="text-center py-4">

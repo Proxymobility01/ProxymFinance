@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from payments.models import Swap
 from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
-
+from django.core.paginator import Paginator
 
 
 from .models import (
@@ -39,11 +39,10 @@ from .forms import (
 
 @login_required(login_url='/login/')
 def liste_chauffeurs(request):
-    """Modifie un chauffeur existant."""
-
-    """Affiche la liste de tous les chauffeurs."""
-    chauffeurs = ValidatedUser.objects.all().order_by('nom', 'prenom')
-
+    chauffeurs_list = ValidatedUser.objects.all().order_by('nom', 'prenom')
+    paginator = Paginator(chauffeurs_list, 20)
+    page_number = request.GET.get('page')
+    chauffeurs = paginator.get_page(page_number)
     return render(request, 'contrats/chauffeurs/liste.html', {
         'chauffeurs': chauffeurs,
         'titre': 'Liste des Chauffeurs'
@@ -156,9 +155,10 @@ def modifier_chauffeur(request, chauffeur_id):
 
 @login_required(login_url='/login/')
 def liste_garants(request):
-    """Affiche la liste de tous les garants."""
-    garants = Garant.objects.all().order_by('nom', 'prenom')
-
+    garants_list = Garant.objects.all().order_by('nom', 'prenom')
+    paginator = Paginator(garants_list, 20)
+    page_number = request.GET.get('page')
+    garants = paginator.get_page(page_number)
     return render(request, 'contrats/garants/liste.html', {
         'garants': garants,
         'titre': 'Liste des Garants'
@@ -181,6 +181,7 @@ def details_garant(request, garant_id):
 @login_required(login_url='/login/')
 def ajouter_garant(request):
     """Ajoute un nouveau garant."""
+
     if request.method == 'POST':
         form = GarantForm(request.POST, request.FILES)
         if form.is_valid():
@@ -194,8 +195,9 @@ def ajouter_garant(request):
                     'id': garant.id,
                     'nom': f'{garant.prenom} {garant.nom} - {garant.numero_cni}'
                 })
+            print("🧪 request.GET:", request.GET)
 
-            return redirect('details_garant', garant_id=garant.id)
+            return redirect('contrats:details_garant', garant_id=garant.id)
     else:
         form = GarantForm()
 
@@ -236,7 +238,10 @@ def modifier_garant(request, garant_id):
 
 @login_required(login_url='/login/')
 def liste_partenaires(request):
-    partenaires = Partenaire.objects.all().order_by('nom', 'prenom')
+    partenaires_list = Partenaire.objects.all().order_by('nom', 'prenom')
+    paginator = Paginator(partenaires_list, 20)
+    page_number = request.GET.get('page')
+    partenaires = paginator.get_page(page_number)
     return render(request, 'contrats/partenaires/liste.html', {
         'partenaires': partenaires,
         'titre': 'Liste de Partenaires'
@@ -301,14 +306,15 @@ def modifier_partenaire(request, partenaire_id):
 
 @login_required(login_url='/login/')
 def liste_contrats_chauffeur(request):
-    contrats = ContratChauffeur.objects.all().order_by('-date_signature')
-
-    for contrat in contrats:
+    contrats_list = ContratChauffeur.objects.all().order_by('-date_signature')
+    for contrat in contrats_list:
         if contrat.montant_total > 0:
             contrat.pourcentage_paye = (contrat.montant_paye / contrat.montant_total) * 100
         else:
             contrat.pourcentage_paye = 0
-
+    paginator = Paginator(contrats_list, 20)
+    page_number = request.GET.get('page')
+    contrats = paginator.get_page(page_number)
     return render(request, 'contrats/contrats_chauffeur/liste.html', {
         'contrats': contrats,
         'titre': 'Liste des Contrats Chauffeur'
@@ -441,23 +447,23 @@ def modifier_contrat_chauffeur(request, contrat_id):
 
 @login_required(login_url='/login/')
 def liste_conges(request):
-    conges = CongesChauffeur.objects.all().order_by('-date_demande')
-
-    # Filtres
+    conges_list = CongesChauffeur.objects.all().order_by('-date_demande')
+    # Filtres...
     statut = request.GET.get('statut')
     if statut:
-        conges = conges.filter(statut=statut)
-
+        conges_list = conges_list.filter(statut=statut)
     periode = request.GET.get('periode')
     if periode:
         today = timezone.now().date()
         if periode == 'en_cours':
-            conges = conges.filter(date_debut__lte=today, date_fin__gte=today)
+            conges_list = conges_list.filter(date_debut__lte=today, date_fin__gte=today)
         elif periode == 'a_venir':
-            conges = conges.filter(date_debut__gt=today)
+            conges_list = conges_list.filter(date_debut__gt=today)
         elif periode == 'termines':
-            conges = conges.filter(date_fin__lt=today)
-
+            conges_list = conges_list.filter(date_fin__lt=today)
+    paginator = Paginator(conges_list, 20)
+    page_number = request.GET.get('page')
+    conges = paginator.get_page(page_number)
     return render(request, 'contrats/conges/liste.html', {
         'conges': conges,
         'statut_filter': statut,
@@ -632,9 +638,10 @@ def dashboard_contrats(request):
 
 @login_required(login_url='/login/')
 def liste_contrats_partenaire(request):
-    """Affiche la liste de tous les contrats partenaire."""
-    contrats = ContratPartenaire.objects.all().order_by('-date_signature')
-
+    contrats_list = ContratPartenaire.objects.all().order_by('-date_signature')
+    paginator = Paginator(contrats_list, 20)
+    page_number = request.GET.get('page')
+    contrats = paginator.get_page(page_number)
     return render(request, 'contrats/contrats_partenaire/liste.html', {
         'contrats': contrats,
         'titre': 'Liste des Contrats Partenaire'
@@ -813,11 +820,8 @@ def modifier_contrat_partenaire(request, contrat_id):
 
 @login_required(login_url='/login/')
 def liste_contrats_batterie(request):
-    """Affiche la liste de tous les contrats batterie."""
-    contrats = ContratBatterie.objects.all().order_by('-date_signature')
-
-    # Ajouter un attribut pour le type de propriétaire et calculer le pourcentage payé
-    for contrat in contrats:
+    contrats_list = ContratBatterie.objects.all().order_by('-date_signature')
+    for contrat in contrats_list:
         if contrat.chauffeur:
             contrat.type_proprietaire = 'chauffeur'
             contrat.proprietaire = contrat.chauffeur
@@ -830,15 +834,14 @@ def liste_contrats_batterie(request):
             contrat.type_proprietaire = 'inconnu'
             contrat.proprietaire = None
             contrat.proprietaire_nom = "Non défini"
-
         if contrat.montant_total > 0:
             contrat.pourcentage_paye = (contrat.montant_paye / contrat.montant_total) * 100
         else:
             contrat.pourcentage_paye = 0
-
-        # Calculer le nombre de batteries
         contrat.nombre_batteries = int(contrat.montant_caution / 50000) if contrat.montant_caution else 0
-
+    paginator = Paginator(contrats_list, 20)
+    page_number = request.GET.get('page')
+    contrats = paginator.get_page(page_number)
     return render(request, 'contrats/contrats_batterie/liste.html', {
         'contrats': contrats,
         'titre': 'Liste des Contrats Batterie'

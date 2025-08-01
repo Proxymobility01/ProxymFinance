@@ -1470,3 +1470,42 @@ canvas {
 .back-btn:hover {
     transform: translateX(-2px);
 }
+@media print {
+  body, html {
+    background: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    -webkit-print-color-adjust: exact !important;  /* Safari/Chrome */
+    print-color-adjust: exact !important;          /* Modern */
+  }
+  .main-content, .card, .stat-card, .table, .card-bg {
+    background: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    box-shadow: none !important;
+  }
+  .btn, .sidebar, .navbar, .no-print {
+    display: none !important;
+  }
+  /* Tu peux ajouter d'autres classes ou éléments à masquer lors de l'impression */
+}
+
+
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination .page-link {
+    color: var(--primary-color, #b8b826);
+    border: none;
+    background: none;
+}
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color, #b8b826);
+    color: #fff;
+    border-radius: 6px;
+}
+.pagination .page-link:hover {
+    background: var(--primary-light, #ebeb77);
+    color: #000;
+}

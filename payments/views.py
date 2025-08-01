@@ -33,7 +33,7 @@ from decimal import Decimal
 from django.db import transaction
 from .models import Paiement, Penalite, ReglePenalite
 from .utils import _est_jour_de_paiement
-
+from django.db.models import Count, Q
 
 def centre_paiements(request):
     """Centre de paiements unifié avec application automatique des pénalités"""
@@ -695,17 +695,41 @@ def centre_paiements(request):
     # Trier les paiements en retard par date (plus ancien en premier)
     paiements_retard.sort(key=lambda x: x['jours_retard'], reverse=True)
 
+    all_paiements = []
+    for p in paiements_attendus:
+        p['display_status'] = 'a_traiter'
+        all_paiements.append(p)
+    for p in paiements_effectues:
+        p['display_status'] = 'deja_traites'
+        all_paiements.append(p)
+    for p in paiements_retard:
+        p['display_status'] = 'retards'
+        all_paiements.append(p)
+
+
+
+    from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(all_paiements, 20)  # 20 paiements par page
+
+    try:
+        paiements_page = paginator.page(page)
+    except PageNotAnInteger:
+        paiements_page = paginator.page(1)
+    except EmptyPage:
+        paiements_page = paginator.page(paginator.num_pages)
+
     context = {
         'titre': 'Centre de Paiements',
-        'paiements_attendus': paiements_attendus,
-        'paiements_effectues': paiements_effectues,
-        'paiements_retard': paiements_retard,
+        'paiements': paiements_page,
         'stats': stats,
         'aujourd_hui': aujourd_hui,
         'heure_actuelle': datetime.now().time(),
         'onglet_actif': request.GET.get('onglet', 'a_traiter'),
         'vue_calendrier': request.GET.get('vue', 'liste') == 'calendrier',
     }
+    return render(request, 'payments/centre.html', context)
 
     return render(request, 'payments/centre.html', context)
 
@@ -927,9 +951,8 @@ def paiement_rapide(request, contrat_type, contrat_id):
     return render(request, 'payments/paiement_rapide.html', context)
 
 
-
-
 def liste_paiements(request):
+
     """Liste des paiements avec filtres améliorés"""
     # Récupérer les filtres
     date_debut = request.GET.get('date_debut', '')
@@ -1062,7 +1085,7 @@ def liste_paiements(request):
                 paiement.reference,
                 client_nom,
                 contrat_ref,
-                f"{paiement.montant:,.0f}",
+                f"{paiement.montant_total:,.0f}",  # ← CORRECTION ICI
                 paiement.get_methode_paiement_display(),
                 type_display,
                 enregistre_par
@@ -1581,7 +1604,6 @@ def tableau_bord_analytique(request):
     """Tableau de bord analytique global amélioré"""
     # Récupérer la période d'analyse
     periode = request.GET.get('periode', 'mois')  # Options: 'semaine', 'mois', 'trimestre', 'annee'
-
     aujourd_hui = date.today()
 
     # Déterminer les dates de début et fin selon la période
@@ -1665,33 +1687,22 @@ def tableau_bord_analytique(request):
         date_paiement__gte=date_debut,
         date_paiement__lte=date_fin
     )
-    totaux = paiements_periode.aggregate(
-        total_moto=Sum('montant_moto'),
-        total_batterie=Sum('montant_batterie')
-    )
-    somme_moto = totaux['total_moto'] or 0
-    somme_batterie = totaux['total_batterie'] or 0
-    somme_totale = somme_moto + somme_batterie
+    montant_paiements_periode = paiements_periode.aggregate(total=Sum('montant_total'))['total'] or 0
 
     # Paiements de la période précédente
     paiements_periode_precedente = Paiement.objects.filter(
         date_paiement__gte=periode_precedente_debut,
         date_paiement__lte=periode_precedente_fin
     )
-    totaux_precedent = paiements_periode_precedente.aggregate(
-        total_moto=Sum('montant_moto'),
-        total_batterie=Sum('montant_batterie')
-    )
-    somme_moto_precedent = totaux_precedent['total_moto'] or 0
-    somme_batterie_precedent = totaux_precedent['total_batterie'] or 0
-    montant_paiements_periode_precedente = somme_moto_precedent + somme_batterie_precedent
+    montant_paiements_periode_precedente = paiements_periode_precedente.aggregate(total=Sum('montant_total'))[
+                                               'total'] or 0
 
     # Variation en pourcentage
     if montant_paiements_periode_precedente > 0:
-        variation_paiements = abs(
-            (somme_totale - montant_paiements_periode_precedente) / montant_paiements_periode_precedente) * 100
+        variation_paiements = abs((
+                                              montant_paiements_periode - montant_paiements_periode_precedente) / montant_paiements_periode_precedente) * 100
     else:
-        variation_paiements = 100 if somme_totale > 0 else 0
+        variation_paiements = 100 if montant_paiements_periode > 0 else 0
 
     # Pénalités actives
     penalites_actives = Penalite.objects.filter(statut='en_attente')
@@ -1706,27 +1717,20 @@ def tableau_bord_analytique(request):
 
     # Paiements par type de contrat
     paiements_par_type = paiements_periode.values('type_contrat').annotate(
-        montant_moto=Sum('montant_moto'),
-        montant_batterie=Sum('montant_batterie'),
-        montant_total=Sum('montant_total'),
+        montant=Sum('montant_total'),
         count=Count('id')
     ).order_by('type_contrat')
 
     # Répartition des méthodes de paiement
     paiements_par_methode = paiements_periode.values('methode_paiement').annotate(
-        montant_moto=Sum('montant_moto'),
-        montant_batterie=Sum('montant_batterie'),
-        montant_total=Sum('montant_total'),
+        montant=Sum('montant_total'),
         count=Count('id')
     ).order_by('methode_paiement')
 
     # Convertir pour le graphique
-    methodes_labels = [
-        dict(Paiement.METHODE_CHOICES).get(p['methode_paiement'], p['methode_paiement'])
-        for p in paiements_par_methode
-    ]
-    methodes_data_moto = [float(p['montant_moto'] or 0) for p in paiements_par_methode]
-    methodes_data_batterie = [float(p['montant_batterie'] or 0) for p in paiements_par_methode]
+    methodes_labels = [dict(Paiement.METHODE_CHOICES).get(p['methode_paiement'], p['methode_paiement']) for p in
+                       paiements_par_methode]
+    methodes_data = [float(p['montant']) for p in paiements_par_methode]
     methodes_counts = [p['count'] for p in paiements_par_methode]
 
     # Paiements par jour sur la période
@@ -1736,51 +1740,48 @@ def tableau_bord_analytique(request):
     for i in range(delta.days + 1):
         date_curr = date_debut + timedelta(days=i)
         paiements_jour = paiements_periode.filter(date_paiement=date_curr)
-        totaux_jour = paiements_jour.aggregate(
-            total_moto=Sum('montant_moto'),
-            total_batterie=Sum('montant_batterie')
-        )
-        montant_jour_moto = float(totaux_jour['total_moto'] or 0)
-        montant_jour_batterie = float(totaux_jour['total_batterie'] or 0)
+        montant_jour = paiements_jour.aggregate(total=Sum('montant_total'))['total'] or 0
         nb_paiements = paiements_jour.count()
 
         paiements_par_jour[date_curr.strftime('%Y-%m-%d')] = {
             'date_affichage': date_curr.strftime(format_date),
-            'montant_moto': montant_jour_moto,
-            'montant_batterie': montant_jour_batterie,
+            'montant': float(montant_jour),
             'count': nb_paiements
         }
 
     # Trier par date
     paiements_par_jour_tries = [
-        {
-            'date': k,
-            'date_affichage': v['date_affichage'],
-            'montant_moto': v['montant_moto'],
-            'montant_batterie': v['montant_batterie'],
-            'count': v['count']
-        }
+        {'date': k, 'date_affichage': v['date_affichage'], 'montant': v['montant'], 'count': v['count']}
         for k, v in sorted(paiements_par_jour.items())
     ]
 
     # Top 5 des clients avec le plus de pénalités
     top_clients_penalites = []
 
-    contrats_penalites = ContratChauffeur.objects.annotate(
-        nb_penalites=Count('penalites', filter=Q(penalites__statut='en_attente'))
+    # Pour les chauffeurs
+
+    chauffeurs_penalites = ValidatedUser.objects.annotate(
+        nb_penalites=Count(
+            'associations_user__association_user_motos__penalites',
+            filter=Q(associations_user__association_user_motos__penalites__statut='en_attente')
+        )
     ).filter(nb_penalites__gt=0).order_by('-nb_penalites')[:5]
 
-    top_clients_penalites = []
-
-    for contrat in contrats_penalites:
-        validated_user = contrat.association.validated_user  # ton chauffeur réel
-        montant_total = contrat.penalites.filter(statut='en_attente').aggregate(total=Sum('montant'))['total'] or 0
+    for chauffeur in chauffeurs_penalites:
+        # Récupère tous les contrats chauffeur de ce user
+        contrats = ContratChauffeur.objects.filter(
+            association__validated_user=chauffeur
+        )
+        montant_total = Penalite.objects.filter(
+            Q(contrat_chauffeur__in=contrats) | Q(contrat_batterie__chauffeur=chauffeur),
+            statut='en_attente'
+        ).aggregate(total=Sum('montant'))['total'] or 0
 
         top_clients_penalites.append({
             'type': 'Chauffeur',
-            'nom': f"{validated_user.prenom} {validated_user.nom}",
-            'id': validated_user.id,
-            'nb_penalites': contrat.nb_penalites,
+            'nom': f"{chauffeur.prenom} {chauffeur.nom}",
+            'id': chauffeur.id,
+            'nb_penalites': chauffeur.nb_penalites,
             'montant_total': montant_total
         })
 
@@ -1822,7 +1823,6 @@ def tableau_bord_analytique(request):
 
     # Prévisions pour le mois suivant (basées sur tendances)
     # ... (code pour calcul des prévisions)
-    montant_paiements_periode = somme_totale  # somme_totale = somme_moto + somme_batterie
 
     context = {
         'titre': 'Tableau de Bord Analytique',
@@ -1840,8 +1840,7 @@ def tableau_bord_analytique(request):
         'montant_penalites_periode': montant_penalites_periode,
         'paiements_par_jour': json.dumps(paiements_par_jour_tries),
         'methodes_labels': json.dumps(methodes_labels),
-        'methodes_data_moto': json.dumps(methodes_data_moto),
-        'methodes_data_batterie': json.dumps(methodes_data_batterie),
+        'methodes_data': json.dumps(methodes_data),
         'methodes_counts': json.dumps(methodes_counts),
         'top_clients_penalites': top_clients_penalites,
         'nb_swaps': nb_swaps,
@@ -2753,7 +2752,7 @@ def appliquer_penalites_view(request):
                 statut__in=['approuvé', 'planifié', 'en_cours']
             ).exists()
 
-            if not deja_paye and not penalite_existe and not est_en_conge and heure_actuelle >= time(12, 1):
+            if not deja_paye and not penalite_existe and not est_en_conge and heure_actuelle >= time(18, 1):
                 type_penalite = 'combine' if ContratBatterie.objects.filter(chauffeur=contrat.association.validated_user, statut='actif').exists() else 'batterie_seule'
                 montant, motif = ReglePenalite.get_penalite_applicable(type_penalite, heure_actuelle)
 
@@ -2781,7 +2780,7 @@ def appliquer_penalites_view(request):
                 date_paiement_manque=aujourd_hui
             ).exists()
 
-            if not deja_paye and heure_actuelle >= time(12, 1) and not penalite_existe:
+            if not deja_paye and heure_actuelle >= time(18, 1) and not penalite_existe:
                 type_penalite = 'combine' if ContratBatterie.objects.filter(partenaire=contrat.partenaire,
                                                                             statut='actif').exists() else 'batterie_seule'
                 montant, motif = ReglePenalite.get_penalite_applicable(type_penalite, heure_actuelle)
@@ -2822,7 +2821,7 @@ def appliquer_penalites_view(request):
                 date_paiement_manque=aujourd_hui
             ).exists()
 
-            if not deja_paye and heure_actuelle >= time(12, 1) and not penalite_existe:
+            if not deja_paye and heure_actuelle >= time(18, 1) and not penalite_existe:
                 montant, motif = ReglePenalite.get_penalite_applicable('batterie_seule', heure_actuelle)
                 if montant > 0:
                     Penalite.objects.create(

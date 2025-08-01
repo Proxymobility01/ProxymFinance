@@ -57,6 +57,49 @@
                             {% endfor %}
                         </tbody>
                     </table>
+
+                    {% if partenaires.paginator.num_pages > 1 %}
+                    <div class="pagination-container mt-4">
+                        <nav aria-label="Pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if partenaires.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevrons-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ partenaires.previous_page_number }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevron-left"></i>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% for num in partenaires.paginator.page_range %}
+                                    {% if num > partenaires.number|add:'-3' and num < partenaires.number|add:'3' %}
+                                    <li class="page-item {% if partenaires.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">{{ num }}</a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if partenaires.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ partenaires.next_page_number }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevron-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ partenaires.paginator.num_pages }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevrons-right"></i>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
