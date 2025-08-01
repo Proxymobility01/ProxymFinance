@@ -5,23 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="adaptation apres modification de la base de donnée">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_08_07_2025_13_14_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/apps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrats/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/apps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" afterDir="false" />
@@ -237,77 +221,6 @@
       <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/station_detail.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/station_form.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/proxym_finance/templates/stations/station_list.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/authentication/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/authentication/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/authentication/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/authentication/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/associations/ajouter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/associations/ajouter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/associations/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/associations/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/associations/formulaire_ajax.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/associations/formulaire_ajax.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/associations/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/associations/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/associations/modal_ajouter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/associations/modal_ajouter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/chauffeurs/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/chauffeurs/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/chauffeurs/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/chauffeurs/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/chauffeurs/formulaire_modal.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/chauffeurs/formulaire_modal.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/chauffeurs/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/chauffeurs/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/conges/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/conges/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/conges/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/conges/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/conges/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/conges/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_batterie/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_batterie/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_batterie/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_batterie/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_batterie/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_batterie/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_partenaire/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_partenaire/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_partenaire/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_partenaire/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_partenaire/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_partenaire/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/garants/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/garants/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/garants/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/garants/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/garants/formulaire_modal.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/garants/formulaire_modal.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/garants/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/garants/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/motos/modal_ajouter.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/motos/modal_ajouter.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/partenaires/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/partenaires/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/partenaires/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/partenaires/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/partenaires/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/partenaires/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/contrats/recherche.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/recherche.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard/admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/dashboard/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/partials/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/partials/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/analytique.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/analytique.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/base/base_payments.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/base/base_payments.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/centre.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/centre.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/details_paiement.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/details_paiement.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/historique.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/historique.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/paiement_rapide.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/paiement_rapide.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/partials/stats_cards.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/partials/stats_cards.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/penalites/centre.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/penalites/centre.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/penalites/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/penalites/details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/penalites/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/penalites/formulaire.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/penalites/gestion.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/penalites/gestion.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/penalites/gestion_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/penalites/gestion_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/penalites/nouveau.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/penalites/nouveau.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/recherche_avancee.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/recherche_avancee.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/swaps/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/swaps/liste.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/payments/test_penalites.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/payments/test_penalites.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/chargecategory_confirm_delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/chargecategory_confirm_delete.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/chargecategory_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/chargecategory_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/chargecategory_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/chargecategory_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/dashboard_rentability.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/dashboard_rentability.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/quick_analysis.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/quick_analysis.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/quick_analysis_result.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/quick_analysis_result.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/rentability_analysis_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/rentability_analysis_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/rentability_analysis_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/rentability_analysis_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/rentability_analysis_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/rentability_analysis_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/station_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/station_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/station_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/station_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/stationcharge_confirm_delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/stationcharge_confirm_delete.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/stationcharge_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/stationcharge_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/stationcharge_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/stationcharge_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/stations/stations_comparison.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/stations/stations_comparison.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -367,35 +280,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;Django Server.proxym_finance.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
-    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR_AND_PREVIEW&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/insta/PycharmProjects/proxym_finance/contrats&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "Django Server.proxym_finance.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
+    "database.data.extractors.current.export.id": "SQL Inserts",
+    "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/insta/PycharmProjects/proxym_finance/contrats",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\insta\PycharmProjects\proxym_finance\contrats" />
