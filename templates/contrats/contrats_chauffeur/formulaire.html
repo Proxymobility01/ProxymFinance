@@ -448,9 +448,9 @@
             const formData = new FormData(form);
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
+            garantModal.style.display = 'none';
 
-            submitBtn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Traitement...';
-            submitBtn.disabled = true;
+
 
             fetch(form.action, {
                 method: 'POST',
@@ -481,7 +481,8 @@
                         }
 
                         // Fermer le modal
-                        document.getElementById(`ajout${type.charAt(0).toUpperCase() + type.slice(1)}Modal`).style.display = 'none';
+                        // document.getElementById(`ajout${type.charAt(0).toUpperCase() + type.slice(1)}Modal`).style.display = 'none';
+                        document.getElementById('#form-ajout-garant').style.display = 'none';
 
                         // Message de succès
                         const alertDiv = document.createElement('div');
@@ -493,10 +494,8 @@
                         setTimeout(() => {
                             alertDiv.remove();
                         }, 5000);
-                    } else {
-                        console.error('Données de chauffeur incomplètes:', data);
-                        alert('Erreur: Données incomplètes reçues du serveur');
                     }
+                    location.reload();
                 } else {
                     // Afficher les erreurs
                     container.innerHTML = data.html;

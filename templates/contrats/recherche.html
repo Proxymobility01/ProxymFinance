@@ -90,9 +90,14 @@
                     <tr>
                         <td>{{ contrat.reference }}</td>
                         <td>
-                            <a href="{% url 'contrats:details_chauffeur' contrat.chauffeur.id %}">
-                                {{ contrat.chauffeur.nom_complet }}
-                            </a>
+                            {% if contrat.association and contrat.association.validated_user %}
+                                <a href="{% url 'contrats:details_chauffeur' contrat.association.validated_user.id %}">
+                                    {{ contrat.association.validated_user.nom }} {{ contrat.association.validated_user.prenom }}
+                                </a>
+                            {% else %}
+                                <span class="text-muted">Chauffeur inconnu</span>
+                            {% endif %}
+
                         </td>
                         <td>{{ contrat.moto.model }} ({{ contrat.moto.vin|slice:"-6:" }})</td>
                         <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
@@ -218,9 +223,13 @@
                     <tr>
                         <td>{{ contrat.reference }}</td>
                         <td>
-                            <a href="{% url 'contrats:details_chauffeur' contrat.chauffeur.id %}">
-                                {{ contrat.chauffeur.nom_complet }}
-                            </a>
+                            {% if contrat.association and contrat.association.validated_user %}
+                                <a href="{% url 'contrats:details_chauffeur' contrat.association.validated_user.id %}">
+                                    {{ contrat.association.validated_user.nom }} {{ contrat.association.validated_user.prenom }}
+                                </a>
+                            {% else %}
+                                <span class="text-muted">Chauffeur inconnu</span>
+                            {% endif %}
                         </td>
                         <td>{{ contrat.batterie }}</td>
                         <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>

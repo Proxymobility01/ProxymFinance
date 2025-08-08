@@ -214,6 +214,8 @@ def ajouter_garant(request):
     return render(request, 'contrats/garants/formulaire.html', context)
 
 
+
+
 @login_required(login_url='/login/')
 def modifier_garant(request, garant_id):
     """Modifie un garant existant."""
@@ -224,7 +226,7 @@ def modifier_garant(request, garant_id):
         if form.is_valid():
             garant = form.save()
             messages.success(request, f'Le garant {garant.prenom} {garant.nom} a été mis à jour avec succès.')
-            return redirect('details_garant', garant_id=garant.id)
+            return redirect('contrats:details_garant', garant_id=garant.id)
     else:
         form = GarantForm(instance=garant)
 
@@ -1239,8 +1241,8 @@ def recherche_contrats(request):
         if query:
             resultats_chauffeur = resultats_chauffeur.filter(
                 Q(reference__icontains=query) |
-                Q(chauffeur__nom__icontains=query) |
-                Q(chauffeur__prenom__icontains=query)
+                Q(association__validated_user__nom__icontains=query) |
+                Q(association__validated_user__prenom__icontains=query)
             )
 
         # Filtre sur le statut

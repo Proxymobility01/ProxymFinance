@@ -274,6 +274,48 @@
     .empty-state p {
         font-size: 1.1rem;
     }
+    .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    gap: 6px;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+
+.pagination .page-link {
+    color: var(--primary-color, #b8b826);
+    border: 1px solid transparent;
+    background-color: transparent;
+    padding: 8px 14px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--primary-light, #ebeb77);
+    color: #000;
+    border-color: var(--primary-light, #ebeb77);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color, #b8b826);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 6px;
+    border-color: var(--primary-color, #b8b826);
+}
+
 </style>
 {% endblock %}
 
