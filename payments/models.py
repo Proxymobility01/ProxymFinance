@@ -534,10 +534,10 @@ class ReglePenalite(models.Model):
                     return Decimal('5000.00'), 'retard_paiement'
 
                 if type_contrat == 'combine':
-                    if heure_paiement and heure_paiement >= time(18, 1):
+                    if heure_paiement and heure_paiement >= time(12, 1):
                         return Decimal('5000.00'), 'retard_grave'
                 else:  # batterie_seule
-                    if heure_paiement and heure_paiement >= time(18, 1):
+                    if heure_paiement and heure_paiement >= time(12, 1):
                         return Decimal('2500.00'), 'retard_grave'
 
                 return Decimal('0.00'), None
@@ -560,10 +560,10 @@ class ReglePenalite(models.Model):
                 return Decimal('5000.00'), 'retard_paiement'
 
             if type_contrat == 'combine':
-                if heure_paiement and heure_paiement >= time(18, 1):
+                if heure_paiement and heure_paiement >= time(12, 1):
                     return Decimal('5000.00'), 'retard_grave'
             else:  # batterie_seule
-                if heure_paiement and heure_paiement >= time(18, 1):
+                if heure_paiement and heure_paiement >= time(12, 1):
                     return Decimal('2500.00'), 'retard_grave'
             return Decimal('0.00'), None
 
