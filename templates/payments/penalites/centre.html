@@ -241,6 +241,7 @@
                             <th>Type/Contrat</th>
                             <th>Motif</th>
                             <th>Statut</th>
+                            <th>Paiement enregistré par</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -304,8 +305,8 @@
                                         <span class="badge badge-danger">Non réglée</span>
                                     {% endif %}
                                 {% endwith %}
-
                             </td>
+
                             <td>
                                 <span class="badge 
                                     {% if penalite.statut == 'en_attente' %}badge-warning
@@ -317,15 +318,23 @@
                                 </span>
                             </td>
                             <td>
+
+                                {% if penalite.enregistre_par %}
+                                    {{ penalite.enregistre_par.prenom }} {{ penalitet.enregistre_par.nom }}
+                                {% else %}
+                                    {{ paiement.user_agence.prenom }} {{ paiement.user_agence.nom }}
+                                {% endif %}
+                            </td>
+                            <td>
                                 <div class="btn-group" role="group">
                                     <a href="{% url 'payments:gerer_penalite' penalite.id %}" class="btn btn-sm btn-primary" title="Gérer cette pénalité">
-                                        <i class="fas fa-edit"></i>
+                                        <i class="ti ti-edit"></i>
                                     </a>
                                     {% if penalite.statut == 'en_attente' %}
                                     <button type="button" class="btn btn-sm btn-success" 
                                             onclick="pardonnerPenalite({{ penalite.id }})" 
                                             title="Pardonner cette pénalité">
-                                        <i class="fas fa-heart"></i>
+                                        <i class="ti ti-heart"></i>
                                     </button>
                                     {% endif %}
                                 </div>

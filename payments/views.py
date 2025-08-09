@@ -1411,7 +1411,8 @@ def gerer_penalite(request, penalite_id):
                         date_paiement=date.today(),
                         methode_paiement=methode,
                         reference_transaction='',
-                        enregistre_par=request.user
+                        enregistre_par=request.user,
+
                     )
 
                     # 🔁 Recalculer le total payé
