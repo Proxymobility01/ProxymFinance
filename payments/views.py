@@ -981,7 +981,7 @@ def liste_paiements(request):
     methode = request.GET.get('methode', '')
     est_penalite = request.GET.get('penalites') == '1'
     q = request.GET.get('q', '')
-    trier_par = request.GET.get('trier_par', '-date_paiement')
+    trier_par = request.GET.get('trier_par', '-date_enregistrement')
 
     # Filtrer les paiements
     paiements = Paiement.objects.all()
