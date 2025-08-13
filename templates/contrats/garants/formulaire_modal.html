@@ -1,0 +1,82 @@
+<form method="post" enctype="multipart/form-data" id="form-ajout-garant" action="{% url 'contrats:ajouter_garant' %}?ajax=1">
+    {% csrf_token %}
+    
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Erreurs dans le formulaire :</strong>
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }} : {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="{{ form.nom.id_for_label }}">{{ form.nom.label }}</label>
+                {{ form.nom }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.prenom.id_for_label }}">{{ form.prenom.label }}</label>
+                {{ form.prenom }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.numero_cni.id_for_label }}">{{ form.numero_cni.label }}</label>
+                {{ form.numero_cni }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.adresse.id_for_label }}">{{ form.adresse.label }}</label>
+                {{ form.adresse }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.occupation.id_for_label }}">{{ form.occupation.label }}</label>
+                {{ form.occupation }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.telephone.id_for_label }}">{{ form.telephone.label }}</label>
+                {{ form.telephone }}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="{{ form.cni_document.id_for_label }}">{{ form.cni_document.label }}</label>
+                {{ form.cni_document }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.justificatif_domicile.id_for_label }}">{{ form.justificatif_domicile.label }}</label>
+                {{ form.justificatif_domicile }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.justificatif_activite.id_for_label }}">{{ form.justificatif_activite.label }}</label>
+                {{ form.justificatif_activite }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.contrat_physique.id_for_label }}">{{ form.contrat_physique.label }}</label>
+                {{ form.contrat_physique }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group text-center mt-3">
+        <button type="submit" class="btn btn-primary">
+            <i class="ti ti-check"></i> Enregistrer le garant
+        </button>
+    </div>
+</form>
+

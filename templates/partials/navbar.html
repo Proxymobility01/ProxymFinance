@@ -1,0 +1,596 @@
+{% load static %}
+<nav class="navbar">
+    <div class="container navbar-content">
+        <!-- Logo and brand -->
+        <a href="{% url 'dashboard:index' %}" class="navbar-brand">
+            <img src="{% static 'images/logo.png' %}" alt="Proxym Finance" class="navbar-logo" style="height: 36px;">
+            <span class="d-none-sm"> </span>
+        </a>
+        
+        <!-- Main navigation -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a href="{% url 'dashboard:index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
+                    Tableau de bord
+                </a>
+            </li>
+
+            <!-- Contrats dropdown -->
+            <li class="nav-item nav-dropdown">
+                <a href="{% url 'contrats:dashboard' %}" class="nav-link {% if 'contrats' in request.path %}active{% endif %}">
+                     Contrats
+                </a>
+                <div class="nav-dropdown-content user-dropdown-content">
+                    <a href="{% url 'contrats:liste_contrats_chauffeur' %}" class="nav-dropdown-item {% if 'contrats/chauffeur' in request.path %}active{% endif %}">
+                        Contrats Chauffeurs
+                    </a>
+                    <a href="{% url 'contrats:liste_contrats_partenaire' %}" class="nav-dropdown-item {% if 'contrats/partenaire' in request.path %}active{% endif %}">
+                        Contrats Partenaires
+                    </a>
+                    <a href="{% url 'contrats:liste_contrats_batterie' %}" class="nav-dropdown-item {% if 'contrats/batterie' in request.path %}active{% endif %}">
+                        Contrats Batteries
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'contrats:liste_chauffeurs' %}" class="nav-dropdown-item {% if 'contrats/chauffeurs' in request.path %}active{% endif %}">
+                        Chauffeurs
+                    </a>
+                    <a href="{% url 'contrats:liste_garants' %}" class="nav-dropdown-item {% if 'contrats/garants' in request.path %}active{% endif %}">
+                        Garants
+                    </a>
+                    <a href="{% url 'contrats:liste_partenaires' %}" class="nav-dropdown-item {% if 'contrats/partenaires' in request.path %}active{% endif %}">
+                        Partenaires
+                    </a>
+                    <a href="{% url 'contrats:liste_conges' %}" class="nav-dropdown-item {% if 'contrats/conges' in request.path %}active{% endif %}">
+                        Congés
+                    </a>
+                </div>
+            </li>
+
+            <!-- Paiements dropdown -->
+            <li class="nav-item nav-dropdown">
+                <a href="{% url 'payments:centre_paiements' %}" class="nav-link {% if 'payments' in request.path %}active{% endif %}">
+                    Paiements
+                </a>
+                <div class="nav-dropdown-content user-dropdown-content">
+                    <a href="{% url 'payments:centre_paiements' %}" class="nav-dropdown-item {% if 'payments' in request.path and not 'penalites' in request.path and not 'swaps' in request.path and not 'analytique' in request.path %}active{% endif %}">
+                        Paiements Contrats
+                    </a>
+                    <a href="{% url 'payments:liste_paiements' %}" class="nav-dropdown-item {% if 'payments/historique' in request.path %}active{% endif %}">
+                        Historique Paiements
+                    </a>
+                    <a href="{% url 'payments:gestion_penalites' %}" class="nav-dropdown-item {% if 'penalites' in request.path %}active{% endif %}">
+                        Pénalités
+                    </a>
+                    <a href="{% url 'payments:liste_swaps' %}" class="nav-dropdown-item {% if 'swaps' in request.path %}active{% endif %}">
+                        Swap
+                    </a>
+                    <a href="{% url 'payments:analytique' %}" class="nav-dropdown-item {% if 'analytique' in request.path %}active{% endif %}">
+                        Rapports
+                    </a>
+                </div>
+            </li>
+
+            <!-- Stations dropdown - NOUVEAU -->
+            <li class="nav-item nav-dropdown">
+                <a href="{% url 'stations:station_list' %}" class="nav-link {% if 'stations' in request.path %}active{% endif %}">
+                    Stations
+                </a>
+                <div class="nav-dropdown-content user-dropdown-content">
+                    <a href="{% url 'stations:station_list' %}" class="nav-dropdown-item {% if 'stations' in request.path and 'charges' in request.path and 'categories' not in request.path %}active{% endif %}">
+                        Liste des stations
+                    </a>
+                    <a href="{% url 'stations:station_charge_list' %}" class="nav-dropdown-item {% if 'stations' in request.path and 'charges' in request.path and 'categories' not in request.path %}active{% endif %}">
+                        Gestion des charges
+                    </a>
+                    <a href="{% url 'stations:dashboard_rentability' %}" class="nav-dropdown-item {% if 'stations' in request.path %}active{% endif %}">
+                        Rentabilité de Stations
+                    </a>
+
+                </div>
+            </li>
+
+            <!-- Other menu items -->
+            <li class="nav-item">
+                <a href="#" class="nav-link {% if 'investisseurs' in request.path %}active{% endif %}">
+                    Investisseurs
+                </a>
+            </li>
+
+        </ul>
+
+        <!-- Right side menu -->
+        <ul class="navbar-nav">
+            <!-- Search button -->
+            <li class="nav-item">
+                <a href="{% url 'contrats:recherche_contrats' %}" class="btn btn-secondary" title="Rechercher">
+                    <i class="ti ti-search"></i>
+                </a>
+            </li>
+
+            <!-- Notifications -->
+            <li class="nav-item nav-dropdown">
+                <a href="#" class="btn btn-secondary" title="Notifications">
+                    <i class="ti ti-bell"></i>
+                    {#% if notifications_count > 0 %#}
+                    <span class="badge badge-danger">{# { notifications_count }#}</span>
+                    {#% endif %#}
+                </a>
+                <!--div class="nav-dropdown-content user-dropdown-content">
+                    <div class="dropdown-header">Notifications</div>
+                    {#% if notifications %#}
+                        {#% for notification in notifications|slice:":5" %#}
+                            <a href="{#{ notification.link }#}" class="nav-dropdown-item">
+                                <i class="ti ti-{#  { notification.icon }#}"></i>
+                                <div>
+                                    <strong>{#{ notification.title }#}</strong>
+                                    <small>{#{ notification.time_ago }#}</small>
+                                </div>
+                            </a>
+                        {#% endfor %#}
+                        <a href="#" class="nav-dropdown-item text-center">Voir toutes les notifications</a>
+                    {#% else %#}
+                        <div class="nav-dropdown-item">Aucune notification</div>
+                    {#% endif %#}
+                </div-->
+            </li>
+
+            <!-- User profile -->
+            <li class="nav-item user-dropdown">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        {% if request.session.user_avatar %}
+                            <img src="{#{ request.session.user_avatar }#}" alt="{#{ request.session.user_name }#}">
+                        {% else %}
+                            {#{ request.session.user_name|slice:":1"|upper }#}
+                        {% endif %}
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">{#{ request.session.user_name }#}</span>
+                        <span class="user-role">{#{ request.session.user_role }#}</span>
+                    </div>
+                </div>
+                <div class="user-dropdown-content">
+                    <a href="#" class="user-dropdown-item">
+                        <i class="ti ti-user-circle"></i> Mon profil
+                    </a>
+                    <a href="#" class="user-dropdown-item">
+                        <i class="ti ti-settings"></i> Paramètres
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="{% url 'authentication:logout' %}" class="user-dropdown-item">
+                        <i class="ti ti-logout"></i> Déconnexion
+                    </a>
+                </div>
+            </li>
+
+            <!-- Theme toggle -->
+            <li class="nav-item">
+                <button id="theme-toggle" class="btn btn-secondary" title="Changer de thème">
+                    <i class="ti ti-moon"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+  // Add mobile menu toggle to the DOM
+  const navbarContent = document.querySelector('.navbar-content');
+  const toggle = document.createElement('div');
+  toggle.className = 'navbar-toggle d-none d-md-none';
+  toggle.innerHTML = '<span></span><span></span><span></span>';
+  navbarContent.insertBefore(toggle, navbarContent.firstChild);
+
+  // Mobile menu toggle functionality
+  toggle.addEventListener('click', function() {
+    this.classList.toggle('active');
+    document.querySelector('.navbar-nav:first-of-type').classList.toggle('show');
+  });
+
+  // Make dropdown toggles work on mobile
+  const dropdownLinks = document.querySelectorAll('.nav-dropdown > .nav-link');
+  dropdownLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      // Only run this on mobile view
+      if (window.innerWidth < 992) {
+        e.preventDefault();
+        const parent = this.parentElement;
+        parent.classList.toggle('open');
+      }
+    });
+  });
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.navbar') && window.innerWidth < 992) {
+      document.querySelector('.navbar-toggle').classList.remove('active');
+      document.querySelector('.navbar-nav:first-of-type').classList.remove('show');
+      document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+        dropdown.classList.remove('open');
+      });
+    }
+  });
+
+  // Handle window resize
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 992) {
+      document.querySelector('.navbar-toggle')?.classList.remove('active');
+      document.querySelector('.navbar-nav:first-of-type')?.classList.remove('show');
+      document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+        dropdown.classList.remove('open');
+      });
+    }
+  });
+});
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight current page in navigation
+        highlightActiveNavItems();
+
+        // Set up theme switcher
+        setupThemeSwitcher();
+    });
+
+    /**
+     * Highlights the active navigation items based on current URL
+     */
+    function highlightActiveNavItems() {
+        const currentPath = window.location.pathname;
+
+        // Check main nav items
+        document.querySelectorAll('.nav-link').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && currentPath.includes(href) && href !== '/') {
+                link.classList.add('active');
+
+                // If this is in a dropdown, also highlight the parent
+                const parentDropdown = link.closest('.nav-dropdown');
+                if (parentDropdown) {
+                    const parentLink = parentDropdown.querySelector('.nav-link');
+                    if (parentLink) {
+                        parentLink.classList.add('active');
+                    }
+                }
+            }
+        });
+
+        // Check dropdown items
+        document.querySelectorAll('.nav-dropdown-item').forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && currentPath.includes(href) && href !== '/') {
+                link.classList.add('active');
+
+                // Also highlight the parent dropdown
+                const parentDropdown = link.closest('.nav-dropdown');
+                if (parentDropdown) {
+                    const parentLink = parentDropdown.querySelector('.nav-link');
+                    if (parentLink) {
+                        parentLink.classList.add('active');
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Sets up the theme switcher
+     */
+    function setupThemeSwitcher() {
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+
+        // Check user preference from localStorage
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            // Update theme and save to localStorage
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            // Update icon
+            updateThemeIcon(newTheme);
+        });
+    }
+
+    /**
+     * Updates the theme icon based on current theme
+     */
+    function updateThemeIcon(theme) {
+        const iconElement = document.querySelector('#theme-toggle i');
+        if (theme === 'dark') {
+            iconElement.className = 'ti ti-sun';
+            document.getElementById('theme-toggle').title = 'Passer au thème clair';
+        } else {
+            iconElement.className = 'ti ti-moon';
+            document.getElementById('theme-toggle').title = 'Passer au thème sombre';
+        }
+    }
+</script>
+
+    <!-- Scripts communs -->
+    <script>
+
+        // Gestion des dropdowns de navigation
+        const navDropdowns = document.querySelectorAll('.nav-dropdown');
+
+        navDropdowns.forEach(dropdown => {
+            const dropdownLink = dropdown.querySelector('.nav-link');
+            const dropdownContent = dropdown.querySelector('.nav-dropdown-content');
+
+            // Sur les appareils tactiles, ouvrir le menu au clic
+            dropdownLink.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Fermer les autres menus
+                document.querySelectorAll('.nav-dropdown-content.show').forEach(content => {
+                    if (content !== dropdownContent) {
+                        content.classList.remove('show');
+                    }
+                });
+
+                // Ouvrir/fermer ce menu
+                dropdownContent.classList.toggle('show');
+            });
+
+            // Fermer le menu en cliquant en dehors
+            document.addEventListener('click', function(event) {
+                if (!dropdown.contains(event.target)) {
+                    dropdownContent.classList.remove('show');
+                }
+            });
+        });
+   </script>
+
+
+
+<style>
+    /* Styles pour les menus déroulants de navigation */
+
+
+    /* Responsive utility classes */
+.d-none {
+  display: none !important;
+}
+
+@media (max-width: 576px) {
+  .d-none-xs {
+    display: none !important;
+  }
+
+  .d-block-xs {
+    display: block !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .d-none-sm {
+    display: none !important;
+  }
+
+  .d-block-sm {
+    display: block !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .d-none-md {
+    display: none !important;
+  }
+
+  .d-block-md {
+    display: block !important;
+  }
+}
+    .nav-dropdown {
+        position: relative;
+    }
+
+    .nav-dropdown-content {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+        min-width: 200px;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        display: none;
+    }
+
+    .nav-dropdown:hover .nav-dropdown-content {
+        display: block;
+    }
+
+    .nav-dropdown-item {
+        padding: 0.75rem 1rem;
+        color: var(--text-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-dropdown-item i {
+        margin-right: 0.75rem;
+    }
+
+    .nav-dropdown-item:hover {
+        color: var(--primary-color);
+        background-color: var(--bg-secondary);
+    }
+
+    .nav-dropdown-item.active {
+        color: var(--primary-color);
+        background-color: var(--bg-secondary);
+    }
+
+    /* Style pour maintenir l'alignement lorsqu'il n'y a pas de menu */
+    .navbar-nav-placeholder {
+        flex: 1;
+    }
+
+    /* Séparateur dans les dropdowns */
+    .dropdown-divider {
+        height: 0;
+        margin: 0.5rem 0;
+        overflow: hidden;
+        border-top: 1px solid var(--border-color);
+    }
+
+    /* Base navbar styles you already have */
+.navbar {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-md) 0;
+  box-shadow: var(--shadow);
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Responsive styles for navbar */
+@media (max-width: 1200px) {
+  .navbar-nav .nav-item {
+    margin: 0 var(--spacing-sm);
+  }
+}
+
+@media (max-width: 992px) {
+  /* Mobile menu toggle */
+  .navbar-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  .navbar-toggle span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: var(--text-color);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-toggle.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .navbar-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .navbar-toggle.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  /* Collapsible navigation */
+  .navbar-content {
+    flex-wrap: wrap;
+  }
+
+  .navbar-nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    margin: var(--spacing-md) 0 0;
+  }
+
+  .navbar-nav.show {
+    display: flex;
+  }
+
+  .nav-item {
+    margin: var(--spacing-xs) 0;
+    width: 100%;
+  }
+
+  /* Adjust dropdowns for mobile */
+  .nav-dropdown-content {
+    position: static;
+    display: none;
+    box-shadow: none;
+    border-left: 2px solid var(--primary-color);
+    margin-left: var(--spacing-md);
+    min-width: auto;
+  }
+
+  .nav-dropdown.open .nav-dropdown-content {
+    display: block;
+  }
+
+  .nav-dropdown > .nav-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-dropdown > .nav-link::after {
+    content: '\e64b'; /* ti-chevron-down icon code */
+    font-family: 'tabler-icons';
+    margin-left: var(--spacing-sm);
+    transition: transform 0.3s ease;
+  }
+
+  .nav-dropdown.open > .nav-link::after {
+    transform: rotate(180deg);
+  }
+
+  /* Right side menu adjustments */
+  .navbar-nav:last-child {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: var(--spacing-sm);
+  }
+
+  .navbar-nav:last-child .nav-item {
+    width: auto;
+    margin-left: var(--spacing-sm);
+  }
+
+  /* User dropdown on mobile */
+  .user-dropdown .user-info {
+    display: none;
+  }
+
+  .d-none-sm {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-logo {
+    max-height: 30px;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-sm);
+  }
+
+  .navbar-nav:last-child .nav-item {
+    margin-left: var(--spacing-xs);
+  }
+
+  .btn {
+    padding: 0.4rem 0.6rem;
+    font-size: var(--font-size-sm);
+  }
+}
+</style>

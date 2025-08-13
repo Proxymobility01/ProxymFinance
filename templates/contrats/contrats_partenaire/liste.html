@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ titre }}</h2>
+
+<a href="{% url 'contrats:ajouter_contrat_partenaire' %}" class="btn btn-primary mb-3">+ Nouveau Contrat</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Référence</th>
+            <th>Partenaire</th>
+            <th>Montant total</th>
+            <th>Montant payé</th>
+            <th>Statut</th>
+            <th>Date Signature</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contrat in contrats %}
+        <tr>
+            <td>{{ contrat.reference }}</td>
+            <td>{{ contrat.partenaire.nom }} {{ contrat.partenaire.prenom }}</td>
+            <td>{{ contrat.montant_total }} FCFA</td>
+            <td>{{ contrat.montant_paye }} FCFA</td>
+            <td>{{ contrat.statut }}</td>
+            <td>{{ contrat.date_signature }}</td>
+            <td>
+                <a href="{% url 'contrats:details_contrat_partenaire' contrat.id %}" class="btn btn-sm btn-info"><i class="ti ti-eye"></i></a>
+                <a href="{% url 'contrats:modifier_contrat_partenaire' contrat.id %}" class="btn btn-sm btn-warning"><i class="ti ti-edit"></i></a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">Aucun contrat partenaire trouvé.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

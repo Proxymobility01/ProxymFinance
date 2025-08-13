@@ -1,0 +1,29 @@
+<!-- payments/templates/payments/test_penalites.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Test des Pénalités Automatiques</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <h5>Tester l'application des pénalités</h5>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="btn-group" role="group">
+                    <button type="submit" name="heure" value="12h" class="btn btn-warning">
+                        Tester Pénalités 12h
+                    </button>
+                    <button type="submit" name="heure" value="14h" class="btn btn-danger">
+                        Tester Pénalités 14h
+                    </button>
+                    <button type="submit" name="heure" value="test" class="btn btn-info">
+                        Test Simple
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

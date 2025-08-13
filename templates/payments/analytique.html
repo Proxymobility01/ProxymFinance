@@ -1,0 +1,595 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ titre }} - {{ titre_periode }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+<style>
+    .card {
+        transition: transform 0.3s ease;
+        margin-bottom: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .card-header {
+        font-weight: bold;
+        border-bottom: 1px solid rgba(0,0,0,0.125);
+        background-color: rgba(0,0,0,0.03);
+    }
+    .info-card {
+        background-color: #f8f9fa;
+    }
+    .card-contrats {
+        background-color: var(--border-color);
+    }
+    .card-paiements {
+        background-color: var(--bg-secondary);
+    }
+    .card-penalites {
+        background-color: #f6f6f0;
+    }
+    .card-swaps {
+        background-color: #f0e8f8;
+    }
+    .variation-positive {
+        color: #28a745;
+    }
+    .variation-negative {
+        color: #dc3545;
+    }
+    .filtre-periode {
+        margin-bottom: 1.5rem;
+    }
+    .summary-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .summary-value {
+        font-size: 1.75rem;
+        font-weight: bold;
+    }
+    .summary-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    .table-responsive {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-0">{{ titre }} - {{ titre_periode }}</h1>
+            <p class="text-muted">Aperçu des performances financières et opérationnelles</p>
+        </div>
+        <div class="row-md-4 text-md-right filtre-periode">
+            <button class="btn btn-primary " onclick="window.print()">Imprimer le rapport</button>
+
+            <form method="get" class="form-inline justify-content-md-end">
+                <div class="form-group mr-2">
+                    <label for="periode" class="mr-2">Période :</label>
+                    <select id="periode" name="periode" class="form-control" onchange="this.form.submit()">
+                        <option value="semaine" {% if periode == 'semaine' %}selected{% endif %}>Semaine</option>
+                        <option value="mois" {% if periode == 'mois' %}selected{% endif %}>Mois</option>
+                        <option value="trimestre" {% if periode == 'trimestre' %}selected{% endif %}>Trimestre</option>
+                        <option value="annee" {% if periode == 'annee' %}selected{% endif %}>Année</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Résumé des indicateurs clés -->
+    <div class="row mb-4">
+        <!-- Paiements -->
+        <div class="col-md-3">
+            <div class="card card-paiements h-100">
+                <div class="card-body text-center">
+                    <div class="summary-icon text-success">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="summary-value">{{ montant_paiements_periode|intcomma }} FCFA</div>
+                    <div class="summary-label">Paiements ({{ periode }})</div>
+                    {% if variation_paiements > 0 %}
+                    <div class="variation-positive">
+                        <i class="fas fa-arrow-up"></i> {{ variation_paiements|floatformat:1 }}%
+                    </div>
+                    {% else %}
+                    <div class="variation-negative">
+                        <i class="fas fa-arrow-down"></i> {{ variation_paiements|floatformat:1 }}%
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Pénalités -->
+        <div class="col-md-3">
+            <div class="card card-penalites h-100">
+                <div class="card-body text-center">
+                    <div class="summary-icon text-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="summary-value">{{ montant_penalites_actives|intcomma }} FCFA</div>
+                    <div class="summary-label">Pénalités actives ({{ penalites_actives }} au total)</div>
+                    <div class="mt-2">
+                        <span class="badge badge-danger">{{ montant_penalites_periode|intcomma }} FCFA cette période</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Swaps -->
+        <div class="col-md-3">
+            <div class="card card-swaps h-100">
+                <div class="card-body text-center">
+                    <div class="summary-icon text-primary">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <div class="summary-value">{{ nb_swaps }}</div>
+                    <div class="summary-label">Swaps ({{ periode }})</div>
+                    <div class="mt-2">
+                        <span class="badge badge-primary">{{ moyenne_swaps_jour|floatformat:1 }} / jour</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contrats actifs -->
+        <div class="col-md-3">
+            <div class="card card-contrats h-100">
+                <div class="card-body text-center">
+                    <div class="summary-icon text-info">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <div class="summary-value">{{ contrats_par_statut.chauffeur.actif|add:contrats_par_statut.partenaire.actif|add:contrats_par_statut.batterie.actif }}</div>
+                    <div class="summary-label">Contrats actifs</div>
+                    <div class="mt-2">
+                        <span class="badge badge-info">{{ total_contrats_chauffeur|add:total_contrats_partenaire|add:total_contrats_batterie }} au total</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques et tableaux détaillés -->
+    <div class="row">
+        <!-- Évolution des paiements dans le temps -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-line mr-1"></i>
+                    Évolution des paiements ({{ titre_periode }})
+                </div>
+                <div class="card-body">
+                    <canvas id="paiementsChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Répartition des méthodes de paiement -->
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie mr-1"></i>
+                    Méthodes de paiement
+                </div>
+                <div class="card-body">
+                    <canvas id="methodesPaiementChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Statuts des contrats -->
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-file-contract mr-1"></i>
+                    Statuts des contrats
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <h6 class="text-center">Chauffeurs</h6>
+                            <canvas id="contratsChauffeurChart" height="200"></canvas>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <h6 class="text-center">Partenaires</h6>
+                            <canvas id="contratsPartenaireChart" height="200"></canvas>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <h6 class="text-center">Batteries</h6>
+                            <canvas id="contratsBatterieChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top clients avec pénalités -->
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-exclamation-circle mr-1"></i>
+                    Top 5 des clients avec pénalités en attente
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Nom</th>
+                                    <th>Pénalités</th>
+                                    <th>Montant total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for client in top_clients_penalites %}
+                                <tr>
+                                    <td>
+                                        {% if client.type == 'Chauffeur' %}
+                                        <span class="badge badge-info">{{ client.type }}</span>
+                                        {% else %}
+                                        <span class="badge badge-secondary">{{ client.type }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ client.nom }}</td>
+                                    <td class="text-center">{{ client.nb_penalites }}</td>
+                                    <td class="text-right">{{ client.montant_total|intcomma }} FCFA</td>
+                                    <td class="text-center">
+                                        {% if client.type == 'Chauffeur' %}
+                                        <a href="{% url 'contrats:details_chauffeur' client.id %}" class="btn btn-sm btn-outline-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'contrats:details_partenaire' client.id %}" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucune pénalité en attente</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations supplémentaires -->
+    <div class="row">
+        <!-- Détails des swaps -->
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-sync-alt mr-1"></i>
+                    Statistiques des swaps
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 text-center">
+                            <h2>{{ nb_swaps }}</h2>
+                            <p class="text-muted">Nombre de swaps</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <h2>{{ montant_swaps|intcomma }} FCFA</h2>
+                            <p class="text-muted">Montant total des swaps</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mt-3">
+                        <div class="col-md-6 text-center">
+                            <h3>{{ moyenne_swaps_jour|floatformat:1 }}</h3>
+                            <p class="text-muted">Moyenne journalière</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            {% if nb_swaps > 0 %}
+                            <h3>{{ montant_swaps|floatformat:0|intcomma }} FCFA</h3>
+                            <p class="text-muted">Montant moyen par swap</p>
+                            {% else %}
+                            <h3>0 FCFA</h3>
+                            <p class="text-muted">Montant moyen par swap</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Récapitulatif des contrats -->
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table mr-1"></i>
+                    Récapitulatif des contrats
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Type de contrat</th>
+                                    <th class="text-center">Actifs</th>
+                                    <th class="text-center">Suspendus</th>
+                                    <th class="text-center">Terminés</th>
+                                    <th class="text-center">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fas fa-user mr-1"></i> Chauffeurs</td>
+                                    <td class="text-center text-success">{{ contrats_par_statut.chauffeur.actif }}</td>
+                                    <td class="text-center text-warning">{{ contrats_par_statut.chauffeur.suspendu }}</td>
+                                    <td class="text-center text-secondary">{{ contrats_par_statut.chauffeur.termine }}</td>
+                                    <td class="text-center font-weight-bold">{{ total_contrats_chauffeur }}</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-handshake mr-1"></i> Partenaires</td>
+                                    <td class="text-center text-success">{{ contrats_par_statut.partenaire.actif }}</td>
+                                    <td class="text-center text-warning">{{ contrats_par_statut.partenaire.suspendu }}</td>
+                                    <td class="text-center text-secondary">{{ contrats_par_statut.partenaire.termine }}</td>
+                                    <td class="text-center font-weight-bold">{{ total_contrats_partenaire }}</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-battery-full mr-1"></i> Batteries</td>
+                                    <td class="text-center text-success">{{ contrats_par_statut.batterie.actif }}</td>
+                                    <td class="text-center text-warning">{{ contrats_par_statut.batterie.suspendu }}</td>
+                                    <td class="text-center text-secondary">{{ contrats_par_statut.batterie.termine }}</td>
+                                    <td class="text-center font-weight-bold">{{ total_contrats_batterie }}</td>
+                                </tr>
+                                <tr class="bg-light">
+                                    <td class="font-weight-bold">Total</td>
+                                    <td class="text-center font-weight-bold text-success">
+                                        {{ contrats_par_statut.chauffeur.actif|add:contrats_par_statut.partenaire.actif|add:contrats_par_statut.batterie.actif }}
+                                    </td>
+                                    <td class="text-center font-weight-bold text-warning">
+                                        {{ contrats_par_statut.chauffeur.suspendu|add:contrats_par_statut.partenaire.suspendu|add:contrats_par_statut.batterie.suspendu }}
+                                    </td>
+                                    <td class="text-center font-weight-bold text-secondary">
+                                        {{ contrats_par_statut.chauffeur.termine|add:contrats_par_statut.partenaire.termine|add:contrats_par_statut.batterie.termine }}
+                                    </td>
+                                    <td class="text-center font-weight-bold">
+                                        {{ total_contrats_chauffeur|add:total_contrats_partenaire|add:total_contrats_batterie }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+<script>
+    // Graphique d'évolution des paiements
+    var paiementsData = {{ paiements_par_jour|safe }};
+    var dates = paiementsData.map(item => item.date_affichage);
+    var montants = paiementsData.map(item => item.montant);
+    var counts = paiementsData.map(item => item.count);
+
+    var ctx = document.getElementById('paiementsChart').getContext('2d');
+    var paiementsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [
+                {
+                    label: 'Montant des paiements (FCFA)',
+                    data: montants,
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(40, 167, 69, 1)',
+                    yAxisID: 'y-axis-1',
+                    fill: true
+                },
+                {
+                    label: 'Nombre de paiements',
+                    data: counts,
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(0, 123, 255, 1)',
+                    yAxisID: 'y-axis-2',
+                    type: 'bar'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    }
+                }],
+                yAxes: [
+                    {
+                        id: 'y-axis-1',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value) {
+                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + ' FCFA';
+                            }
+                        },
+                        gridLines: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    {
+                        id: 'y-axis-2',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }
+                ]
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (tooltipItem.datasetIndex === 0) {
+                            label += tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + ' FCFA';
+                        } else {
+                            label += tooltipItem.yLabel;
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    });
+
+    // Graphique des méthodes de paiement
+    var methodesLabels = {{ methodes_labels|safe }};
+    var methodesData = {{ methodes_data|safe }};
+    var methodesCounts = {{ methodes_counts|safe }};
+
+    var ctxMethodes = document.getElementById('methodesPaiementChart').getContext('2d');
+    var methodesChart = new Chart(ctxMethodes, {
+        type: 'doughnut',
+        data: {
+            labels: methodesLabels,
+            datasets: [{
+                data: methodesData,
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.7)',
+                    'rgba(0, 123, 255, 0.7)',
+                    'rgba(255, 193, 7, 0.7)',
+                    'rgba(108, 117, 125, 0.7)',
+                    'rgba(23, 162, 184, 0.7)',
+                    'rgba(220, 53, 69, 0.7)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'bottom'
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var dataset = data.datasets[tooltipItem.datasetIndex];
+                        var total = dataset.data.reduce(function(previousValue, currentValue) {
+                            return previousValue + currentValue;
+                        });
+                        var currentValue = dataset.data[tooltipItem.index];
+                        var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+                        
+                        var label = data.labels[tooltipItem.index] || '';
+                        var count = methodesCounts[tooltipItem.index];
+                        
+                        return label + ': ' + currentValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + ' FCFA (' + percentage + '%, ' + count + ' paiements)';
+                    }
+                }
+            }
+        }
+    });
+
+    // Graphiques des statuts de contrats
+    function createContratChart(elementId, activeCount, suspendedCount, terminatedCount) {
+        var ctx = document.getElementById(elementId).getContext('2d');
+        return new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Actifs', 'Suspendus', 'Terminés'],
+                datasets: [{
+                    data: [activeCount, suspendedCount, terminatedCount],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.7)',
+                        'rgba(255, 193, 7, 0.7)',
+                        'rgba(108, 117, 125, 0.7)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        fontSize: 10,
+                        boxWidth: 10
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var dataset = data.datasets[tooltipItem.datasetIndex];
+                            var total = dataset.data.reduce(function(previousValue, currentValue) {
+                                return previousValue + currentValue;
+                            });
+                            var currentValue = dataset.data[tooltipItem.index];
+                            var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+                            
+                            var label = data.labels[tooltipItem.index] || '';
+                            return label + ': ' + currentValue + ' (' + percentage + '%)';
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Créer les graphiques de statuts de contrats
+    var chauffeurChart = createContratChart(
+        'contratsChauffeurChart', 
+        {{ contrats_par_statut.chauffeur.actif }}, 
+        {{ contrats_par_statut.chauffeur.suspendu }}, 
+        {{ contrats_par_statut.chauffeur.termine }}
+    );
+    
+    var partenaireChart = createContratChart(
+        'contratsPartenaireChart', 
+        {{ contrats_par_statut.partenaire.actif }}, 
+        {{ contrats_par_statut.partenaire.suspendu }}, 
+        {{ contrats_par_statut.partenaire.termine }}
+    );
+    
+    var batterieChart = createContratChart(
+        'contratsBatterieChart', 
+        {{ contrats_par_statut.batterie.actif }}, 
+        {{ contrats_par_statut.batterie.suspendu }}, 
+        {{ contrats_par_statut.batterie.termine }}
+    );
+</script>
+{% endblock %}

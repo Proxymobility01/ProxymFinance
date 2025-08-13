@@ -1,0 +1,594 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ titre }}{% endblock %}
+{% block page_title %}{{ titre }}{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'contrats:liste_contrats_chauffeur' %}" class="btn btn-secondary">
+    <i class="ti ti-arrow-left"></i> Retour
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>{{ action }} un contrat chauffeur</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <strong>Des erreurs ont été détectées dans le formulaire:</strong>
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                <!-- Informations de base -->
+                <div class="col-md-6">
+                    <h4 class="mb-3">Informations de base</h4>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.reference.id_for_label }}">{{ form.reference.label }}</label>
+                        {{ form.reference }}
+                        {% if form.reference.help_text %}
+                            <small class="form-text text-muted">{{ form.reference.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label for="{{ form.association.id_for_label }}">{{ form.association.label }}</label>
+                        {{ form.association }}
+                        <!--
+                        <div class="mt-2">
+                            <a href="{#% url 'contrats:ajouter_association' %#}?ajax=1" class="btn btn-sm btn-outline-primary" id="addAssociationBtn">
+                                <i class="ti ti-plus"></i> Créer une nouvelle association chauffeur-moto
+                            </a>
+                        </div>
+                        -->
+                        {% if form.association.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.association.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!--
+                    <div class="form-group mt-3">
+                        <div class="d-flex gap-2">
+                            <a href="{#% url 'contrats:ajouter_moto' % #}?ajax=1" class="btn btn-sm btn-outline-success" id="addMotosBtn">
+                                <i class="ti ti-motorbike"></i> Ajouter une moto directement
+                            </a>
+                            <a href="{#% url 'contrats:ajouter_chauffeur' % #}?ajax=1" class="btn btn-sm btn-outline-info" id="addChauffeurBtn">
+                                <i class="ti ti-user-plus"></i> Ajouter un chauffeur directement
+                            </a>
+                        </div>
+                    </div>
+
+                    -->
+
+
+                    
+                    <div class="form-group">
+                        <label for="{{ form.garant.id_for_label }}">{{ form.garant.label }}</label>
+                        {{ form.garant }}
+                        <div class="mt-2">
+                            <a href="{% url 'contrats:ajouter_garant' %}?ajax=1" class="btn btn-sm btn-outline-primary" id="addGarantBtn">
+                                <i class="ti ti-plus"></i> Ajouter un nouveau garant
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.montant_total.id_for_label }}">{{ form.montant_total.label }}</label>
+                        {{ form.montant_total }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.montant_engage.id_for_label }}">{{ form.montant_engage.label }}</label>
+                        {{ form.montant_engage }}
+                        {% if form.montant_engage.help_text %}
+                            <small class="form-text text-muted">{{ form.montant_engage.help_text }}</small>
+                        {% endif %}
+                        {% if form.montant_engage.errors %}
+                            <div class="invalid-feedback">{{ form.montant_engage.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.frequence_paiement.id_for_label }}">{{ form.frequence_paiement.label }}</label>
+                        {{ form.frequence_paiement }}
+                    </div>
+                </div>
+                
+                <!-- Détails du contrat -->
+                <div class="col-md-6">
+                    <h4 class="mb-3">Détails du contrat</h4>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.date_signature.id_for_label }}">{{ form.date_signature.label }}</label>
+                        {{ form.date_signature }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.date_debut.id_for_label }}">{{ form.date_debut.label }}</label>
+                        {{ form.date_debut }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.duree_semaines.id_for_label }}">{{ form.duree_semaines.label }}</label>
+                        {{ form.duree_semaines }}
+                        <small class="form-text text-muted">La date de fin sera calculée automatiquement</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.montant_caution_batterie.id_for_label }}">{{ form.montant_caution_batterie.label }}</label>
+                        {{ form.montant_caution_batterie }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.duree_caution_batterie.id_for_label }}">{{ form.duree_caution_batterie.label }}</label>
+                        {{ form.duree_caution_batterie }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.montant_engage_batterie.id_for_label }}">{{ form.montant_engage_batterie.label }}</label>
+                        {{ form.montant_engage_batterie }}
+                        {% if form.montant_engage_batterie.help_text %}
+                            <small class="form-text text-muted">{{ form.montant_engage_batterie.help_text }}</small>
+                        {% endif %}
+                        {% if form.montant_engage_batterie.errors %}
+                            <div class="invalid-feedback">{{ form.montant_engage_batterie.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.contrat_physique.id_for_label }}">{{ form.contrat_physique.label }}</label>
+                        {{ form.contrat_physique }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="{{ form.statut.id_for_label }}">{{ form.statut.label }}</label>
+                        {{ form.statut }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mt-4 text-center">
+                <button type="submit" class="btn btn-primary">
+                    <i class="ti ti-device-floppy"></i> {{ action }}
+                </button>
+                <a href="{% url 'contrats:liste_contrats_chauffeur' %}" class="btn btn-secondary">
+                    <i class="ti ti-x"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal pour ajouter un garant -->
+<div class="modal" id="ajoutGarantModal">
+    <div class="modal-content">
+        <span class="close" id="fermerGarantModal">&times;</span>
+        <h5>Ajouter un nouveau garant</h5>
+        <div id="garantFormContainer">
+            <!-- Le contenu sera chargé ici via AJAX -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour ajouter un chauffeur -->
+<div class="modal" id="ajoutChauffeurModal">
+    <div class="modal-content">
+        <span class="close" id="fermerChauffeurModal">&times;</span>
+        <h5>Ajouter un nouveau chauffeur</h5>
+        <div id="chauffeurFormContainer">
+            <!-- Le contenu sera chargé ici via AJAX -->
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal pour ajouter une association -->
+<div class="modal" id="ajoutAssociationModal">
+    <div class="modal-content">
+        <span class="close" id="fermerAssociationModal">&times;</span>
+        <h5>Ajouter Une nouvelle Association</h5>
+        <div id="associationFormContainer">
+            <!-- Le contenu sera chargé ici via AJAX -->
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal pour ajouter une Motos -->
+<div class="modal" id="ajoutMotosModal">
+    <div class="modal-content">
+        <span class="close" id="fermerMotosModal">&times;</span>
+        <h5>Ajouter Une nouvelle Association</h5>
+        <div id="motosFormContainer">
+            <!-- Le contenu sera chargé ici via AJAX -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Style général du modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(18, 18, 18, 0.6); /* semi-transparent noir adapté aux 2 thèmes */
+    }
+
+    /* Contenu du modal */
+    .modal-content {
+        background-color: var(--card-bg);
+        margin: 5% auto;
+        padding: var(--spacing-lg);
+        border: 1px solid var(--border-color);
+        width: 60%;
+        max-width: 800px;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow);
+        color: var(--text-color);
+        font-family: var(--font-family-body);
+        animation: slideIn var(--transition-speed) ease-out;
+    }
+
+    /* Bouton de fermeture */
+    .modal .close {
+        position: absolute;
+        top: var(--spacing-sm);
+        right: var(--spacing-md);
+        font-size: var(--font-size-xl);
+        font-weight: bold;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: color var(--transition-speed);
+    }
+
+    .modal .close:hover {
+        color: var(--danger);
+    }
+
+    /* Animation */
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Modal Garant
+        const garantModal = document.getElementById('ajoutGarantModal');
+        const garantOpenBtn = document.getElementById('addGarantBtn');
+        const garantCloseBtn = document.getElementById('fermerGarantModal');
+
+        // Modal Chauffeur
+        const chauffeurModal = document.getElementById('ajoutChauffeurModal');
+        const chauffeurOpenBtn = document.getElementById('addChauffeurBtn');
+        const chauffeurCloseBtn = document.getElementById('fermerChauffeurModal');
+
+        // Modal Association
+        const associationModal = document.getElementById('ajoutAssociationModal');
+        const associationOpenBtn = document.getElementById('addAssociationBtn');
+        const associationCloseBtn = document.getElementById('fermerAssociationModal');
+
+        // Modal Motos
+        const motosModal = document.getElementById('ajoutMotosModal');
+        const motosOpenBtn = document.getElementById('addMotosBtn');
+        const motosCloseBtn = document.getElementById('fermerMotosModal');
+    
+        garantOpenBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            garantModal.style.display = 'block';
+            
+            // Charger le formulaire
+            const url = this.getAttribute('href');
+            console.log('Voici l\'url Garant : ' + url);
+            const formContainer = document.getElementById('garantFormContainer');
+            
+            formContainer.innerHTML = '<div class="text-center"><i class="ti ti-loader ti-spin" style="font-size: 32px;"></i><p class="mt-2">Chargement du formulaire...</p></div>';
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    formContainer.innerHTML = html;
+                    initializeAjaxForm(formContainer, 'garant');
+                })
+                .catch(error => {
+                    formContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement du formulaire.</div>';
+                });
+        });
+    
+        garantCloseBtn.addEventListener('click', function () {
+            garantModal.style.display = 'none';
+        });
+
+        chauffeurOpenBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            chauffeurModal.style.display = 'block';
+            
+            // Charger le formulaire
+            const url = this.getAttribute('href');
+            console.log('Voici l\'url Chauffeur : ' + url);
+            const formContainer = document.getElementById('chauffeurFormContainer');
+            
+            formContainer.innerHTML = '<div class="text-center"><i class="ti ti-loader ti-spin" style="font-size: 32px;"></i><p class="mt-2">Chargement du formulaire...</p></div>';
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    formContainer.innerHTML = html;
+                    initializeAjaxForm(formContainer, 'chauffeur');
+                })
+                .catch(error => {
+                    formContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement du formulaire.</div>';
+                });
+        });
+        
+        chauffeurCloseBtn.addEventListener('click', function () {
+            chauffeurModal.style.display = 'none';
+        });
+
+        associationOpenBtn.addEventListener('click',function(e) {
+            e.preventDefault();
+            associationModal.style.display = 'block';
+
+            // Charger le formulaire
+            const url = this.getAttribute('href');
+            console.log('Voici l\'url Association : ' + url);
+            const formContainer = document.getElementById('associationFormContainer');
+
+            formContainer.innerHTML = '<div class="text-center"><i class="ti ti-loader ti-spin" style="font-size: 32px;"></i><p class="mt-2">Chargement du formulaire...</p></div>';
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    formContainer.innerHTML = html;
+                    initializeAjaxForm(formContainer, 'association');
+                    // retire les modal
+                    formContainer.querySelector('.modal').removeAttribute('aria-hidden');
+                    formContainer.querySelector('.modal').removeAttribute('aria-labelledby');
+                    formContainer.querySelector('.modal').removeAttribute('tabindex');
+                    formContainer.querySelector('.modal').classList.remove('fade');
+                    formContainer.querySelector('.modal').classList.remove('modal');
+                })
+                .catch(error => {
+                    console.log("Erreur : ", error.toString());
+                    formContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement du formulaire.</div>';
+                });
+        })
+
+        associationCloseBtn.addEventListener('click',(e)=>{
+            e.preventDefault();
+            associationModal.style.display = 'none';
+        })
+
+        motosOpenBtn.addEventListener('click',function (e){
+            e.preventDefault();
+            motosModal.style.display = 'block';
+
+            // Charger le formulaire
+            const url = this.getAttribute('href');
+            console.log('Voici l\'url Motos : ' + url);
+            const formContainer = document.getElementById('motosFormContainer');
+
+            formContainer.innerHTML = '<div class="text-center"><i class="ti ti-loader ti-spin" style="font-size: 32px;"></i><p class="mt-2">Chargement du formulaire...</p></div>';
+
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    formContainer.innerHTML = html;
+                    initializeAjaxForm(formContainer, 'motos');
+                    // retire les modal
+                    formContainer.querySelector('.modal').removeAttribute('aria-hidden');
+                    formContainer.querySelector('.modal').removeAttribute('aria-labelledby');
+                    formContainer.querySelector('.modal').removeAttribute('tabindex');
+                    formContainer.querySelector('.modal').classList.remove('fade');
+                    formContainer.querySelector('.modal').classList.remove('modal');
+                })
+                .catch(error => {
+                    console.log("Erreur : ", error.toString());
+                    formContainer.innerHTML = '<div class="alert alert-danger">Erreur lors du chargement du formulaire.</div>';
+                });
+        })
+
+        motosCloseBtn.addEventListener('click',function(e){
+            e.preventDefault();
+            motosModal.style.display = 'none';
+        })
+        
+        // Fermeture des modals en cliquant à l'extérieur
+        window.addEventListener('click', function (event) {
+            if (event.target === garantModal) {
+                garantModal.style.display = 'none';
+            }
+            if (event.target === chauffeurModal) {
+                chauffeurModal.style.display = 'none';
+            }
+            if (event.target === associationModal) {
+                chauffeurModal.style.display = 'none';
+            }
+        });
+        
+        // Fonction pour initialiser les formulaires AJAX
+        // Dans votre fonction qui initialise le formulaire AJAX
+        function initializeAjaxForm(container, type) {
+            const form = container.querySelector('form');
+            console.log(type, ": ", form);
+            if (!form) return;
+    
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            garantModal.style.display = 'none';
+
+
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Réponse du serveur:', data); // Pour déboguer
+
+                if (data.success) {
+                    // Vérifiez si data.id et data.name existent et sont valides
+                    if (data.id && data.name) {
+                        // Mise à jour du sélecteur
+                        const selectField = document.querySelector(`select[name="${type}"]`);
+                        if (selectField) {
+                            const option = document.createElement('option');
+                            option.value = data.id;
+                            option.text = data.name;
+                            option.selected = true;
+                            selectField.appendChild(option);
+
+                            console.log(`Option ajoutée : ${data.id} - ${data.name}`); // Pour déboguer
+                        } else {
+                            console.error(`Sélecteur pour ${type} non trouvé`);
+                        }
+
+                        // Fermer le modal
+                        // document.getElementById(`ajout${type.charAt(0).toUpperCase() + type.slice(1)}Modal`).style.display = 'none';
+                        document.getElementById('#form-ajout-garant').style.display = 'none';
+
+                        // Message de succès
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success';
+                        alertDiv.innerHTML = `<i class="ti ti-check"></i> ${data.message}`;
+                        document.querySelector('.card-body').insertBefore(alertDiv, document.querySelector('.card-body').firstChild);
+
+                        // Supprimer l'alerte après 5 secondes
+                        setTimeout(() => {
+                            alertDiv.remove();
+                        }, 5000);
+                    }
+                    location.reload();
+                } else {
+                    // Afficher les erreurs
+                    container.innerHTML = data.html;
+                    initializeAjaxForm(container, type);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger';
+                console.log("Erreur :", error.toString());
+                errorDiv.innerHTML = '<i class="ti ti-alert-triangle"></i> Une erreur est survenue lors du traitement de votre demande.';
+                form.prepend(errorDiv);
+
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            });
+    });
+}
+    
+    });
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ajouter la classe form-control à tous les champs du formulaire
+        const formInputs = document.querySelectorAll('input, select, textarea');
+        formInputs.forEach(input => {
+            if (!input.classList.contains('form-control')) {
+                input.classList.add('form-control');
+            }
+        });
+        
+        // Initialiser les sélecteurs avec recherche
+        const selects = document.querySelectorAll('select.select2');
+        selects.forEach(select => {
+            // Ici on pourrait initialiser Select2 ou un autre plugin si disponible
+        });
+        
+        // Calcul automatique du montant par paiement
+        const montantTotalInput = document.querySelector('input[name="montant_total"]');
+        const frequencePaiementSelect = document.querySelector('select[name="frequence_paiement"]');
+        const dureeSemainesInput = document.querySelector('input[name="duree_semaines"]');
+        
+        function calculerMontantParPaiement() {
+            const montantTotal = parseFloat(montantTotalInput.value) || 0;
+            const duree = parseInt(dureeSemainesInput.value) || 61;
+            const frequence = frequencePaiementSelect.value;
+            
+            let montantParPaiement = 0;
+            const totalJours = duree * 6; // 6 jours par semaine
+            
+            if (frequence === 'journalier') {
+                montantParPaiement = montantTotal / totalJours;
+            } else if (frequence === 'hebdomadaire') {
+                montantParPaiement = montantTotal / duree;
+            } else if (frequence === 'mensuel') {
+                montantParPaiement = montantTotal / (duree / 4);
+            } else if (frequence === 'trimestriel') {
+                montantParPaiement = montantTotal / (duree / 13);
+            }
+            
+            // Afficher le montant calculé
+            const infoElement = document.createElement('div');
+            infoElement.className = 'mt-2 alert alert-info';
+            infoElement.innerHTML = `<strong>Montant par paiement estimé:</strong> ${Math.round(montantParPaiement).toLocaleString()} FCFA`;
+            
+            const existingInfo = frequencePaiementSelect.parentNode.querySelector('.alert-info');
+            if (existingInfo) {
+                existingInfo.remove();
+            }
+            
+            frequencePaiementSelect.parentNode.appendChild(infoElement);
+        }
+        
+        // Écouter les changements sur les champs concernés
+        if (montantTotalInput && frequencePaiementSelect && dureeSemainesInput) {
+            montantTotalInput.addEventListener('change', calculerMontantParPaiement);
+            frequencePaiementSelect.addEventListener('change', calculerMontantParPaiement);
+            dureeSemainesInput.addEventListener('change', calculerMontantParPaiement);
+            
+            // Calculer au chargement de la page
+            calculerMontantParPaiement();
+        }
+    });
+</script>
+
+<script>
+// Vérification des URLs dans la console
+console.log('URL Association:', '{% url "contrats:ajouter_association" %}?ajax=1');
+console.log('URL Moto:', '{% url "contrats:ajouter_moto" %}?ajax=1');
+console.log('URL Chauffeur:', '{% url "contrats:ajouter_chauffeur" %}?ajax=1');
+</script>
+
+{% endblock %}

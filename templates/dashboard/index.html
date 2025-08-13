@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Proxym Finance{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Bienvenue sur votre tableau de bord</h3>
+
+            </div>
+            <div class="card-body">
+                <p>Vous êtes connecté en tant que <strong>{{ user_name }}</strong></p>
+                
+                {% if user_role %}
+                <p>Votre rôle : <strong>{{ user_role }}</strong></p>
+                {% endif %}
+                
+                <p>Utilisez le menu de navigation à gauche pour accéder aux différentes fonctionnalités.</p>
+                
+                <div style="margin-top: 1.5rem;">
+                    <h4>Actions rapides</h4>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <a href="{% url 'contrats:liste_contrats_chauffeur' %}">Test Contrats Chauffeurs</a>
+                        {% if request.session.user_role == 'Gestionnaire de Station' or request.session.user_type == 'agence' %}
+                        <a href="{% url 'station:index' %}" class="btn-action">
+                            <i class="ti ti-building-store"></i>
+                            Gérer les stations
+                        </a>
+                        {% endif %}
+                        
+                        {% if request.session.user_role == 'Gestionnaire des Opérations' %}
+                        <a href="{% url 'rapports:index' %}" class="btn-action">
+                            <i class="ti ti-report"></i>
+                            Voir les rapports
+                        </a>
+                        {% endif %}
+                        
+                        {% if request.session.user_role == 'Responsable des Leases' %}
+                        <a href="{% url 'investisseurs:index' %}" class="btn-action">
+                            <i class="ti ti-coin"></i>
+                            Investisseurs & Leases
+                        </a>
+                        {% endif %}
+                        
+                        {% if request.session.user_role == 'Manager Financier' %}
+                        <a href="{% url 'dashboard:admin' %}" class="btn-action">
+                            <i class="ti ti-chart-pie"></i>
+                            Administration
+                        </a>
+                        
+                        <a href="" class="btn-action">
+                            <i class="ti ti-users"></i>
+                            Gérer les utilisateurs
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3>Informations du compte</h3>
+            </div>
+            <div class="card-body">
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="ti ti-user"></i>
+                        <span>{{ user_name }}</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="ti ti-mail"></i>
+                        <span>{{ request.session.user_email }}</span>
+                    </div>
+                    
+                    {% if user_role %}
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="ti ti-id-badge"></i>
+                        <span>{{ user_role }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="ti ti-device-desktop"></i>
+                        <span>Dernière connexion: Aujourd'hui</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -0.75rem;
+    }
+    
+    .col-lg-8 {
+        flex: 0 0 calc(66.666% - 1.5rem);
+        max-width: calc(66.666% - 1.5rem);
+        padding: 0.75rem;
+    }
+    
+    .col-lg-4 {
+        flex: 0 0 calc(33.333% - 1.5rem);
+        max-width: calc(33.333% - 1.5rem);
+        padding: 0.75rem;
+    }
+    
+    @media (max-width: 992px) {
+        .col-lg-8, .col-lg-4 {
+            flex: 0 0 calc(100% - 1.5rem);
+            max-width: calc(100% - 1.5rem);
+        }
+    }
+    
+    .btn-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--bg-secondary);
+        border-radius: var(--border-radius-md);
+        padding: 1.5rem;
+        text-decoration: none;
+        color: var(--text-color);
+        text-align: center;
+        min-width: 120px;
+    }
+    
+    .btn-action:hover {
+        background-color: var(--primary-light);
+        color: var(--primary-dark);
+    }
+    
+    .btn-action i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}

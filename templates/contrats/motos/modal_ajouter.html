@@ -1,0 +1,283 @@
+<!-- templates/contrats/motos/formulaire_ajax.html -->
+{% load i18n %}
+<div class="modal fade" id="motoModal" tabindex="-1" aria-labelledby="motoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="motoModalLabel">
+                    <i class="ti ti-motorbike me-2"></i>{{ title }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" id="ajaxMotoForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <!-- Messages d'erreur -->
+                    <div id="motoErrors" class="alert alert-danger d-none"></div>
+
+                    <!-- Messages d'erreur globaux -->
+                    {% if form.errors %}
+                      <div class="alert alert-danger">
+                        <ul>
+                        {% for field, errors in form.errors.items %}
+                          <li><strong>{{ field }}:</strong> {{ errors|striptags }}</li>
+                        {% endfor %}
+                        </ul>
+                      </div>
+                    {% endif %}
+
+
+                    <div class="row">
+                        <!-- VIN -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.vin.id_for_label }}" class="form-label">
+                                    {{ form.vin.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.vin }}
+                                {% if form.vin.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.vin.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if form.vin.help_text %}
+                                    <small class="form-text text-muted">{{ form.vin.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Modèle -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.model.id_for_label }}" class="form-label">
+                                    {{ form.model.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.model }}
+                                {% if form.model.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.model.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if form.model.help_text %}
+                                    <small class="form-text text-muted">{{ form.model.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- IMEI GPS -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.gps_imei.id_for_label }}" class="form-label">
+                                    {{ form.gps_imei.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.gps_imei }}
+                                {% if form.gps_imei.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.gps_imei.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if form.gps_imei.help_text %}
+                                    <small class="form-text text-muted">{{ form.gps_imei.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Assurance -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.assurance.id_for_label }}" class="form-label">
+                                    {{ form.assurance.label }}
+                                </label>
+                                {{ form.assurance }}
+                                {% if form.assurance.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.assurance.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if form.assurance.help_text %}
+                                    <small class="form-text text-muted">{{ form.assurance.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Permis -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.permis.id_for_label }}" class="form-label">
+                                    {{ form.permis.label }}
+                                </label>
+                                {{ form.permis }}
+                                {% if form.permis.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.permis.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if form.permis.help_text %}
+                                    <small class="form-text text-muted">{{ form.permis.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations supplémentaires -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="ti ti-info-circle me-2"></i>
+                                {% trans "Assurez-vous que toutes les informations sont correctes avant d'enregistrer. Le VIN et l'IMEI GPS doivent être uniques." %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="ti ti-x me-1"></i>{% trans "Annuler" %}
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveMotoBtn">
+                        <i class="ti ti-device-floppy me-1"></i>{% trans "Enregistrer" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Gestion de la soumission du formulaire AJAX
+    $('#ajaxMotoForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const form = $(this);
+        const submitBtn = $('#saveMotoBtn');
+        const originalText = submitBtn.html();
+
+        // Désactiver le bouton et afficher le loading
+        submitBtn.prop('disabled', true).html('<i class="ti ti-loader-2 me-1 animate-spin"></i>{% trans "Enregistrement..." %}');
+
+        // Cacher les erreurs précédentes
+        $('#motoErrors').addClass('d-none').empty();
+        $('.form-control').removeClass('is-invalid');
+
+        $.ajax({
+            url: form.attr('action') || '{% url "contrats:ajouter_moto" %}',
+            type: 'POST',
+            data: form.serialize(),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Ajouter la nouvelle option au select du formulaire parent (association)
+                    const motoSelect = $('#id_moto_valide');
+                    if (motoSelect.length) {
+                        const newOption = new Option(response.moto.label, response.moto.id, true, true);
+                        motoSelect.append(newOption).trigger('change');
+                    }
+
+                    // Fermer le modal
+                    $('#motoModal').modal('hide');
+
+                    // Afficher un message de succès
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '{% trans "Succès" %}',
+                            text: response.message,
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        alert(response.message);
+                    }
+
+                    // Déclencher un événement personnalisé pour rafraîchir d'autres listes
+                    $(document).trigger('motoCreated', [response.moto]);
+                } else {
+                    // Afficher les erreurs
+                    let errorMsg = response.message || '{% trans "Une erreur est survenue." %}';
+
+                    if (response.errors) {
+                        for (let field in response.errors) {
+                            const fieldElement = $(`#id_${field}`);
+                            if (fieldElement.length) {
+                                fieldElement.addClass('is-invalid');
+                                // Ajouter le message d'erreur
+                                let errorDiv = fieldElement.next('.invalid-feedback');
+                                if (errorDiv.length === 0) {
+                                    errorDiv = $('<div class="invalid-feedback"></div>');
+                                    fieldElement.after(errorDiv);
+                                }
+                                errorDiv.text(response.errors[field].join(', '));
+                            }
+                            errorMsg += '\n' + field + ': ' + response.errors[field].join(', ');
+                        }
+                    }
+
+                    $('#motoErrors').removeClass('d-none').text(errorMsg);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erreur AJAX:', error);
+                $('#motoErrors').removeClass('d-none').text('{% trans "Erreur de communication avec le serveur." %}');
+            },
+            complete: function() {
+                // Réactiver le bouton
+                submitBtn.prop('disabled', false).html(originalText);
+            }
+        });
+    });
+
+    // Supprimer les classes d'erreur lors de la saisie
+    $('#motoModal .form-control').on('input change', function() {
+        $(this).removeClass('is-invalid');
+        $(this).next('.invalid-feedback').remove();
+    });
+
+    // Validation côté client pour le VIN
+    $('#id_vin').on('input', function() {
+        const vin = $(this).val().toUpperCase();
+        $(this).val(vin);
+
+        if (vin.length > 0 && vin.length !== 17) {
+            $(this).addClass('is-invalid');
+            let errorDiv = $(this).next('.invalid-feedback');
+            if (errorDiv.length === 0) {
+                errorDiv = $('<div class="invalid-feedback"></div>');
+                $(this).after(errorDiv);
+            }
+            errorDiv.text('{% trans "Le VIN doit contenir exactement 17 caractères." %}');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+        }
+    });
+
+    // Validation côté client pour l'IMEI
+    $('#id_gps_imei').on('input', function() {
+        const imei = $(this).val();
+
+        if (imei.length > 0 && (imei.length !== 15 || !/^\d+$/.test(imei))) {
+            $(this).addClass('is-invalid');
+            let errorDiv = $(this).next('.invalid-feedback');
+            if (errorDiv.length === 0) {
+                errorDiv = $('<div class="invalid-feedback"></div>');
+                $(this).after(errorDiv);
+            }
+            errorDiv.text('{% trans "L\'IMEI doit contenir exactement 15 chiffres." %}');
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+        }
+    });
+});
+</script>

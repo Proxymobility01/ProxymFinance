@@ -1,0 +1,340 @@
+<!-- partials/stats_cards.html -->
+{% comment %}
+Ce template partiel permet d'afficher des cartes de statistiques réutilisables à travers différentes pages.
+Usage: {% include "payments/partials/stats_cards.html" with stats=stats %}
+{% endcomment %}
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stats-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-value">{{ stats.nb_paiements_attendus|default:"0" }}</div>
+                        <div class="stats-label">Paiements attendus</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small>Montant total: {{ stats.montant_total_attendu|default:"0"|floatformat:0 }} FCFA</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stats-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-value">{{ stats.nb_paiements_effectues|default:"0" }}</div>
+                        <div class="stats-label">Paiements effectués</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small>Montant perçu: {{ stats.montant_total_paye|default:"0"|floatformat:0 }} FCFA</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stats-card bg-warning text-dark">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-value">{{ stats.nb_penalites_actives|default:"0" }}</div>
+                        <div class="stats-label">Pénalités actives</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <small>Montant: {{ stats.montant_total_penalites|default:"0"|floatformat:0 }} FCFA</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stats-card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stats-value">{{ stats.taux_realisation|default:"0"|floatformat:0 }}%</div>
+                        <div class="stats-label">Taux de réalisation</div>
+                    </div>
+                    <div class="stats-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-white" role="progressbar" style="width: {{ stats.taux_realisation|default:"0" }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- partials/payment_card.html -->
+{% comment %}
+Ce template partiel affiche une carte de paiement individuelle avec indicateurs visuels.
+Usage: {% include "payments/partials/payment_card.html" with paiement=paiement %}
+{% endcomment %}
+
+<div class="card payment-card {% if paiement.retard_grave %}retard-grave{% elif paiement.retard %}retard{% elif paiement.penalites_count > 0 %}penalites{% endif %}">
+    {% if paiement.penalites_count > 0 %}
+        <span class="badge bg-warning text-dark badge-penalite">
+            {{ paiement.penalites_count }} pénalité(s)
+        </span>
+    {% endif %}
+    
+    <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+            {% if paiement.photo_client %}
+                <img src="{{ paiement.photo_client }}" alt="{{ paiement.client_nom }}" class="client-photo me-3">
+            {% else %}
+                <div class="client-photo me-3 bg-light d-flex align-items-center justify-content-center">
+                    <i class="fas fa-user text-secondary"></i>
+                </div>
+            {% endif %}
+            
+            <div>
+                <h5 class="card-title mb-0">{{ paiement.client_nom }}</h5>
+                <p class="card-text text-muted small mb-0">
+                    <span class="badge bg-secondary">{{ paiement.contrat_type|title }}</span>
+                    <span class="text-muted">{{ paiement.reference }}</span>
+                </p>
+                <p class="card-text small mb-0">
+                    <i class="fas fa-phone-alt"></i> {{ paiement.client_telephone }}
+                </p>
+            </div>
+            
+            <div class="ms-auto">
+                <div class="urgence-indicator {% if paiement.retard_grave %}grave{% elif paiement.retard %}moyenne{% else %}normale{% endif %}"></div>
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-6">
+                <div class="text-muted small">Montant principal:</div>
+                <div class="fw-bold">{{ paiement.montant|floatformat:0 }} FCFA</div>
+            </div>
+            <div class="col-6">
+                <div class="text-muted small">Montant batterie:</div>
+                <div class="fw-bold">{{ paiement.montant_batterie|floatformat:0 }} FCFA</div>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <div class="text-muted small">Total à payer:</div>
+                <div class="fw-bold">{{ paiement.montant_total|floatformat:0 }} FCFA</div>
+            </div>
+            
+            <a href="{% url 'payments:paiement_rapide' paiement.contrat_type paiement.contrat_id %}{% if paiement.contrat_batterie_id %}?contrat_batterie_id={{ paiement.contrat_batterie_id }}{% endif %}" class="btn btn-primary">
+                {% if paiement.retard %}
+                    <i class="fas fa-exclamation-circle"></i> Payer (retard)
+                {% else %}
+                    <i class="fas fa-money-bill-wave"></i> Payer
+                {% endif %}
+            </a>
+        </div>
+        
+        {% if paiement.penalite_applicable > 0 %}
+            <div class="mt-2 small">
+                <span class="text-{% if paiement.retard_grave %}danger{% else %}warning{% endif %}">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Pénalité applicable: {{ paiement.penalite_applicable|floatformat:0 }} FCFA
+                </span>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- partials/client_info.html -->
+{% comment %}
+Ce template partiel affiche un bloc d'informations client réutilisable.
+Usage: {% include "payments/partials/client_info.html" with client=client contrat=contrat %}
+{% endcomment %}
+
+<div class="client-info">
+    {% if client.photo_url %}
+    <img src="{{ client.photo_url }}" alt="{{ client.prenom }} {{ client.nom }}" class="client-photo">
+    {% else %}
+    <div class="client-photo d-flex align-items-center justify-content-center">
+        <i class="fas fa-user fa-2x text-secondary"></i>
+    </div>
+    {% endif %}
+    
+    <div class="client-details">
+        <h3>{{ client.prenom }} {{ client.nom }}</h3>
+        <p><i class="fas fa-id-card"></i> {{ client.numero_cni|default:"N° CNI non disponible" }}</p>
+        <p><i class="fas fa-phone"></i> {{ client.telephone|default:"Téléphone non disponible" }}</p>
+        
+        <div class="mt-2">
+            {% if contrat %}
+            <span class="badge bg-primary">{{ contrat_type|title }}</span>
+            <span class="badge bg-secondary">{{ contrat.reference }}</span>
+            {% endif %}
+            {% if contrat_batterie %}
+            <span class="badge bg-info">Avec batterie</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- partials/filters.html -->
+{% comment %}
+Ce template partiel affiche des filtres réutilisables pour les pages de liste.
+Usage: {% include "payments/partials/filters.html" with filtres=filtres url_name='payments:liste_paiements' %}
+{% endcomment %}
+
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Filtres</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" action="{% url url_name %}">
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-3">
+                    <label for="date_debut" class="form-label">Date début</label>
+                    <input type="date" class="form-control" id="date_debut" name="date_debut" value="{{ filtres.date_debut }}">
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <label for="date_fin" class="form-label">Date fin</label>
+                    <input type="date" class="form-control" id="date_fin" name="date_fin" value="{{ filtres.date_fin }}">
+                </div>
+                
+                {% if type_contrat_choices %}
+                <div class="col-md-6 col-lg-3">
+                    <label for="type_contrat" class="form-label">Type de contrat</label>
+                    <select class="form-select" id="type_contrat" name="type_contrat">
+                        <option value="">Tous les types</option>
+                        {% for value, label in type_contrat_choices %}
+                        <option value="{{ value }}" {% if filtres.type_contrat == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                
+                {% if methode_choices %}
+                <div class="col-md-6 col-lg-3">
+                    <label for="methode" class="form-label">Méthode de paiement</label>
+                    <select class="form-select" id="methode" name="methode">
+                        <option value="">Toutes les méthodes</option>
+                        {% for value, label in methode_choices %}
+                        <option value="{{ value }}" {% if filtres.methode == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                
+                <div class="col-md-6 col-lg-3">
+                    <label for="q" class="form-label">Recherche</label>
+                    <input type="text" class="form-control" id="q" name="q" placeholder="Nom, référence..." value="{{ filtres.q }}">
+                </div>
+                
+                <div class="col-md-6 col-lg-3">
+                    <label for="trier_par" class="form-label">Trier par</label>
+                    <select class="form-select" id="trier_par" name="trier_par">
+                        <option value="date_paiement" {% if filtres.trier_par == 'date_paiement' %}selected{% endif %}>Date (récent → ancien)</option>
+                        <option value="-date_paiement" {% if filtres.trier_par == '-date_paiement' %}selected{% endif %}>Date (ancien → récent)</option>
+                        <option value="montant" {% if filtres.trier_par == 'montant' %}selected{% endif %}>Montant (croissant)</option>
+                        <option value="-montant" {% if filtres.trier_par == '-montant' %}selected{% endif %}>Montant (décroissant)</option>
+                    </select>
+                </div>
+                
+                <div class="col-12">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter"></i> Filtrer
+                            </button>
+                            <a href="{% url url_name %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-undo"></i> Réinitialiser
+                            </a>
+                        </div>
+                        
+                        <div>
+                            <a href="{% url 'payments:export_paiements' %}?{{ request.GET.urlencode }}" class="btn btn-outline-success">
+                                <i class="fas fa-file-excel"></i> Exporter CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- partials/pagination.html -->
+{% comment %}
+Ce template partiel affiche un composant de pagination réutilisable.
+Usage: {% include "payments/partials/pagination.html" with page_obj=page_obj %}
+{% endcomment %}
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page=1" aria-label="Première">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Précédente">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;&laquo;</span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Suivante">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?{% if request.GET.urlencode %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.paginator.num_pages }}" aria-label="Dernière">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

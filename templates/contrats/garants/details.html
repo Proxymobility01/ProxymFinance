@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titre }}</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:modifier_garant' garant.id %}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{% url 'contrats:liste_garants' %}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Retour à la liste
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Informations personnelles</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Nom complet</th>
+                                    <td>{{ garant.prenom }} {{ garant.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Numéro CNI</th>
+                                    <td>{{ garant.numero_cni }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse</th>
+                                    <td>{{ garant.adresse }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Occupation</th>
+                                    <td>{{ garant.occupation }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone</th>
+                                    <td>{{ garant.telephone }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date d'ajout</th>
+                                    <td>{{ garant.created_at|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Documents</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Document CNI</th>
+                                    <td>
+                                        {% if garant.cni_document %}
+                                            <a href="{{ garant.cni_document.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Justificatif de domicile</th>
+                                    <td>
+                                        {% if garant.justificatif_domicile %}
+                                            <a href="{{ garant.justificatif_domicile.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Justificatif d'activité</th>
+                                    <td>
+                                        {% if garant.justificatif_activite %}
+                                            <a href="{{ garant.justificatif_activite.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Contrat physique</th>
+                                    <td>
+                                        {% if garant.contrat_physique %}
+                                            <a href="{{ garant.contrat_physique.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section des contrats garantis -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Contrats garantis</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Chauffeur</th>
+                                <th>Date signature</th>
+                                <th>Montant</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contrat in contrats_garantis %}
+                            <tr>
+                                <td>{{ contrat.reference }}</td>
+                                <td>
+                                    {% if contrat.association %}
+                                        {{ contrat.association.validated_user.nom }} {{ contrat.association.validated_user.prenom }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
+                                <td>{{ contrat.montant_total|floatformat:"0" }} FCFA</td>
+                                <td>
+                                    {% if contrat.statut == 'actif' %}
+                                        <span class="badge badge-success">Actif</span>
+                                    {% elif contrat.statut == 'terminé' %}
+                                        <span class="badge badge-info">Terminé</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Suspendu</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'contrats:details_contrat_chauffeur' contrat.id %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun contrat garanti</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

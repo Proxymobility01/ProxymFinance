@@ -1,0 +1,585 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">{{ titre }}</h1>
+    
+    <!-- Statistiques -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total pénalités</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_penalites }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Montant total</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ montant_total|floatformat:0 }} FCFA</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filtres -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Filtres</h6>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="statut">Statut</label>
+                        <select name="statut" id="statut" class="form-control">
+                            <option value="">Tous les statuts</option>
+                            {% for key, value in statut_choices %}
+                            <option value="{{ key }}" {% if filtres.statut == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="type_penalite">Type</label>
+                        <select name="type_penalite" id="type_penalite" class="form-control">
+                            <option value="">Tous les types</option>
+                            {% for key, value in type_penalite_choices %}
+                            <option value="{{ key }}" {% if filtres.type_penalite == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="motif">Motif</label>
+                        <select name="motif" id="motif" class="form-control">
+                            <option value="">Tous les motifs</option>
+                            {% for key, value in motif_choices %}
+                            <option value="{{ key }}" {% if filtres.motif == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="date_debut">Date début</label>
+                        <input type="date" name="date_debut" id="date_debut" class="form-control" value="{{ filtres.date_debut }}">
+                    </div>
+                </div>
+                
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="date_fin">Date fin</label>
+                        <input type="date" name="date_fin" id="date_fin" class="form-control" value="{{ filtres.date_fin }}">
+                    </div>
+                </div>
+                
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="q">Recherche</label>
+                        <input type="text" name="q" id="q" class="form-control" value="{{ filtres.q }}" placeholder="Nom, référence...">
+                    </div>
+                </div>
+                
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                    <a href="{% url 'payments:gestion_penalites' %}" class="btn btn-secondary">
+                        <i class="fas fa-undo"></i> Réinitialiser
+                    </a>
+                    
+                    <!-- Bouton pour corriger les pénalités manquées -->
+                    <form method="post" action="{% url 'payments:corriger_penalites_manquees' %}" style="display: inline;" onsubmit="return confirm('Voulez-vous créer automatiquement toutes les pénalités manquées en base de données ?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning float-right">
+                            <i class="fas fa-database"></i> Corriger pénalités manquées en base
+                        </button>
+                    </form>
+                    
+                    <form method="post" action="{% url 'payments:appliquer_penalites' %}" style="display: inline; margin-right: 10px;" onsubmit="return confirm('Voulez-vous appliquer les pénalités automatiques pour aujourd\'hui ?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success float-right">
+                            <i class="fas fa-sync"></i> Appliquer pénalités du jour
+                        </button>
+                    </form>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Actions groupées -->
+    {% if penalites %}
+    <div class="card shadow mb-4" id="actionsGroupees" style="display: none;">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-warning">Actions groupées</h6>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'payments:traiter_penalites_groupees' %}" id="formActionsGroupees">
+                {% csrf_token %}
+                <input type="hidden" name="penalites_ids" id="penalites_ids">
+                
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="action_groupee">Action</label>
+                            <select name="action" id="action_groupee" class="form-control" required>
+                                <option value="">Choisir une action</option>
+                                <option value="payer">Marquer comme payées</option>
+                                <option value="annuler">Annuler</option>
+                                <option value="reporter">Reporter</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 section-methode-paiement" style="display: none;">
+                        <div class="form-group">
+                            <label for="methode_paiement_groupee">Méthode de paiement</label>
+                            <select name="methode_paiement" id="methode_paiement_groupee" class="form-control">
+                                <option value="espece">Espèces</option>
+                                <option value="mobile_money">Mobile Money</option>
+                                <option value="virement">Virement</option>
+                                <option value="cheque">Chèque</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 section-date-report" style="display: none;">
+                        <div class="form-group">
+                            <label for="date_report_groupee">Date de report</label>
+                            <input type="date" name="date_report" id="date_report_groupee" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="raison_groupee">Raison/Commentaire</label>
+                            <input type="text" name="raison" id="raison_groupee" class="form-control" placeholder="Optionnel">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="envoyer_notification" id="envoyer_notification_groupee">
+                            <label class="form-check-label" for="envoyer_notification_groupee">
+                                Envoyer une notification aux clients
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 text-right">
+                        <span id="selectionSummary" class="text-muted mr-3"></span>
+                        <button type="button" class="btn btn-primary" id="btnAppliquerActions" disabled>
+                            <i class="fas fa-check"></i> Appliquer aux <span id="nbSelected">0</span> sélectionnées
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Liste des pénalités -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Pénalités 
+                {% if penalites.paginator %}
+                    ({{ penalites.paginator.count }})
+                {% else %}
+                    ({{ penalites|length }})
+                {% endif %}
+            </h6>
+            <div>
+                <a href="{% url 'payments:export_penalites' %}?statut={{ filtres.statut }}&type_penalite={{ filtres.type_penalite }}&motif={{ filtres.motif }}&date_debut={{ filtres.date_debut }}&date_fin={{ filtres.date_fin }}&q={{ filtres.q }}" class="btn btn-sm btn-outline-success">
+                    <i class="fas fa-file-excel"></i> Exporter
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="selectAll">
+                                    <label class="form-check-label" for="selectAll">Tout</label>
+                                </div>
+                            </th>
+                            <th>Client</th>
+                            <th>Montant</th>
+                            <th>Date création</th>
+                            <th>Date paiement manqué</th>
+                            <th>Type/Contrat</th>
+                            <th>Motif</th>
+                            <th>Statut</th>
+                            <th>Paiement enregistré par</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for penalite in penalites %}
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input penalite-select" 
+                                           data-id="{{ penalite.id }}" 
+                                           data-montant="{{ penalite.montant }}">
+                                </div>
+                            </td>
+                            <td>
+                                {% if penalite.contrat_chauffeur %}
+                                    <strong>{{ penalite.contrat_chauffeur.association.validated_user.prenom }} {{ penalite.contrat_chauffeur.association.validated_user.nom }}</strong><br>
+                                    <small class="text-muted">{{ penalite.contrat_chauffeur.association.validated_user.phone }}</small>
+                                {% elif penalite.contrat_partenaire %}
+                                    <strong>{{ penalite.contrat_partenaire.partenaire.prenom }} {{ penalite.contrat_partenaire.partenaire.nom }}</strong><br>
+                                    <small class="text-muted">{{ penalite.contrat_partenaire.partenaire.phone }}</small>
+                                {% elif penalite.contrat_batterie and penalite.contrat_batterie.chauffeur %}
+                                    <strong>{{ penalite.contrat_batterie.chauffeur.prenom }} {{ penalite.contrat_batterie.chauffeur.nom }}</strong><br>
+                                    <small class="text-muted">{{ penalite.contrat_batterie.chauffeur.phone }}</small>
+                                {% elif penalite.contrat_batterie and penalite.contrat_batterie.partenaire %}
+                                    <strong>{{ penalite.contrat_batterie.partenaire.prenom }} {{ penalite.contrat_batterie.partenaire.nom }}</strong><br>
+                                    <small class="text-muted">{{ penalite.contrat_batterie.partenaire.phone }}</small>
+                                {% else %}
+                                    <span class="text-muted">Client inconnu</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong class="text-danger">{{ penalite.montant|floatformat:0 }} FCFA</strong>
+                            </td>
+                            <td>{{ penalite.date_creation|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if penalite.date_paiement_manque %}
+                                    {{ penalite.date_paiement_manque|date:"d/m/Y" }}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-secondary">{{ penalite.get_type_penalite_display }}</span><br>
+                                {% if penalite.contrat_reference %}
+                                    <small class="text-muted">{{ penalite.contrat_reference }}</small>
+                                {% else %}
+                                    <small class="text-muted">-</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% with total_paye=penalite.montant_total_paye %}
+                                    {% if penalite.statut == 'payee' %}
+                                        <span class="badge badge-success">Payée</span>
+                                    {% elif total_paye > 0 %}
+                                        <span class="badge badge-warning">Partiellement payée</span>
+                                    {% elif penalite.statut == 'reportee' %}
+                                        <span class="badge badge-info">Reportée</span>
+                                    {% elif penalite.statut == 'annulee' %}
+                                        <span class="badge badge-secondary">Annulée</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Non réglée</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+
+                            <td>
+                                <span class="badge 
+                                    {% if penalite.statut == 'en_attente' %}badge-warning
+                                    {% elif penalite.statut == 'payee' %}badge-success
+                                    {% elif penalite.statut == 'annulee' %}badge-secondary
+                                    {% elif penalite.statut == 'reportee' %}badge-info
+                                    {% endif %}">
+                                    {{ penalite.get_statut_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if penalite.paiements.exists %}
+                                    {% with paiement=penalite.paiements.last %}
+                                        {% if paiement.enregistre_par %}
+                                            {{ paiement.enregistre_par.prenom }} {{ paiement.enregistre_par.nom }}
+                                        {% elif paiement.user_agence %}
+                                            {{ paiement.user_agence.nom }}  {# adapte selon ton modèle UserAgence #}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'payments:gerer_penalite' penalite.id %}" class="btn btn-sm btn-primary" title="Gérer cette pénalité">
+                                        <i class="ti ti-edit"></i>
+                                    </a>
+                                    {% if penalite.statut == 'en_attente' %}
+                                    <button type="button" class="btn btn-sm btn-success" 
+                                            onclick="pardonnerPenalite({{ penalite.id }})" 
+                                            title="Pardonner cette pénalité">
+                                        <i class="ti ti-heart"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center py-4">
+                                <i class="fas fa-search fa-2x text-gray-300 mb-2"></i><br>
+                                <span class="text-muted">Aucune pénalité trouvée avec ces critères</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if penalites.paginator and penalites.paginator.num_pages > 1 %}
+            <div class="mt-4">
+                <nav aria-label="Pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if penalites.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Première">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ penalites.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Précédente">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for i in penalites.paginator.page_range %}
+                            {% if penalites.number == i %}
+                                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                            {% elif i > penalites.number|add:'-3' and i < penalites.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if penalites.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ penalites.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Suivante">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ penalites.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Dernière">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour pardonner une pénalité -->
+<div class="modal fade" id="modalPardonner" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pardonner une pénalité</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form id="formPardonner" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="raison_pardon">Raison du pardon (obligatoire)</label>
+                        <textarea name="raison_pardon" id="raison_pardon" class="form-control" rows="3" required 
+                                  placeholder="Exemple: Paiement effectué en retard mais justifié..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-heart"></i> Pardonner
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Gestion de l'action groupée
+    $('#action_groupee').change(function() {
+        var action = $(this).val();
+        if (action === 'payer') {
+            $('.section-methode-paiement').show();
+            $('.section-date-report').hide();
+            $('#raison_groupee').attr('placeholder', 'Commentaire pour le paiement (optionnel)');
+        } else if (action === 'reporter') {
+            $('.section-methode-paiement').hide();
+            $('.section-date-report').show();
+            $('#raison_groupee').attr('placeholder', 'Raison du report');
+        } else if (action === 'annuler') {
+            $('.section-methode-paiement').hide();
+            $('.section-date-report').hide();
+            $('#raison_groupee').attr('placeholder', 'Raison de l\'annulation (obligatoire)');
+        } else {
+            $('.section-methode-paiement').hide();
+            $('.section-date-report').hide();
+            $('#raison_groupee').attr('placeholder', 'Optionnel');
+        }
+    });
+    
+    // Sélection de toutes les pénalités
+    $('#selectAll').change(function() {
+        var isChecked = $(this).is(':checked');
+        $('.penalite-select').prop('checked', isChecked);
+        updateSelection();
+    });
+    
+    // Mise à jour de la sélection
+    $('.penalite-select').change(function() {
+        updateSelection();
+        
+        // Vérifier si toutes les cases sont cochées
+        var totalCheckboxes = $('.penalite-select').length;
+        var checkedCheckboxes = $('.penalite-select:checked').length;
+        $('#selectAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+    });
+    
+    // Appliquer l'action aux pénalités sélectionnées
+    $('#btnAppliquerActions').click(function() {
+        var action = $('#action_groupee').val();
+        var raison = $('#raison_groupee').val().trim();
+        
+        if (!action) {
+            alert('Veuillez choisir une action.');
+            return;
+        }
+        
+        if (action === 'annuler' && !raison) {
+            alert('Une raison est requise pour annuler des pénalités.');
+            $('#raison_groupee').focus();
+            return;
+        }
+        
+        if (action === 'reporter' && !$('#date_report_groupee').val()) {
+            alert('Une date de report est requise.');
+            $('#date_report_groupee').focus();
+            return;
+        }
+        
+        if (action === 'payer' && !$('#methode_paiement_groupee').val()) {
+            alert('Une méthode de paiement est requise.');
+            $('#methode_paiement_groupee').focus();
+            return;
+        }
+        
+        var nbSelected = $('.penalite-select:checked').length;
+        var actionText = {
+            'payer': 'marquer comme payées',
+            'annuler': 'annuler',
+            'reporter': 'reporter'
+        };
+        
+        if (confirm('Voulez-vous vraiment ' + actionText[action] + ' ' + nbSelected + ' pénalité(s) ?')) {
+            $('#formActionsGroupees').submit();
+        }
+    });
+    
+    // Fonction pour mettre à jour la sélection
+    function updateSelection() {
+        var selectedIds = [];
+        var totalMontant = 0;
+        
+        $('.penalite-select:checked').each(function() {
+            selectedIds.push($(this).data('id'));
+            totalMontant += parseFloat($(this).data('montant'));
+        });
+        
+        $('#penalites_ids').val(selectedIds.join(','));
+        $('#nbSelected').text(selectedIds.length);
+        
+        if (selectedIds.length > 0) {
+            $('#btnAppliquerActions').prop('disabled', false);
+            $('#selectionSummary').text('Montant total: ' + totalMontant.toLocaleString() + ' FCFA');
+            $('#actionsGroupees').show();
+        } else {
+            $('#btnAppliquerActions').prop('disabled', true);
+            $('#selectionSummary').text('');
+            $('#actionsGroupees').hide();
+        }
+    }
+    
+    // Initialiser les sections visibles selon l'action sélectionnée
+    $('#action_groupee').trigger('change');
+});
+
+// Fonction pour pardonner une pénalité
+function pardonnerPenalite(penaliteId) {
+    $('#formPardonner').attr('action', '{% url "payments:pardonner_penalite" 0 %}'.replace('0', penaliteId));
+    $('#modalPardonner').modal('show');
+}
+
+// Gestion du formulaire de pardon
+$('#formPardonner').submit(function(e) {
+    e.preventDefault();
+    
+    var raison = $('#raison_pardon').val().trim();
+    if (!raison) {
+        alert('Une raison est obligatoire pour pardonner une pénalité.');
+        return;
+    }
+    
+    $.ajax({
+        url: $(this).attr('action'),
+        method: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+            if (response.success) {
+                $('#modalPardonner').modal('hide');
+                location.reload(); // Recharger la page pour voir les changements
+            } else {
+                alert('Erreur: ' + response.message);
+            }
+        },
+        error: function() {
+            alert('Une erreur est survenue. Veuillez réessayer.');
+        }
+    });
+});
+</script>
+{% endblock %}

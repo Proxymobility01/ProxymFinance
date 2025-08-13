@@ -1,0 +1,201 @@
+{% extends 'stations/base_stations.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        {% if form.instance.pk %}
+                            Modifier la station
+                        {% else %}
+                            Ajouter une station
+                        {% endif %}
+                    </h3>
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.nom_agence.label_tag }}
+                                    {{ form.nom_agence }}
+                                    {% if form.nom_agence.errors %}
+                                    <div class="text-danger">{{ form.nom_agence.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.nom_proprietaire.label_tag }}
+                                    {{ form.nom_proprietaire }}
+                                    {% if form.nom_proprietaire.errors %}
+                                    <div class="text-danger">{{ form.nom_proprietaire.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.ville.label_tag }}
+                                    {{ form.ville }}
+                                    {% if form.ville.errors %}
+                                    <div class="text-danger">{{ form.ville.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.quartier.label_tag }}
+                                    {{ form.quartier }}
+                                    {% if form.quartier.errors %}
+                                    <div class="text-danger">{{ form.quartier.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.adresse_complete.label_tag }}
+                            {{ form.adresse_complete }}
+                            {% if form.adresse_complete.errors %}
+                            <div class="text-danger">{{ form.adresse_complete.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.code_postal.label_tag }}
+                                    {{ form.code_postal }}
+                                    {% if form.code_postal.errors %}
+                                    <div class="text-danger">{{ form.code_postal.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.telephone.label_tag }}
+                                    {{ form.telephone }}
+                                    {% if form.telephone.errors %}
+                                    <div class="text-danger">{{ form.telephone.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.email.label_tag }}
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                    <div class="text-danger">{{ form.email.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.capacite.label_tag }}
+                                    {{ form.capacite }}
+                                    {% if form.capacite.errors %}
+                                    <div class="text-danger">{{ form.capacite.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.statut.label_tag }}
+                                    {{ form.statut }}
+                                    {% if form.statut.errors %}
+                                    <div class="text-danger">{{ form.statut.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.logo.label_tag }}
+                                    {{ form.logo }}
+                                    {% if form.logo.errors %}
+                                    <div class="text-danger">{{ form.logo.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.cout_initial.label_tag }}
+                                    {{ form.cout_initial }}
+                                    {% if form.cout_initial.errors %}
+                                    <div class="text-danger">{{ form.cout_initial.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form.cout_mensuel.label_tag }}
+                                    {{ form.cout_mensuel }}
+                                    {% if form.cout_mensuel.errors %}
+                                    <div class="text-danger">{{ form.cout_mensuel.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <div class="text-danger">{{ form.description.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            {{ form.notes.label_tag }}
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                            <div class="text-danger">{{ form.notes.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if not form.instance.pk %}
+                        <div class="form-group">
+                            {{ form.password.label_tag }}
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                            <div class="text-danger">{{ form.password.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    Mettre à jour
+                                {% else %}
+                                    Créer
+                                {% endif %}
+                            </button>
+                            <a href="{% url 'stations:station-list' %}" class="btn btn-secondary">
+                                Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

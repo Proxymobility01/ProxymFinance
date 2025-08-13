@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+{% block page_title %}{{ titre }}{% endblock %}
+
+{% block page_actions %}
+<a href="{% if contrat %}{% url 'contrats:details_contrat_chauffeur' contrat.id %}{% else %}{% url 'contrats:liste_conges' %}{% endif %}" class="btn btn-secondary">
+    <i class="ti ti-arrow-left"></i> Annuler
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>{{ action }} un congé</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" id="conge-form">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="id_contrat" class="form-label">Contrat <span class="text-danger">*</span></label>
+                            {{ form.contrat }}
+                            {% if form.contrat.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.contrat.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            <small class="form-text text-muted">Sélectionnez le contrat concerné par cette demande de congé.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="id_date_debut" class="form-label">Date de début <span class="text-danger">*</span></label>
+                            {{ form.date_debut }}
+                            {% if form.date_debut.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.date_debut.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_date_fin" class="form-label">Date de fin <span class="text-danger">*</span></label>
+                            {{ form.date_fin }}
+                            {% if form.date_fin.errors %}
+                            <div class="text-danger mt-1">
+                                {% for error in form.date_fin.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mt-3">
+                        <label class="form-label">Nombre de jours</label>
+                        <input type="text" class="form-control" id="nombre_jours" readonly>
+                    </div>
+                    
+                    
+                    <div class="mb-3">
+                        <label for="id_motif" class="form-label">Motif de la demande</label>
+                        {{ form.motif }}
+                        <small class="form-text text-muted">Précisez le motif de votre demande de congé (facultatif).</small>
+                        {% if form.motif.errors %}
+                        <div class="text-danger mt-1">
+                            {% for error in form.motif.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="ti ti-device-floppy"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        {% if contrat %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Informations du contrat</h4>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>Chauffeur :</strong>
+                    <a href="{% url 'contrats:details_chauffeur' contrat.association.validated_user.id %}">
+                        {{ contrat.association.validated_user.nom}} {{ contrat.association.validated_user.prenom }}
+                    </a>
+                </p>
+                <p>
+                    <strong>Référence :</strong>
+                    <a href="{% url 'contrats:details_contrat_chauffeur' contrat.id %}">
+                        {{ contrat.reference }}
+                    </a>
+                </p>
+                <p><strong>Date d'embauche :</strong> {{ contrat.date_embauche|date:"d/m/Y" }}</p>
+                <div class="alert alert-info">
+                    <p class="mb-0"><strong>Jours de congés restants : {{ contrat.jours_conges_restants }}</strong></p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h4>Aide</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <i class="ti ti-info-circle text-primary"></i>
+                        <strong>Dates :</strong> Sélectionnez les dates de début et de fin du congé. Le nombre de jours sera calculé automatiquement.
+                    </li>
+                    <li class="mb-3">
+                        <i class="ti ti-info-circle text-primary"></i>
+                        <strong>Types de congé :</strong> Choisissez le type approprié (congé payé, congé sans solde, congé maladie, etc.).
+                    </li>
+                    <li>
+                        <i class="ti ti-info-circle text-primary"></i>
+                        <strong>Validation :</strong> La demande sera soumise à validation par un responsable avant d'être approuvée.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+        function calculerNombreJours() {
+        const debutInput = document.getElementById('id_date_debut');
+        const finInput = document.getElementById('id_date_fin');
+        const joursInput = document.getElementById('nombre_jours');
+
+        const debut = new Date(debutInput.value);
+        const fin = new Date(finInput.value);
+
+        if (!isNaN(debut) && !isNaN(fin)) {
+            const diffTime = fin - debut;
+            const diffJours = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 pour inclure le jour de début
+            joursInput.value = diffJours > 0 ? diffJours : 0;
+        } else {
+            joursInput.value = '';
+        }
+    }
+
+    document.getElementById('id_date_debut').addEventListener('change', calculerNombreJours);
+    document.getElementById('id_date_fin').addEventListener('change', calculerNombreJours);
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion de la sélection des dates et du calcul automatique des jours
+        const dateDebutInput = document.getElementById('id_date_debut');
+        const dateFinInput = document.getElementById('id_date_fin');
+        const nombreJoursInput = document.getElementById('id_nombre_jours');
+        
+        function calculerNombreJours() {
+            if (dateDebutInput.value && dateFinInput.value) {
+                const dateDebut = new Date(dateDebutInput.value);
+                const dateFin = new Date(dateFinInput.value);
+                
+                if (dateFin >= dateDebut) {
+                    // Calculer la différence en millisecondes et convertir en jours
+                    const diffTime = Math.abs(dateFin - dateDebut);
+                    // Ajouter 1 pour inclure le jour de début
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    nombreJoursInput.value = diffDays;
+                }
+            }
+        }
+        
+        dateDebutInput.addEventListener('change', calculerNombreJours);
+        dateFinInput.addEventListener('change', calculerNombreJours);
+        
+        // Validation côté client
+        const congeForm = document.getElementById('conge-form');
+        congeForm.addEventListener('submit', function(event) {
+            let isValid = true;
+            
+            // Vérifier si les dates sont valides
+            if (dateDebutInput.value && dateFinInput.value) {
+                const dateDebut = new Date(dateDebutInput.value);
+                const dateFin = new Date(dateFinInput.value);
+                
+                if (dateFin < dateDebut) {
+                    alert('La date de fin doit être postérieure ou égale à la date de début.');
+                    isValid = false;
+                }
+            }
+            
+            // Empêcher la soumission si le formulaire n'est pas valide
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+        
+        // Amélioration de l'expérience utilisateur pour les champs de date
+        if (dateDebutInput.type !== 'date') {
+            // Si le navigateur ne prend pas en charge le type date, ajouter une bibliothèque de datepicker
+            // Code pour initialiser un datepicker alternatif
+        }
+    });
+</script>
+{% endblock %}

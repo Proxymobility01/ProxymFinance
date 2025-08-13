@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/contrats/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/ajouter.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/formulaire.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/formulaire_ajax.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/liste.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/contrats/associations/modal_ajouter.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/contrats/motos/modal_ajouter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/mysql.osA4Bg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/c65ecacd-2c41-442f-aff4-854199f9106a/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/fb8f59d1-2181-49b6-8488-29aff1089b2f.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contrats/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contrats/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/contrats/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/contrats/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/payments/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxym_finance/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/proxym_finance/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contrats/chauffeurs/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/chauffeurs/details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contrats/chauffeurs/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/chauffeurs/liste.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contrats/conges/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/conges/liste.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_batterie/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_batterie/formulaire.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/formulaire.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/formulaire.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/liste.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contrats/contrats_chauffeur/liste.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/dashboard/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/dashboard/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/partials/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/partials/navbar.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2xx6slrju79DJxBnPFBQYQGLiZk" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Django Server.proxym_finance.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
+    &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR_AND_PREVIEW&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/insta/PycharmProjects/proxym_finance&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\insta\PycharmProjects\proxym_finance" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\insta\PycharmProjects\proxym_finance\templates" />
+      <recent name="C:\Users\insta\PycharmProjects\proxym_finance" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="proxym_finance" type="Python.DjangoServer" factoryName="Django server">
+      <module name="proxym_finance" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="proxym_finance.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PY-251.25410.159" />
+        <option value="bundled-python-sdk-e0ed3721d81e-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.159" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4454127f-5a3a-4ae2-b78d-ff7393a80461" name="Changes" comment="" />
+      <created>1748867586795</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1748867586795</updated>
+      <workItem from="1748867587926" duration="4007000" />
+      <workItem from="1748871649430" duration="844000" />
+      <workItem from="1748874003043" duration="30389000" />
+      <workItem from="1749114654182" duration="23574000" />
+      <workItem from="1749199168601" duration="35161000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="django-line">
+          <url>file://$PROJECT_DIR$/templates/dashboard/index.html</url>
+          <line>52</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/models.py</url>
+          <line>54</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/forms.py</url>
+          <line>256</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/models.py</url>
+          <line>364</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/forms.py</url>
+          <line>13</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/models.py</url>
+          <line>12</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/forms.py</url>
+          <line>387</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/forms.py</url>
+          <line>252</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/forms.py</url>
+          <line>426</line>
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/views.py</url>
+          <line>1403</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/views.py</url>
+          <line>181</line>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/views.py</url>
+          <line>74</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/contrats/views.py</url>
+          <line>1482</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

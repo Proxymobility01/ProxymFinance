@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Entête avec titre et statistiques -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Historique des paiements</h1>
+        <div class="d-flex">
+            <a href="{% url 'contrats:centre_paiements' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mr-2">
+                <i class="fas fa-money-bill-wave fa-sm text-white-50 mr-1"></i> Centre de paiements
+            </a>
+            <button class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm" id="btnExport">
+                <i class="fas fa-download fa-sm text-white-50 mr-1"></i> Exporter
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Filtres de recherche</h6>
+        </div>
+        <div class="card-body">
+            <form method="get" class="form-inline mb-3">
+                <div class="input-group mr-2 mb-2">
+                    <input type="text" name="q" class="form-control" placeholder="Rechercher..." value="{{ filtres.q }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="input-group mr-2 mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Du</span>
+                    </div>
+                    <input type="date" name="date_debut" class="form-control" value="{{ filtres.date_debut }}">
+                </div>
+                
+                <div class="input-group mr-2 mb-2">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Au</span>
+                    </div>
+                    <input type="date" name="date_fin" class="form-control" value="{{ filtres.date_fin }}">
+                </div>
+                
+                <select name="type_contrat" class="form-control mr-2 mb-2">
+                    <option value="">Tous les types</option>
+                    <option value="chauffeur" {% if filtres.type_contrat == 'chauffeur' %}selected{% endif %}>Contrats chauffeur</option>
+                    <option value="partenaire" {% if filtres.type_contrat == 'partenaire' %}selected{% endif %}>Contrats partenaire</option>
+                    <option value="batterie" {% if filtres.type_contrat == 'batterie' %}selected{% endif %}>Contrats batterie</option>
+                </select>
+                
+                <select name="methode" class="form-control mr-2 mb-2">
+                    <option value="">Toutes méthodes</option>
+                    {% for code, label in methode_choices %}
+                    <option value="{{ code }}" {% if filtres.methode == code %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                
+                <div class="custom-control custom-checkbox mr-2 mb-2">
+                    <input type="checkbox" class="custom-control-input" id="checkPenalites" name="penalites" value="1" {% if filtres.penalites %}checked{% endif %}>
+                    <label class="custom-control-label" for="checkPenalites">Pénalités uniquement</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary mb-2">Filtrer</button>
+                <a href="{% url 'contrats:liste_paiements' %}" class="btn btn-outline-secondary mb-2 ml-2">Réinitialiser</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Résultats -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Paiements ({{ paiements.paginator.count }})</h6>
+            <div>
+                <span class="font-weight-bold">Total: {{ total_montant|floatformat:0 }} FCFA</span>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if paiements %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="tablePaiements" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Référence</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Contrat</th>
+                            <th>Montant</th>
+                            <th>Méthode</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paiement in paiements %}
+                        <tr>
+                            <td>{{ paiement.reference }}</td>
+                            <td>{{ paiement.date_paiement }}</td>
+                            <td>
+                                {% if paiement.contrat_chauffeur %}
+                                {{ paiement.contrat_chauffeur.chauffeur.prenom }} {{ paiement.contrat_chauffeur.chauffeur.nom }}
+                                {% elif paiement.contrat_partenaire %}
+                                {{ paiement.contrat_partenaire.partenaire.prenom }} {{ paiement.contrat_partenaire.partenaire.nom }}
+                                {% elif paiement.contrat_batterie.chauffeur %}
+                                {{ paiement.contrat_batterie.chauffeur.prenom }} {{ paiement.contrat_batterie.chauffeur.nom }}
+                                {% elif paiement.contrat_batterie.partenaire %}
+                                {{ paiement.contrat_batterie.partenaire.prenom }} {{ paiement.contrat_batterie.partenaire.nom }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if paiement.contrat_chauffeur %}
+                                {{ paiement.contrat_chauffeur.reference }}
+                                {% elif paiement.contrat_partenaire %}
+                                {{ paiement.contrat_partenaire.reference }}
+                                {% elif paiement.contrat_batterie %}
+                                {{ paiement.contrat_batterie.reference }}
+                                {% endif %}
+                            </td>
+                            <td>{{ paiement.montant|floatformat:0 }} FCFA</td>
+                            <td>{{ paiement.get_methode_paiement_display }}</td>
+                            <td>
+                                {% if paiement.est_penalite %}
+                                <span class="badge badge-danger">Pénalité</span>
+                                {% else %}
+                                <span class="badge badge-primary">{{ paiement.get_type_contrat_display }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if paiements.paginator.num_pages > 1 %}
+            <div class="d-flex justify-content-center mt-4">
+                <ul class="pagination">
+                    {% if paiements.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ paiements.previous_page_number }}{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in paiements.paginator.page_range %}
+                    {% if paiements.number == num %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                    {% elif num > paiements.number|add:'-3' and num < paiements.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if paiements.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ paiements.next_page_number }}{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ paiements.paginator.num_pages }}{% for key, value in filtres.items %}&{{ key }}={{ value }}{% endfor %}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle mr-2"></i> Aucun paiement ne correspond aux critères de recherche.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Export CSV
+        $('#btnExport').click(function() {
+            window.location.href = window.location.pathname + window.location.search + (window.location.search ? '&' : '?') + 'export=csv';
+        });
+    });
+</script>
+{% endblock %}

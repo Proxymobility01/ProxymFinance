@@ -1,0 +1,667 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}{{ titre }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Style global */
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    /* En-tête et statistiques */
+    .stats-summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .stats-card {
+        background-color: var(--bg-secondary);
+
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+    }
+    
+    .stats-card .icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 20px;
+    }
+    
+    .stats-card .info .value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1;
+    }
+    
+    .stats-card .info .label {
+        font-size: 0.85rem;
+        color: #666;
+    }
+    
+    /* Filtres */
+    .filter-bar {
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .filter-group {
+        display: flex;
+        align-items: center;
+    }
+    
+    .filter-group label {
+        margin-right: 10px;
+        font-weight: 500;
+    }
+    
+    .search-container {
+        flex-grow: 1;
+        max-width: 300px;
+        position: relative;
+    }
+    
+    .search-container input {
+        width: 100%;
+        padding: 8px 15px 8px 35px;
+        border-radius: 20px;
+        border: 1px solid #ced4da;
+    }
+    
+    .search-container i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+    
+    /* Tableau des paiements */
+    .payments-table-container {
+        background-color: var(--bg-color);
+        border-bottom: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .payments-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .payments-table th {
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 1px solid var(--border-color);
+        background-color: var(--bg-secondary);
+        font-weight: bold;
+    }
+    
+    .payments-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+    }
+    
+    .payments-table tr:hover {
+        background-color: var(--bg-secondary);
+    }
+    
+    .payments-table .btn-group {
+        white-space: nowrap;
+    }
+    
+    /* Status indicators */
+    .status-pill {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-align: center;
+    }
+    
+    .status-normal {
+        background-color: #e6f4ea;
+        color: #28a745;
+    }
+    
+    .status-pending {
+        background-color: #fff4e5;
+        color: #fd7e14;
+    }
+    
+    .status-late {
+        background-color: #fdeaea;
+        color: #dc3545;
+    }
+    
+    .status-danger {
+        background-color: #dc3545;
+        color: white;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
+    
+    /* Types labels */
+    .type-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background-color: #e9ecef;
+        color: #495057;
+    }
+    
+    .type-chauffeur {
+        background-color: #cfe2ff;
+        color: #0d6efd;
+    }
+    
+    .type-partenaire {
+        background-color: #d1e7dd;
+        color: #198754;
+    }
+    
+    .type-batterie {
+        background-color: #f8d7da;
+        color: #dc3545;
+    }
+    
+    /* Pagination */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .stats-summary {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .filter-bar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .search-container {
+            max-width: 100%;
+            width: 100%;
+        }
+        
+        .payments-table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .stats-summary {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Horloge */
+    .clock-display {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        background-color: #f8f9fa;
+    }
+    
+    .clock-display i {
+        margin-right: 5px;
+    }
+    
+    .morning {
+        color: #28a745;
+    }
+    
+    .afternoon {
+        color: #fd7e14;
+    }
+    
+    .evening {
+        color: #dc3545;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+    
+    .empty-state p {
+        font-size: 1.1rem;
+    }
+    .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+    gap: 6px;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+
+.pagination .page-link {
+    color: var(--primary-color, #b8b826);
+    border: 1px solid transparent;
+    background-color: transparent;
+    padding: 8px 14px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--primary-light, #ebeb77);
+    color: #000;
+    border-color: var(--primary-light, #ebeb77);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color, #b8b826);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 6px;
+    border-color: var(--primary-color, #b8b826);
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container py-4">
+    <!-- En-tête avec date et heure -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">{{ titre }}</h1>
+            <p class="text-muted">{{ aujourd_hui|date:"l d F Y"|title }}</p>
+        </div>
+        
+        <div class="clock-display" id="clock-display">
+            <i class="fas fa-clock"></i>
+            <span id="current-time">{{ heure_actuelle|time:"H:i:s" }}</span>
+        </div>
+    </div>
+    
+    <!-- Résumé des statistiques -->
+    <div class="stats-summary mb-4">
+        <div class="stats-card">
+            <div class="icon bg-primary text-white">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="info">
+                <div class="value">{{ stats.nb_paiements_attendus }}</div>
+                <div class="label">Paiements attendus</div>
+                <div class="small text-muted">{{ stats.montant_total_attendu|floatformat:0 }} FCFA</div>
+            </div>
+        </div>
+        
+        <div class="stats-card">
+            <div class="icon bg-success text-white">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="info">
+                <div class="value">{{ stats.nb_paiements_effectues }}</div>
+                <div class="label">Paiements effectués</div>
+                <div class="small text-muted">{{ stats.montant_total_paye|floatformat:0 }} FCFA</div>
+            </div>
+        </div>
+        
+        <div class="stats-card">
+            <div class="icon bg-warning text-dark">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="info">
+                <div class="value">{{ stats.nb_penalites_actives }}</div>
+                <div class="label">Pénalités actives</div>
+                <div class="small text-muted">{{ stats.montant_total_penalites|floatformat:0 }} FCFA</div>
+            </div>
+        </div>
+        
+        <div class="stats-card">
+            <div class="icon bg-info text-white">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="info">
+                <div class="value">{{ stats.taux_realisation|floatformat:0 }}%</div>
+                <div class="label">Taux de réalisation</div>
+                <div class="small text-muted">Progression journalière</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Barre de filtres -->
+    <div class="filter-bar">
+        <div class="filter-group me-3">
+            <label for="status-filter">Statut:</label>
+            <select class="form-select form-select-sm" id="status-filter">
+                <option value="tous">Tous</option>
+                <option value="a_traiter">À traiter aujourd'hui</option>
+                <option value="deja_traites">Déjà traités</option>
+                <option value="retards">En retard</option>
+            </select>
+        </div>
+        
+        <div class="filter-group me-3">
+            <label for="type-filter">Type:</label>
+            <select class="form-select form-select-sm" id="type-filter">
+                <option value="tous">Tous</option>
+                <option value="chauffeur">Chauffeurs</option>
+                <option value="partenaire">Partenaires</option>
+                <option value="batterie">Batterie</option>
+            </select>
+        </div>
+        
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" class="form-control form-control-sm" id="search-input" placeholder="Rechercher un client, un numéro...">
+        </div>
+    </div>
+    
+    <!-- Tableau des paiements -->
+    <div class="payments-table-container">
+        <table class="payments-table" id="payments-table">
+            <thead>
+                <tr>
+                    <th style="width: 20px;"></th>
+                    <th>Client</th>
+                    <th>Type</th>
+                    <th>Référence</th>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th style="width: 120px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for paiement in paiements %}
+        <tr class="payment-row"
+            data-status="{{ paiement.display_status }}"
+            data-type="{{ paiement.contrat_type|lower }}">
+            <!-- Avatar / Photo -->
+            <td>
+                {% if paiement.photo_client %}
+                    <img src="{{ paiement.photo_client }}" alt="{{ paiement.client_nom }}" width="30" height="30" class="rounded-circle">
+                {% else %}
+                    <div class="rounded-circle bg-light text-secondary d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                        <i class="fas fa-user small"></i>
+                    </div>
+                {% endif %}
+            </td>
+            <!-- Nom client -->
+            <td>
+                <div class="fw-bold">{{ paiement.client_nom }}</div>
+                {% if paiement.est_en_conge %}
+                    <span class="badge badge-info">En congé</span>
+                {% endif %}
+                <div class="small text-muted">{{ paiement.client_telephone }}</div>
+            </td>
+            <!-- Type -->
+            <td>
+                <span class="type-badge type-{{ paiement.contrat_type|lower }}">
+                    {% if paiement.display_status == 'deja_traites' and paiement.est_penalite %}Pénalité
+                    {% else %}{{ paiement.contrat_type|title }}{% endif %}
+                </span>
+            </td>
+            <!-- Référence -->
+            <td>{{ paiement.reference }}</td>
+            <!-- Date -->
+            <td>
+                {% if paiement.display_status == 'retards' %}
+                    {{ paiement.date_manquee|date:"d/m/Y" }}
+                {% elif paiement.display_status == 'deja_traites' %}
+                    {{ paiement.heure }}
+                {% else %}
+                    Aujourd'hui
+                {% endif %}
+            </td>
+            <!-- Montant -->
+            <td>
+                <div class="fw-bold">
+                    {% if paiement.display_status == 'retards' %}
+                        {{ paiement.montant|add:paiement.montant_batterie|floatformat:0|intcomma  }} FCFA
+                    {% else %}
+                        {{ paiement.montant_total|floatformat:0|intcomma  }} FCFA
+                    {% endif %}
+                </div>
+                {% if paiement.montant_batterie > 0 %}
+                    <div class="small text-muted">dont batterie: {{ paiement.montant_batterie|floatformat:0|intcomma  }} FCFA</div>
+                {% endif %}
+            </td>
+            <!-- Statut -->
+            <td>
+                {% if paiement.display_status == 'retards' %}
+                    <span class="status-pill status-danger">{{ paiement.jours_retard }} jours de retard</span>
+                {% elif paiement.display_status == 'deja_traites' %}
+                    <span class="status-pill status-normal">Payé</span>
+                {% elif paiement.retard_grave %}
+                    <span class="status-pill status-danger">Retard grave</span>
+                {% elif paiement.retard %}
+                    <span class="status-pill status-late">En retard</span>
+                {% else %}
+                    <span class="status-pill status-pending">À traiter</span>
+                {% endif %}
+            </td>
+            <!-- Actions -->
+            <td>
+                {% if paiement.display_status == 'deja_traites' %}
+                    <a href="{% url 'payments:details_paiement' paiement.id %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-print"></i>
+                    </a>
+                {% else %}
+                    <div class="btn-group btn-group-sm">
+                        <a href="{% url 'payments:paiement_rapide' paiement.contrat_type paiement.contrat_id %}{% if paiement.contrat_batterie_id %}?contrat_batterie_id={{ paiement.contrat_batterie_id }}{% endif %}" class="btn {% if paiement.display_status == 'retards' %}btn-danger{% else %}btn-primary{% endif %}">
+                            {% if paiement.display_status == 'retards' %}
+                                <i class="fas fa-exclamation-circle"></i> Régulariser
+                            {% else %}
+                                <i class="fas fa-money-bill-wave"></i> Payer
+                            {% endif %}
+                        </a>
+                        <button type="button" class="btn {% if paiement.display_status == 'retards' %}btn-danger{% else %}btn-primary{% endif %} dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown"></button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-phone me-2"></i> Appeler</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-exclamation-circle me-2"></i> Pénalité</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</tbody>
+
+
+
+
+        </table>
+
+{% if paiements.has_other_pages %}
+<div class="pagination-container">
+    <ul class="pagination">
+        {% if paiements.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" title="Première page">&laquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paiements.previous_page_number }}" title="Page précédente">&lsaquo;</a>
+            </li>
+        {% endif %}
+        {% for num in paiements.paginator.page_range %}
+            {% if paiements.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% elif num > paiements.number|add:'-3' and num < paiements.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        {% if paiements.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paiements.next_page_number }}" title="Page suivante">&rsaquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paiements.paginator.num_pages }}" title="Dernière page">&raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+
+        <!-- Message si aucun résultat -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <i class="fas fa-search"></i>
+            <p>Aucun paiement trouvé pour ces critères.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Mise à jour de l'horloge
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                          now.getMinutes().toString().padStart(2, '0') + ':' + 
+                          now.getSeconds().toString().padStart(2, '0');
+        
+        const clockDisplay = document.getElementById('clock-display');
+        const currentTime = document.getElementById('current-time');
+        
+        if (clockDisplay && currentTime) {
+            currentTime.textContent = timeString;
+            
+            // Mettre à jour la classe en fonction de l'heure
+            clockDisplay.classList.remove('morning', 'afternoon', 'evening');
+            let iconClass = 'fa-clock';
+            
+            if (now.getHours() < 12) {
+                clockDisplay.classList.add('morning');
+            } else if (now.getHours() < 14) {
+                clockDisplay.classList.add('afternoon');
+                iconClass = 'fa-exclamation-triangle';
+            } else {
+                clockDisplay.classList.add('evening');
+                iconClass = 'fa-exclamation-circle';
+            }
+            
+            const icon = clockDisplay.querySelector('i');
+            if (icon) {
+                icon.className = `fas ${iconClass}`;
+            }
+        }
+    }
+    
+    // Initialiser et mettre à jour l'horloge
+    updateClock();
+    setInterval(updateClock, 1000);
+    
+    // Filtrage des paiements
+    document.addEventListener('DOMContentLoaded', function() {
+        const statusFilter = document.getElementById('status-filter');
+        const typeFilter = document.getElementById('type-filter');
+        const searchInput = document.getElementById('search-input');
+        const paymentRows = document.querySelectorAll('.payment-row');
+        const emptyState = document.getElementById('empty-state');
+        
+        function applyFilters() {
+            const statusValue = statusFilter.value;
+            const typeValue = typeFilter.value;
+            const searchValue = searchInput.value.toLowerCase();
+            
+            let visibleCount = 0;
+            
+            paymentRows.forEach(row => {
+                const rowStatus = row.dataset.status;
+                const rowType = row.dataset.type;
+                const rowText = row.textContent.toLowerCase();
+                
+                const statusMatch = statusValue === 'tous' || rowStatus === statusValue;
+                const typeMatch = typeValue === 'tous' || rowType === typeValue;
+                const searchMatch = searchValue === '' || rowText.includes(searchValue);
+                
+                if (statusMatch && typeMatch && searchMatch) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Afficher le message si aucun résultat
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+        
+        // Appliquer les filtres au changement
+        if (statusFilter) {
+            statusFilter.addEventListener('change', applyFilters);
+        }
+        
+        if (typeFilter) {
+            typeFilter.addEventListener('change', applyFilters);
+        }
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', applyFilters);
+        }
+    });
+</script>
+{% endblock %}

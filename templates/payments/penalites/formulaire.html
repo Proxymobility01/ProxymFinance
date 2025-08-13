@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Nouvelle pénalité
+                    </h6>
+                    <a href="{% url 'contrats:gestion_penalites' %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-arrow-left mr-1"></i> Retour
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Informations sur le client -->
+                    <div class="alert alert-info mb-4">
+                        <h5 class="alert-heading">Client: {{ client.prenom }} {{ client.nom }}</h5>
+                        <p class="mb-0"><strong>Contrat:</strong> {{ contrat.reference }}</p>
+                        <p class="mb-0"><strong>Type:</strong> Contrat {{ contrat_type|title }}</p>
+                    </div>
+                    
+                    <!-- Formulaire de création de pénalité -->
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="id_montant"><strong>Montant de la pénalité</strong></label>
+                            <div class="input-group">
+                                {{ form.montant }}
+                                <div class="input-group-append">
+                                    <span class="input-group-text">FCFA</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_motif"><strong>Motif de la pénalité</strong></label>
+                            {{ form.motif }}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="id_description"><strong>Description détaillée</strong></label>
+                            {{ form.description }}
+                            <small class="form-text text-muted">
+                                Fournissez des détails sur les circonstances de cette pénalité.
+                            </small>
+                        </div>
+                        
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-exclamation-circle mr-1"></i> Créer la pénalité
+                            </button>
+                            {% if from_detail %}
+                            <a href="{% if contrat_type == 'chauffeur' %}{% url 'contrats:details_contrat_chauffeur' contrat_id=contrat.id %}{% else %}{% url 'contrats:details_contrat_partenaire' contrat_id=contrat.id %}{% endif %}" class="btn btn-light btn-lg ml-2">Annuler</a>
+                            {% else %}
+                            <a href="{% url 'contrats:gestion_penalites' %}" class="btn btn-light btn-lg ml-2">Annuler</a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

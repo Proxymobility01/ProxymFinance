@@ -1,0 +1,71 @@
+<!-- templates/stations/stationcharge_confirm_delete.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer la Charge{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmer la Suppression
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-warning"></i>
+                        <strong>Attention !</strong> Cette action est irréversible.
+                    </div>
+
+                    <p>Êtes-vous sûr de vouloir supprimer cette charge :</p>
+
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5>{{ charge.intitule }}</h5>
+                                    <p class="mb-1">
+                                        <strong>Station :</strong> {{ charge.station.nom_agence }}
+                                    </p>
+                                    <p class="mb-1">
+                                        <strong>Catégorie :</strong>
+                                        <span class="badge badge-secondary">{{ charge.categorie.code }}</span>
+                                        {{ charge.categorie.nom }}
+                                    </p>
+                                    <p class="mb-1">
+                                        <strong>Date :</strong> {{ charge.date_charge|date:"d/m/Y" }}
+                                    </p>
+                                    {% if charge.commentaire %}
+                                        <p class="mb-0">
+                                            <strong>Commentaire :</strong> {{ charge.commentaire }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <h3 class="text-primary">{{ charge.montant|floatformat:0 }} FCFA</h3>
+                                    <span class="badge badge-info">{{ charge.get_periode_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'stations:station_charge_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Oui, supprimer cette charge
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

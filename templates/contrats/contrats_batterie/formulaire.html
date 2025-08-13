@@ -1,0 +1,929 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Nouveau Contrat Batterie{% endblock %}
+{% block page_title %}Nouveau Contrat Batterie{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'contrats:liste_contrats_batterie' %}" class="btn btn-secondary">
+    <i class="ti ti-arrow-left"></i> Retour à la liste
+</a>
+{% endblock %}
+{% if form.errors %}
+
+<div class="alert alert-danger">
+    <strong>Des erreurs ont été détectées dans le formulaire :</strong>
+    <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li>{{ field.label }} : {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Création d'un nouveau contrat batterie</h3>
+    </div>
+    <div class="card-body">
+        <!-- Section de recherche de propriétaire -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-header">
+                        <h4 class="mb-0">Étape 1: Sélectionner un propriétaire</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="type-proprietaire" class="form-label">Type de propriétaire</label>
+                                    <select id="type-proprietaire" class="form-control">
+                                        <option value="chauffeur">Chauffeur</option>
+                                        <option value="partenaire">Partenaire</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="recherche-proprietaire" class="form-label">Rechercher un propriétaire</label>
+                                    <div class="input-group">
+                                        <input type="text" id="recherche-proprietaire" class="form-control" placeholder="Nom, prénom ou téléphone">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" id="btn-rechercher">
+                                                <i class="ti ti-search"></i> Rechercher
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">Commencez à taper pour voir les suggestions</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Résultats de recherche -->
+                        <div id="resultats-recherche" class="mb-3" style="display: none;">
+                            <h5>Résultats de la recherche</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom complet</th>
+                                            <th>Type</th>
+                                            <th>Téléphone</th>
+                                            <th>Email</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultats-proprietaires">
+                                        <!-- Les résultats seront injectés ici par JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Message aucun résultat -->
+                        <div id="aucun-resultat" class="alert alert-warning" style="display: none;">
+                            <p>Aucun propriétaire trouvé avec ces critères. Voulez-vous en créer un nouveau ?</p>
+                            <button type="button" class="btn btn-success" id="btn-nouveau-proprietaire">
+                                <i class="ti ti-plus"></i> Créer un nouveau propriétaire
+                            </button>
+                        </div>
+
+                        <!-- Propriétaire sélectionné -->
+                        <div id="proprietaire-selectionne" class="alert alert-success" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1">Propriétaire sélectionné</h5>
+                                    <p id="info-proprietaire" class="mb-0"></p>
+                                    <input type="hidden" id="proprietaire-id" name="proprietaire_id">
+                                    <input type="hidden" id="proprietaire-type" name="proprietaire_type">
+                                </div>
+                                <button type="button" class="btn btn-outline-danger" id="btn-annuler-selection">
+                                    <i class="ti ti-x"></i> Changer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulaire de contrat -->
+        <form method="post" id="form-contrat" enctype="multipart/form-data" style="display: none;">
+            {% csrf_token %}
+            <div class="card bg-light">
+                <div class="card-header">
+                    <h4 class="mb-0">Étape 2: Informations du contrat</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.reference.id_for_label }}" class="form-label required">Référence du contrat</label>
+                                {{ form.reference }}
+                                {% if form.reference.errors %}
+                                    <div class="invalid-feedback">{{ form.reference.errors }}</div>
+                                {% endif %}
+                                <small class="form-text text-muted">Référence générée automatiquement</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nombre-batteries" class="form-label required">Nombre de batteries</label>
+                                <input type="number" id="nombre-batteries" name="nombre_batteries" class="form-control" min="1" value="1" required>
+                                <div class="invalid-feedback">Veuillez indiquer le nombre de batteries</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="montant-caution" class="form-label"> (FCFA)</label>
+                                <input type="text" id="montant-caution" name="montant_caution" class="form-control" readonly>
+                                <small class="form-text text-muted">Calculé automatiquement (50 000 FCFA par batterie)</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="duree-caution" class="form-label required">Durée de la caution (jours)</label>
+                                <input type="number" id="duree-caution" name="duree_caution" class="form-control" min="1" value="100" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="montant-engage-batterie" class="form-label required">Montant engagé par échéance (FCFA)</label>
+                                <input type="number" id="montant-engage-batterie" name="montant_engage_batterie" class="form-control" min="1" step="0.01" required>
+                                <small class="form-text text-muted">Montant que le propriétaire s'engage à payer à chaque échéance pour la batterie</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ form.date_signature.id_for_label }}" class="form-label required">Date de signature</label>
+                                {{ form.date_signature }}
+                                {% if form.date_signature.errors %}
+                                    <div class="invalid-feedback">{{ form.date_signature.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.date_debut.id_for_label }}" class="form-label required">Date de début</label>
+                                {{ form.date_debut }}
+                                {% if form.date_debut.errors %}
+                                    <div class="invalid-feedback">{{ form.date_debut.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.duree_semaines.id_for_label }}" class="form-label required">Durée (semaines)</label>
+                                {{ form.duree_semaines }}
+                                {% if form.duree_semaines.errors %}
+                                    <div class="invalid-feedback">{{ form.duree_semaines.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.frequence_paiement.id_for_label }}" class="form-label required">Fréquence de paiement</label>
+                                {{ form.frequence_paiement }}
+                                {% if form.frequence_paiement.errors %}
+                                    <div class="invalid-feedback">{{ form.frequence_paiement.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Résumé du contrat avant validation -->
+            <div class="card bg-light mt-4">
+                <div class="card-header">
+                    <h4 class="mb-0">Étape 3: Résumé du contrat</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Informations du propriétaire</h5>
+                            <p id="resume-proprietaire"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Détails du contrat</h5>
+                            <ul>
+                                <li><strong>Référence:</strong> <span id="resume-reference"></span></li>
+                                <li><strong>Nombre de batteries:</strong> <span id="resume-batteries"></span></li>
+                                <li><strong>Montant caution:</strong> <span id="resume-montant"></span> FCFA</li>
+                                <li><strong>Montant engagé par paiement:</strong> <span id="resume-montant-engage"></span> FCFA</li>
+                                <li><strong>Durée:</strong> <span id="resume-duree"></span> semaines</li>
+                                <li><strong>Date début:</strong> <span id="resume-date-debut"></span></li>
+                                <li><strong>Fréquence paiement:</strong> <span id="resume-frequence"></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-device-floppy"></i> Enregistrer le contrat
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="btn-annuler">
+                        <i class="ti ti-x"></i> Annuler
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ajout des champs cachés pour le propriétaire -->
+            <input type="hidden" name="proprietaire_id" id="post-proprietaire-id">
+            <input type="hidden" name="proprietaire_type" id="post-proprietaire-type">
+        </form>
+    </div>
+</div>
+
+<!-- Modal de choix pour le type de propriétaire à créer -->
+<div class="modal fade" id="modal-choix-proprietaire" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Créer un nouveau propriétaire</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Veuillez choisir le type de propriétaire que vous souhaitez créer :</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary btn-block" id="btn-creer-chauffeur">
+                            <i class="ti ti-user"></i> Créer un chauffeur
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-success btn-block" id="btn-creer-partenaire">
+                            <i class="ti ti-users"></i> Créer un partenaire
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour créer un nouveau chauffeur -->
+<div class="modal fade" id="modal-nouveau-chauffeur" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un nouveau chauffeur</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-nouveau-chauffeur">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="chauffeur-nom" class="form-label required">Nom</label>
+                                <input type="text" id="chauffeur-nom" name="nom" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="chauffeur-prenom" class="form-label required">Prénom</label>
+                                <input type="text" id="chauffeur-prenom" name="prenom" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="chauffeur-email" class="form-label required">Email</label>
+                                <input type="email" id="chauffeur-email" name="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="chauffeur-phone" class="form-label required">Téléphone</label>
+                                <input type="text" id="chauffeur-phone" name="phone" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="chauffeur-numero-cni" class="form-label required">Numéro CNI</label>
+                                <input type="text" id="chauffeur-numero-cni" name="numero_cni" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="chauffeur-domicile" class="form-label required">Domicile</label>
+                                <input type="text" id="chauffeur-domicile" name="domicile" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="chauffeur-permis" class="form-label">Permis de conduire</label>
+                                <input type="file" id="chauffeur-permis" name="permis_conduire" class="form-control-file">
+                                <small class="form-text text-muted">Format accepté: PDF, JPG, PNG (Max: 5MB)</small>
+                            </div>
+                            <div class="alert alert-info">
+                                <small>Les autres documents (CNI, plan de localisation) peuvent être ajoutés ultérieurement.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="chauffeur-erreurs" class="alert alert-danger" style="display: none;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="btn-sauvegarder-chauffeur">
+                    <i class="ti ti-device-floppy"></i> Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour créer un nouveau partenaire -->
+<div class="modal fade" id="modal-nouveau-partenaire" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un nouveau partenaire</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-nouveau-partenaire">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partenaire-nom" class="form-label required">Nom</label>
+                                <input type="text" id="partenaire-nom" name="nom" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="partenaire-prenom" class="form-label required">Prénom</label>
+                                <input type="text" id="partenaire-prenom" name="prenom" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="partenaire-email" class="form-label required">Email</label>
+                                <input type="email" id="partenaire-email" name="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="partenaire-phone" class="form-label required">Téléphone</label>
+                                <input type="text" id="partenaire-phone" name="phone" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partenaire-numero-cni" class="form-label required">Numéro CNI</label>
+                                <input type="text" id="partenaire-numero-cni" name="numero_cni" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="partenaire-adresse" class="form-label required">Adresse</label>
+                                <input type="text" id="partenaire-adresse" name="adresse" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="partenaire-justificatif-activite" class="form-label">Justificatif d'activité</label>
+                                <input type="file" id="partenaire-justificatif-activite" name="justificatif_activite" class="form-control-file">
+                                <small class="form-text text-muted">Format accepté: PDF, JPG, PNG (Max: 5MB)</small>
+                            </div>
+                            <div class="alert alert-info">
+                                <small>Les autres documents (CNI, plan de localisation) peuvent être ajoutés ultérieurement.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="partenaire-erreurs" class="alert alert-danger" style="display: none;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="btn-sauvegarder-partenaire">
+                    <i class="ti ti-device-floppy"></i> Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+    console.log("Initialisation de la page de contrat batterie");
+    
+    // Initialisation du formulaire
+    initFormControls();
+    
+    // Calcul initial du montant de caution
+    calculerMontantCaution();
+    
+    // Recherche de propriétaire avec autocomplétion
+    document.getElementById('recherche-proprietaire').addEventListener('keyup', function() {
+        const query = this.value;
+        const typeProprietaire = document.getElementById('type-proprietaire').value;
+        
+        if (query.length >= 3) {
+            // Simulation pour test (à remplacer par l'appel AJAX réel)
+            console.log(`Recherche de ${typeProprietaire} avec query: ${query}`);
+            
+            // Exemple de données de test (à remplacer par l'appel AJAX réel)
+            const data = {
+                results: [
+                    { id: 1, nom: "Doe", prenom: "John", email: "john@example.com", phone: "123456789" },
+                    { id: 2, nom: "Smith", prenom: "Jane", email: "jane@example.com", phone: "987654321" }
+                ]
+            };
+            
+            // Appel AJAX réel (décommentez et adaptez selon votre URL)
+            fetch(`/contrats/api/recherche-proprietaire/?query=${encodeURIComponent(query)}&type=${typeProprietaire}`)
+                .then(response => response.json())
+                .then(data => {
+                    afficherResultatsRecherche(data, typeProprietaire);
+                })
+                .catch(error => {
+                    console.error("Erreur de recherche:", error);
+                    alert("Une erreur s'est produite lors de la recherche");
+                    
+                    // Pour les tests, afficher quand même les résultats fictifs
+                    afficherResultatsRecherche(data, typeProprietaire);
+                });
+        } else if (query.length === 0) {
+            document.getElementById('resultats-recherche').style.display = 'none';
+            document.getElementById('aucun-resultat').style.display = 'none';
+        }
+    });
+    
+    // Bouton de recherche
+    document.getElementById('btn-rechercher').addEventListener('click', function() {
+        const query = document.getElementById('recherche-proprietaire').value;
+        const typeProprietaire = document.getElementById('type-proprietaire').value;
+        
+        if (query.length >= 2) {
+            console.log(`Recherche de ${typeProprietaire} avec query: ${query}`);
+            
+            // Exemple de données de test (à remplacer par l'appel AJAX réel)
+            const data = {
+                results: [
+                    { id: 1, nom: "Doe", prenom: "John", email: "john@example.com", phone: "123456789" },
+                    { id: 2, nom: "Smith", prenom: "Jane", email: "jane@example.com", phone: "987654321" }
+                ]
+            };
+            
+            // Appel AJAX réel (décommentez et adaptez selon votre URL)
+            fetch(`/contrats/api/recherche-proprietaire/?query=${encodeURIComponent(query)}&type=${typeProprietaire}`)
+                .then(response => response.json())
+                .then(data => {
+                    afficherResultatsRecherche(data, typeProprietaire);
+                })
+                .catch(error => {
+                    console.error("Erreur de recherche:", error);
+                    alert("Une erreur s'est produite lors de la recherche");
+                    
+                    // Pour les tests, afficher quand même les résultats fictifs
+                    afficherResultatsRecherche(data, typeProprietaire);
+                });
+        } else {
+            alert("Veuillez saisir au moins 2 caractères pour la recherche");
+        }
+    });
+    
+    // Ouvrir la modal pour créer un nouveau propriétaire
+    document.getElementById('btn-nouveau-proprietaire').addEventListener('click', function() {
+        // Vérifier si Bootstrap est disponible
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modalElement = document.getElementById('modal-choix-proprietaire');
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        } else {
+            // Fallback si Bootstrap n'est pas disponible
+            const modal = document.getElementById('modal-choix-proprietaire');
+            modal.classList.add('show');
+            modal.style.display = 'block';
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            
+            // Créer un backdrop si nécessaire
+            let backdrop = document.querySelector('.modal-backdrop');
+            if (!backdrop) {
+                backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                document.body.appendChild(backdrop);
+            }
+        }
+    });
+    
+    // Fermer les modals quand on clique sur le bouton close ou Annuler
+    document.querySelectorAll('.modal .close, .modal .btn-secondary').forEach(button => {
+        button.addEventListener('click', function() {
+            const modalElement = this.closest('.modal');
+            
+            // Vérifier si Bootstrap est disponible
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) {
+                    modal.hide();
+                }
+            } else {
+                // Fallback si Bootstrap n'est pas disponible
+                modalElement.classList.remove('show');
+                modalElement.style.display = 'none';
+                modalElement.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('modal-open');
+                
+                // Supprimer le backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    document.body.removeChild(backdrop);
+                }
+            }
+        });
+    });
+    
+    // Bouton pour créer un chauffeur
+    document.getElementById('btn-creer-chauffeur').addEventListener('click', function() {
+        fermerModal('modal-choix-proprietaire');
+        ouvrirModal('modal-nouveau-chauffeur');
+    });
+    
+    // Bouton pour créer un partenaire
+    document.getElementById('btn-creer-partenaire').addEventListener('click', function() {
+        fermerModal('modal-choix-proprietaire');
+        ouvrirModal('modal-nouveau-partenaire');
+    });
+    
+    // Annuler la sélection du propriétaire
+    document.getElementById('btn-annuler-selection').addEventListener('click', function() {
+        annulerSelectionProprietaire();
+    });
+    
+    // Calculer automatiquement le 
+    document.getElementById('nombre-batteries').addEventListener('change', function() {
+        calculerMontantCaution();
+    });
+    
+    // Mise à jour du résumé avant soumission
+    document.querySelectorAll('#form-contrat input, #form-contrat select').forEach(element => {
+        element.addEventListener('change', function() {
+            mettreAJourResume();
+        });
+    });
+    
+    // Soumission du formulaire de création de chauffeur
+    document.getElementById('btn-sauvegarder-chauffeur').addEventListener('click', function() {
+        const form = document.getElementById('form-nouveau-chauffeur');
+        const formData = new FormData(form);
+        
+        // Pour les tests, simuler une création réussie
+        // À remplacer par l'appel AJAX réel
+        console.log("Soumission du formulaire chauffeur");
+        
+        // Exemple de réponse simulée
+        const data = {
+            success: true,
+            id: Math.floor(Math.random() * 1000) + 1,
+            nom_complet: `${formData.get('prenom')} ${formData.get('nom')}`
+        };
+        
+        // Appel AJAX réel (décommentez et adaptez)
+        fetch('/contrats/api/ajouter-chauffeur-ajax/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                fermerModal('modal-nouveau-chauffeur');
+                alert("Le chauffeur a été créé avec succès");
+                // Sélectionner automatiquement le nouveau chauffeur
+                selectionnerProprietaire(data.id, data.nom_complet, 'chauffeur');
+            } else {
+                // Afficher les erreurs
+                afficherErreurs('chauffeur', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error("Erreur:", error);
+            alert("Une erreur s'est produite lors de la création du chauffeur");
+            
+            // Pour les tests, simuler une création réussie
+            fermerModal('modal-nouveau-chauffeur');
+            alert("Le chauffeur a été créé avec succès (simulation)");
+            selectionnerProprietaire(data.id, data.nom_complet, 'chauffeur');
+        });
+    });
+    
+    // Soumission du formulaire de création de partenaire
+    document.getElementById('btn-sauvegarder-partenaire').addEventListener('click', function() {
+        const form = document.getElementById('form-nouveau-partenaire');
+        const formData = new FormData(form);
+        
+        // Pour les tests, simuler une création réussie
+        // À remplacer par l'appel AJAX réel
+        console.log("Soumission du formulaire partenaire");
+        
+        // Exemple de réponse simulée
+        const data = {
+            success: true,
+            id: Math.floor(Math.random() * 1000) + 1,
+            nom_complet: `${formData.get('prenom')} ${formData.get('nom')}`
+        };
+        
+        // Appel AJAX réel (décommentez et adaptez)
+        fetch('/contrats/api/ajouter-partenaire-ajax/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                fermerModal('modal-nouveau-partenaire');
+                alert("Le partenaire a été créé avec succès");
+                // Sélectionner automatiquement le nouveau partenaire
+                selectionnerProprietaire(data.id, data.nom_complet, 'partenaire');
+            } else {
+                // Afficher les erreurs
+                afficherErreurs('partenaire', data.errors);
+            }
+        })
+        .catch(error => {
+            console.error("Erreur:", error);
+            alert("Une erreur s'est produite lors de la création du partenaire");
+            
+            // Pour les tests, simuler une création réussie
+            fermerModal('modal-nouveau-partenaire');
+            alert("Le partenaire a été créé avec succès (simulation)");
+            selectionnerProprietaire(data.id, data.nom_complet, 'partenaire');
+        });
+    });
+    
+    // Annuler le formulaire
+    document.getElementById('btn-annuler').addEventListener('click', function() {
+        if (confirm("Êtes-vous sûr de vouloir annuler la création de ce contrat ?")) {
+            window.location.href = '/contrats/batterie/';
+        }
+    });
+    
+    // Configuration du formulaire de contrat
+    document.getElementById('form-contrat').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Vérifier que le propriétaire est sélectionné
+        const proprietaireId = document.getElementById('proprietaire-id').value;
+        const proprietaireType = document.getElementById('proprietaire-type').value;
+        
+        if (!proprietaireId || !proprietaireType) {
+            alert("Veuillez sélectionner un propriétaire avant de créer le contrat");
+            return false;
+        }
+        
+        // Vérifier les champs obligatoires
+        let isValid = true;
+        document.querySelectorAll('#form-contrat input[required], #form-contrat select[required]').forEach(field => {
+            if (!field.value) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            alert("Veuillez remplir tous les champs obligatoires");
+            return false;
+        }
+        
+        // Transférer les valeurs des champs cachés
+        document.getElementById('post-proprietaire-id').value = proprietaireId;
+        document.getElementById('post-proprietaire-type').value = proprietaireType;
+        
+        // Tout est valide, soumettre le formulaire
+        this.submit();
+    });
+    
+    // Fonctions utilitaires
+    function initFormControls() {
+        console.log("Initialisation des contrôles du formulaire");
+        
+        // S'assurer que les dates sont au format YYYY-MM-DD
+        document.querySelectorAll('input[type="date"]').forEach(input => {
+            if (!input.value) {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                input.value = `${year}-${month}-${day}`;
+            }
+        });
+        
+        // Ajouter la classe form-control aux champs si nécessaire
+        document.querySelectorAll('#form-contrat input, #form-contrat select').forEach(field => {
+            if (!field.classList.contains('form-control') && field.type !== 'hidden' && field.type !== 'file') {
+                field.classList.add('form-control');
+            }
+        });
+        
+        // Calculer le montant initial de caution
+        calculerMontantCaution();
+        
+        // Mettre à jour le résumé initial
+        mettreAJourResume();
+    }
+    
+    function afficherResultatsRecherche(data, type) {
+        const tbody = document.getElementById('resultats-proprietaires');
+        const resultatsDiv = document.getElementById('resultats-recherche');
+        const aucunResultatDiv = document.getElementById('aucun-resultat');
+        
+        // Vider le tableau
+        tbody.innerHTML = '';
+        
+        if (data.results && data.results.length > 0) {
+            resultatsDiv.style.display = 'block';
+            aucunResultatDiv.style.display = 'none';
+            
+            data.results.forEach(function(proprietaire) {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${proprietaire.prenom} ${proprietaire.nom}</td>
+                    <td>${type === 'chauffeur' ? 'Chauffeur' : 'Partenaire'}</td>
+                    <td>${proprietaire.phone || proprietaire.telephone || 'N/A'}</td>
+                    <td>${proprietaire.email || 'N/A'}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-success">
+                            <i class="ti ti-check"></i> Sélectionner
+                        </button>
+                    </td>
+                `;
+                
+                // Ajouter l'événement de clic pour sélectionner
+                const btnSelectionner = row.querySelector('.btn-success');
+                btnSelectionner.addEventListener('click', function() {
+                    selectionnerProprietaire(proprietaire.id, `${proprietaire.prenom} ${proprietaire.nom}`, type);
+                });
+                
+                tbody.appendChild(row);
+            });
+        } else {
+            resultatsDiv.style.display = 'none';
+            aucunResultatDiv.style.display = 'block';
+        }
+    }
+    
+    function selectionnerProprietaire(id, nom, type) {
+        document.getElementById('proprietaire-id').value = id;
+        document.getElementById('proprietaire-type').value = type;
+        
+        const typeTexte = type === 'chauffeur' ? 'Chauffeur' : 'Partenaire';
+        document.getElementById('info-proprietaire').innerHTML = `<strong>${typeTexte}:</strong> ${nom} <span class="badge badge-primary">ID: ${id}</span>`;
+        
+        document.getElementById('proprietaire-selectionne').style.display = 'block';
+        document.getElementById('resultats-recherche').style.display = 'none';
+        document.getElementById('aucun-resultat').style.display = 'none';
+        
+        // Activer le formulaire de contrat
+        document.getElementById('form-contrat').style.display = 'block';
+        
+        // Mettre à jour le résumé
+        document.getElementById('resume-proprietaire').innerHTML = `<strong>${typeTexte}:</strong> ${nom}`;
+        mettreAJourResume();
+        
+        alert(`${typeTexte} "${nom}" sélectionné avec succès`);
+    }
+    
+    function annulerSelectionProprietaire() {
+        document.getElementById('proprietaire-id').value = '';
+        document.getElementById('proprietaire-type').value = '';
+        document.getElementById('info-proprietaire').innerHTML = '';
+        
+        document.getElementById('proprietaire-selectionne').style.display = 'none';
+        document.getElementById('form-contrat').style.display = 'none';
+        
+        // Réinitialiser le champ de recherche
+        document.getElementById('recherche-proprietaire').value = '';
+    }
+    
+    function calculerMontantCaution() {
+        const nombreBatteries = parseInt(document.getElementById('nombre-batteries').value) || 1;
+        const montantParBatterie = 50000; // 50 000 FCFA par batterie
+        const montantTotal = nombreBatteries * montantParBatterie;
+        
+        document.getElementById('montant-caution').value = montantTotal.toLocaleString('fr-FR');
+        
+        // Mettre à jour le résumé
+        mettreAJourResume();
+    }
+    
+    function mettreAJourResume() {
+        // Récupérer les valeurs
+        const referenceElement = document.getElementById('id_reference');
+        const reference = referenceElement ? referenceElement.value : 'N/A';
+        
+        const nombreBatteries = document.getElementById('nombre-batteries').value || 1;
+        const montantCaution = document.getElementById('montant-caution').value;
+        
+        const dureeSemainesElement = document.getElementById('id_duree_semaines');
+        const dureeSemaines = dureeSemainesElement ? dureeSemainesElement.value || 61 : 61;
+        
+        const dateDebutElement = document.getElementById('id_date_debut');
+        const dateDebut = dateDebutElement ? dateDebutElement.value : 'N/A';
+        const montantEngageElement = document.getElementById('montant-engage-batterie');
+        const montantEngage = montantEngageElement ? montantEngageElement.value : 'N/A';
+        // Obtenir le texte de l'option sélectionnée
+        const frequencePaiementElement = document.getElementById('id_frequence_paiement');
+        let frequenceTexte = 'N/A';
+        
+        if (frequencePaiementElement && frequencePaiementElement.options) {
+            const selectedOption = frequencePaiementElement.options[frequencePaiementElement.selectedIndex];
+            if (selectedOption) {
+                frequenceTexte = selectedOption.text;
+            }
+        }
+        
+        // Mettre à jour les éléments du résumé
+        document.getElementById('resume-reference').textContent = reference;
+        document.getElementById('resume-batteries').textContent = nombreBatteries;
+        document.getElementById('resume-montant').textContent = montantCaution;
+        document.getElementById('resume-duree').textContent = dureeSemaines;
+        document.getElementById('resume-date-debut').textContent = dateDebut;
+        document.getElementById('resume-frequence').textContent = frequenceTexte;
+        document.getElementById('resume-montant-engage').textContent = montantEngage;
+    }
+    
+    function afficherErreurs(type, errors) {
+        const container = document.getElementById(`${type}-erreurs`);
+        container.innerHTML = '';
+        
+        let htmlErreurs = '<strong>Des erreurs ont été détectées:</strong><ul>';
+        
+        if (errors) {
+            for (const field in errors) {
+                if (errors.hasOwnProperty(field)) {
+                    const errorMsg = Array.isArray(errors[field]) ? errors[field].join(', ') : errors[field];
+                    htmlErreurs += `<li>${field}: ${errorMsg}</li>`;
+                    
+                    // Ajouter la classe d'erreur au champ correspondant
+                    const inputElement = document.getElementById(`${type}-${field.replace('_', '-')}`);
+                    if (inputElement) {
+                        inputElement.classList.add('is-invalid');
+                    }
+                }
+            }
+        } else {
+            htmlErreurs += '<li>Une erreur inconnue est survenue</li>';
+        }
+        
+        htmlErreurs += '</ul>';
+        container.innerHTML = htmlErreurs;
+        container.style.display = 'block';
+    }
+    
+    function ouvrirModal(id) {
+        const modalElement = document.getElementById(id);
+        
+        // Vérifier si Bootstrap est disponible
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        } else {
+            // Fallback si Bootstrap n'est pas disponible
+            modalElement.classList.add('show');
+            modalElement.style.display = 'block';
+            modalElement.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            
+            // Créer un backdrop si nécessaire
+            let backdrop = document.querySelector('.modal-backdrop');
+            if (!backdrop) {
+                backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                document.body.appendChild(backdrop);
+            }
+        }
+    }
+    
+    function fermerModal(id) {
+        const modalElement = document.getElementById(id);
+        
+        // Vérifier si Bootstrap est disponible
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            }
+        } else {
+            // Fallback si Bootstrap n'est pas disponible
+            modalElement.classList.remove('show');
+            modalElement.style.display = 'none';
+            modalElement.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            
+            // Supprimer le backdrop si c'est le dernier modal
+            const modalOuverts = document.querySelectorAll('.modal.show');
+            if (modalOuverts.length === 0) {
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.parentNode.removeChild(backdrop);
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

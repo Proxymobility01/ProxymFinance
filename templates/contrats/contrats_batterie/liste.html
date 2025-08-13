@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titre }}</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:ajouter_contrat_batterie' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Ajouter un contrat batterie
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped" id="table-contrats-batterie">
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Type</th>
+                                <th>Propriétaire</th>
+                                <th>Date signature</th>
+                                <th>Montant</th>
+                                <th>Progression</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contrat in contrats %}
+                            <tr>
+                                <td>{{ contrat.reference }}</td>
+                                <td>
+                                    {% if contrat.type_proprietaire == 'chauffeur' %}
+                                        <span class="badge badge-primary">Chauffeur</span>
+                                    {% elif contrat.type_proprietaire == 'partenaire' %}
+                                        <span class="badge badge-info">Partenaire</span>
+                                    {% else %}
+                                        <span class="badge badge-secondary">Non défini</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if contrat.proprietaire %}
+                                        {% if contrat.type_proprietaire == 'chauffeur' %}
+                                            <a href="{% url 'contrats:details_chauffeur' contrat.chauffeur.id %}">
+                                                {{ contrat.chauffeur.nom_complet }}
+                                            </a>
+                                        {% elif contrat.type_proprietaire == 'partenaire' %}
+                                            <a href="{% url 'contrats:details_partenaire' contrat.partenaire.id %}">
+                                                {{ contrat.partenaire.prenom }} {{ contrat.partenaire.nom }}
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">Non défini</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
+                                <td>{{ contrat.montant_total|floatformat:"0" }} FCFA</td>
+                                <td>
+                                    <div class="progress progress-xs">
+                                        <div class="progress-bar bg-success" style="width: {{ contrat.pourcentage_paye|floatformat:"0" }}%"></div>
+                                    </div>
+                                    <small>{{ contrat.montant_paye|floatformat:"0" }} FCFA ({{ contrat.pourcentage_paye|floatformat:"0" }}%)</small>
+                                </td>
+                                <td>
+                                    {% if contrat.statut == 'actif' %}
+                                        <span class="badge badge-success">Actif</span>
+                                    {% elif contrat.statut == 'terminé' %}
+                                        <span class="badge badge-info">Terminé</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Suspendu</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'contrats:details_contrat_batterie' contrat.id %}" class="btn btn-sm btn-info">
+                                        <i class="ti ti-eye"></i>
+                                    </a>
+                                    <a href="{% url 'contrats:modifier_contrat_batterie' contrat.id %}" class="btn btn-sm btn-warning">
+                                        <i class="ti ti-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">Aucun contrat batterie trouvé</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#table-contrats-batterie').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+            "url": "{% static 'datatables/fr.json' %}"
+        }
+    });
+});
+</script>
+{% endblock %}

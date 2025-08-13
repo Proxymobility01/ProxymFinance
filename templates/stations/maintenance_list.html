@@ -1,0 +1,153 @@
+{% extends 'stations/base_stations.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Page header -->
+    <div class="page-header">
+        <h2 class="page-title">Gestion des Maintenances</h2>
+        <a href="{% url 'stations:maintenance-create' %}" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-1">
+                <path d="M12 5V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Planifier une maintenance
+        </a>
+    </div>
+
+    <!-- Filtres -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="station" class="form-label">Station</label>
+                    <select name="station" id="station" class="form-select">
+                        <option value="">Toutes les stations</option>
+                        {% for station in stations %}
+                        <option value="{{ station.id }}" {% if request.GET.station == station.id|stringformat:"i" %}selected{% endif %}>
+                            {{ station.nom_agence }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="statut" class="form-label">Statut</label>
+                    <select name="statut" id="statut" class="form-select">
+                        <option value="">Tous les statuts</option>
+                        <option value="planifiee" {% if request.GET.statut == 'planifiee' %}selected{% endif %}>Planifiée</option>
+                        <option value="en_cours" {% if request.GET.statut == 'en_cours' %}selected{% endif %}>En cours</option>
+                        <option value="terminee" {% if request.GET.statut == 'terminee' %}selected{% endif %}>Terminée</option>
+                        <option value="annulee" {% if request.GET.statut == 'annulee' %}selected{% endif %}>Annulée</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="type_maintenance" class="form-label">Type</label>
+                    <select name="type_maintenance" id="type_maintenance" class="form-select">
+                        <option value="">Tous les types</option>
+                        <option value="preventive" {% if request.GET.type_maintenance == 'preventive' %}selected{% endif %}>Préventive</option>
+                        <option value="corrective" {% if request.GET.type_maintenance == 'corrective' %}selected{% endif %}>Corrective</option>
+                        <option value="urgente" {% if request.GET.type_maintenance == 'urgente' %}selected{% endif %}>Urgente</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="date_debut" class="form-label">Date début</label>
+                    <input type="date" id="date_debut" name="date_debut" class="form-control" 
+                        value="{{ request.GET.date_debut|default:'' }}">
+                </div>
+                <div class="col-md-6">
+                    <label for="date_fin" class="form-label">Date fin</label>
+                    <input type="date" id="date_fin" name="date_fin" class="form-control"
+                        value="{{ request.GET.date_fin|default:'' }}">
+                </div>
+                <div class="">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter"></i> Filtrer
+                            </button>
+                            <a href="{% url 'stations:maintenance-list' %}" class="btn btn-secondary">
+                                <i class="fas fa-undo"></i> Réinitialiser
+                            </a>
+                        </div>
+                        {% if maintenances %}
+                        <div class="col-md-4">
+                            <a href="{% url 'stations:maintenance-export' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" 
+                            class="btn btn-outline-primary">
+                                <i class="fas fa-file-export"></i> Exporter (CSV)
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Liste des maintenances -->
+    <div class="card" id="maintenanceList">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Station</th>
+                            <th>Titre</th>
+                            <th>Type</th>
+                            <th>Date planifiée</th>
+                            <th>Durée estimée</th>
+                            <th>Coût estimé</th>
+                            <th>Technicien</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for maintenance in maintenances %}
+                        <tr class="{% if maintenance.statut == 'planifiee' and maintenance.date_planifiee < now %}table-danger{% endif %}">
+                            <td>{{ maintenance.station.nom_agence }}</td>
+                            <td>{{ maintenance.titre }}</td>
+                            <td>
+                                <span class="badge bg-{% if maintenance.type_maintenance == 'preventive' %}info{% elif maintenance.type_maintenance == 'corrective' %}warning{% else %}danger{% endif %}">
+                                    {{ maintenance.get_type_maintenance_display }}
+                                </span>
+                            </td>
+                            <td>{{ maintenance.date_planifiee|date:"d/m/Y H:i" }}</td>
+                            <td>{{ maintenance.duree_estimee_display }}</td>
+                            <td>{{ maintenance.cout_estime }} Fcfa</td>
+                            <td>{{ maintenance.technicien }}</td>
+                            <td>
+                                <span class="badge bg-{% if maintenance.statut == 'planifiee' %}primary{% elif maintenance.statut == 'en_cours' %}warning{% elif maintenance.statut == 'terminee' %}success{% else %}secondary{% endif %}">
+                                    {{ maintenance.get_statut_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'stations:maintenance-update' maintenance.pk %}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </a>
+                                <button class="btn btn-sm btn-info view-details-btn" data-id="{{ maintenance.pk }}">
+                                    <i class="fas fa-eye"></i> Détails
+                                </button>
+                                {% if maintenance.statut == 'planifiee' %}
+                                <button class="btn btn-sm btn-success start-maintenance-btn" data-id="{{ maintenance.pk }}">
+                                    <i class="fas fa-play"></i> Démarrer
+                                </button>
+                                {% elif maintenance.statut == 'en_cours' %}
+                                <button class="btn btn-sm btn-success complete-maintenance-btn" data-id="{{ maintenance.pk }}">
+                                    <i class="fas fa-check"></i> Terminer
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center">Aucune maintenance trouvée.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination, modals, etc. comme avant -->
+</div>
+{% endblock %}

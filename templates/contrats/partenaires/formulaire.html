@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ajouter un partenaire{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Ajouter un nouveau partenaire</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:liste_partenaires' %}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Retour à la liste
+                        </a>
+                    </div>
+                </div>
+                <form method="post" enctype="multipart/form-data" class="form-horizontal">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>Informations personnelles</h4>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.nom.id_for_label }}" class="required">{{ form.nom.label }}</label>
+                                    {{ form.nom }}
+                                    {% if form.nom.errors %}
+                                        <div class="text-danger">{{ form.nom.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.prenom.id_for_label }}" class="required">{{ form.prenom.label }}</label>
+                                    {{ form.prenom }}
+                                    {% if form.prenom.errors %}
+                                        <div class="text-danger">{{ form.prenom.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}" class="required">{{ form.email.label }}</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="text-danger">{{ form.email.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.phone.id_for_label }}" class="required">{{ form.phone.label }}</label>
+                                    {{ form.phone }}
+                                    {% if form.phone.errors %}
+                                        <div class="text-danger">{{ form.phone.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.numero_cni.id_for_label }}" class="required">{{ form.numero_cni.label }}</label>
+                                    {{ form.numero_cni }}
+                                    {% if form.numero_cni.errors %}
+                                        <div class="text-danger">{{ form.numero_cni.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.adresse.id_for_label }}" class="required">{{ form.adresse.label }}</label>
+                                    {{ form.adresse }}
+                                    {% if form.adresse.errors %}
+                                        <div class="text-danger">{{ form.adresse.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h4>Documents</h4>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.photo_cni_recto.id_for_label }}">{{ form.photo_cni_recto.label }}</label>
+                                    {{ form.photo_cni_recto }}
+                                    {% if form.photo_cni_recto.errors %}
+                                        <div class="text-danger">{{ form.photo_cni_recto.errors }}</div>
+                                    {% endif %}
+                                    <small class="form-text text-muted">Format accepté : PDF, JPG, PNG. Taille max : 5MB</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.photo_cni_verso.id_for_label }}">{{ form.photo_cni_verso.label }}</label>
+                                    {{ form.photo_cni_verso }}
+                                    {% if form.photo_cni_verso.errors %}
+                                        <div class="text-danger">{{ form.photo_cni_verso.errors }}</div>
+                                    {% endif %}
+                                    <small class="form-text text-muted">Format accepté : PDF, JPG, PNG. Taille max : 5MB</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.justificatif_activite.id_for_label }}">{{ form.justificatif_activite.label }}</label>
+                                    {{ form.justificatif_activite }}
+                                    {% if form.justificatif_activite.errors %}
+                                        <div class="text-danger">{{ form.justificatif_activite.errors }}</div>
+                                    {% endif %}
+                                    <small class="form-text text-muted">Format accepté : PDF, JPG, PNG. Taille max : 5MB</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.plan_localisation.id_for_label }}">{{ form.plan_localisation.label }}</label>
+                                    {{ form.plan_localisation }}
+                                    {% if form.plan_localisation.errors %}
+                                        <div class="text-danger">{{ form.plan_localisation.errors }}</div>
+                                    {% endif %}
+                                    <small class="form-text text-muted">Format accepté : PDF, JPG, PNG. Taille max : 5MB</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{ form.contrat_physique.id_for_label }}">{{ form.contrat_physique.label }}</label>
+                                    {{ form.contrat_physique }}
+                                    {% if form.contrat_physique.errors %}
+                                        <div class="text-danger">{{ form.contrat_physique.errors }}</div>
+                                    {% endif %}
+                                    <small class="form-text text-muted">Format accepté : PDF. Taille max : 10MB</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Enregistrer
+                        </button>
+                        <a href="{% url 'contrats:liste_partenaires' %}" class="btn btn-default">
+                            Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Validation du formulaire côté client
+    $('form').on('submit', function(e) {
+        var isValid = true;
+        
+        // Vérifier les champs requis
+        $('.form-control[required]').each(function() {
+            if ($(this).val() === '') {
+                isValid = false;
+                $(this).addClass('is-invalid');
+                if (!$(this).next('.invalid-feedback').length) {
+                    $(this).after('<div class="invalid-feedback">Ce champ est requis.</div>');
+                }
+            } else {
+                $(this).removeClass('is-invalid');
+                $(this).next('.invalid-feedback').remove();
+            }
+        });
+        
+        // Vérifier le format de l'email
+        var email = $('#{{ form.email.id_for_label }}').val();
+        if (email && !isValidEmail(email)) {
+            isValid = false;
+            $('#{{ form.email.id_for_label }}').addClass('is-invalid');
+            if (!$('#{{ form.email.id_for_label }}').next('.invalid-feedback').length) {
+                $('#{{ form.email.id_for_label }}').after('<div class="invalid-feedback">Adresse email invalide.</div>');
+            }
+        }
+        
+        // Vérifier le format du téléphone
+        var phone = $('#{{ form.phone.id_for_label }}').val();
+        if (phone && !isValidPhone(phone)) {
+            isValid = false;
+            $('#{{ form.phone.id_for_label }}').addClass('is-invalid');
+            if (!$('#{{ form.phone.id_for_label }}').next('.invalid-feedback').length) {
+                $('#{{ form.phone.id_for_label }}').after('<div class="invalid-feedback">Numéro de téléphone invalide (minimum 8 chiffres).</div>');
+            }
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            // Afficher un message d'erreur
+            toastr.error('Veuillez corriger les erreurs dans le formulaire.');
+        }
+    });
+    
+    // Enlever les messages d'erreur lors de la modification
+    $('.form-control').on('input', function() {
+        $(this).removeClass('is-invalid');
+        $(this).next('.invalid-feedback').remove();
+    });
+    
+    // Fonction de validation d'email
+    function isValidEmail(email) {
+        var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+    
+    // Fonction de validation de téléphone
+    function isValidPhone(phone) {
+        var regex = /^\d{8,}$/;
+        return regex.test(phone);
+    }
+    
+    // Prévisualisation des fichiers uploadés
+    $('input[type="file"]').on('change', function() {
+        var fileName = $(this).val().split('\\').pop();
+        if (fileName) {
+            $(this).next('.file-name').remove();
+            $(this).after('<small class="file-name text-muted">Fichier sélectionné : ' + fileName + '</small>');
+        }
+    });
+});
+</script>
+{% endblock %}

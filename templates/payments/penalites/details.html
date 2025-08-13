@@ -1,0 +1,365 @@
+<!-- payments/templates/payments/penalites/details.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">{{ titre }}</h1>
+    <!-- Boutons de navigation -->
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'payments:gestion_penalites' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+    <!-- Informations sur la pénalité -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Détails de la pénalité</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-6 form-label text-left">Montant total</div>
+                        <div class="col-6 text-left">
+                            {{ penalite.montant|floatformat:0 }} FCFA
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6 form-label text-left">Montant déjà payé</div>
+                        <div class="col-6 text-left text-success font-weight-bold">
+                            {{ penalite.montant_total_paye|floatformat:0 }} FCFA
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6 form-label text-left">Reste à payer</div>
+                        <div class="col-6 text-left text-danger font-weight-bold">
+                            {{ restant_a_payer|floatformat:0 }} FCFA
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                    <div class="col-6 form-label text-left">Date de création</div>
+                    <div class="col-6 text-left">
+                        {{ penalite.date_creation|date:"d/m/Y H:i" }}
+                    </div>
+                    </div>
+
+                    <div class="row mb-2">
+                    <div class="col-6 form-label text-left">Motif</div>
+                    <div class="col-6 text-left">
+                        {{ penalite.get_motif_display }}
+                    </div>
+                    </div>
+
+                    <div class="row mb-2">
+                    <div class="col-6 form-label text-left">Type</div>
+                    <div class="col-6 text-left">
+                        {{ penalite.get_type_penalite_display }}
+                    </div>
+                    </div>
+
+                    <div class="row mb-2">
+                    <div class="col-6 form-label text-left">Date paiement manqué</div>
+                    <div class="col-6 text-left">
+                        {{ penalite.date_paiement_manque|date:"d/m/Y" }}
+                    </div>
+                    </div>
+
+                    <div class="row">
+                    <div class="col-6 form-label text-left">Statut</div>
+                    <div class="col-6 text-left">
+                        <span class="badge
+                        {% if penalite.statut == 'en_attente' %}badge-warning
+                        {% elif penalite.statut == 'payee'     %}badge-success
+                        {% else %}badge-secondary{% endif %}">
+                        {{ penalite.get_statut_display }}
+                        </span>
+                    </div>
+                    </div>
+
+                    {% if penalite.description %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p><strong>Description:</strong></p>
+                            <p class="text-muted">{{ penalite.description }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if penalite.statut == 'annulee' and penalite.raison_annulation %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert2  alert-info">
+                                <strong>Raison du pardon:</strong><br>
+                                {{ penalite.raison_annulation }}
+                                {% if penalite.pardonnee_par %}
+                                <br><small>Pardonnée par: {{ penalite.pardonnee_par.prenom }} {{ penalite.pardonnee_par.nom }} 
+                                le {{ penalite.date_pardon|date:"d/m/Y à H:i" }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+
+
+            </div>
+            
+            <!-- Actions sur la pénalité -->
+            <!-- Section Actions - Section corrigée du template -->
+            <!-- Section Actions - Section corrigée du template -->
+            {% if penalite.statut == 'en_attente' %}
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Pardonner la pénalité -->
+                        <div class="col-md-6">
+                            <div class="card border-left-secondary">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold">Pardonner la pénalité</h6>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="pardonner">
+                                        
+                                        <div class="form-group">
+                                            <label for="raison_pardon">Raison du pardon (obligatoire)</label>
+                                            <textarea class="form-control" id="raison_pardon" name="raison_pardon" 
+                                                    rows="3" required placeholder="Expliquez pourquoi cette pénalité est pardonnée..."></textarea>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-secondary">
+                                            <i class="fas fa-heart"></i> Pardonner
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Encaisser la pénalité -->
+                        <div class="col-md-6">
+                            <div class="card border-left-success">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold">Encaisser la pénalité</h6>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="payer">
+                                        
+                                        <div class="form-group">
+                                            <label for="montant_paiement">Montant</label>
+                                            <input type="number" class="form-control" id="montant_paiement" 
+                                                name="montant_paiement" value="{{ penalite.montant }}" step="0.01" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="methode_paiement">Méthode de paiement</label>
+                                            <select class="form-control" id="methode_paiement" name="methode_paiement" required>
+                                                <option value="">Sélectionner...</option>
+                                                <option value="espece">Espèces</option>
+                                                <option value="mobile_money">Mobile Money</option>
+                                                <option value="virement">Virement bancaire</option>
+                                                <option value="cheque">Chèque</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="raison_paiement">Commentaire</label>
+                                            <textarea class="form-control" id="raison_paiement" name="raison" 
+                                                    rows="2" placeholder="Commentaire sur le paiement..."></textarea>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-money-bill"></i> Encaisser
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Autres actions si nécessaire -->
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <div class="card border-left-warning">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold">Autres actions</h6>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        
+                                        <div class="form-group">
+                                            <label for="action_type">Action à effectuer</label>
+                                            <select class="form-control" id="action_type" name="action" required>
+                                                <option value="">Sélectionner une action...</option>
+                                                <option value="annuler">Annuler définitivement</option>
+                                                <option value="reporter">Reporter à une date ultérieure</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="form-group" id="date_report_group" style="display: none;">
+                                            <label for="date_report">Date de report</label>
+                                            <input type="date" class="form-control" id="date_report" name="date_report">
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="raison_action">Raison</label>
+                                            <textarea class="form-control" id="raison_action" name="raison" 
+                                                    rows="2" placeholder="Motif de l'action..."></textarea>
+                                        </div>
+                                        
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="envoyer_notification" name="envoyer_notification">
+                                            <label class="form-check-label" for="envoyer_notification">
+                                                Envoyer une notification au client
+                                            </label>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-warning mt-2">
+                                            <i class="fas fa-edit"></i> Exécuter l'action
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Script JavaScript pour afficher/masquer le champ date de report -->
+            <script>
+            document.getElementById('action_type').addEventListener('change', function() {
+                var dateReportGroup = document.getElementById('date_report_group');
+                if (this.value === 'reporter') {
+                    dateReportGroup.style.display = 'block';
+                    document.getElementById('date_report').required = true;
+                } else {
+                    dateReportGroup.style.display = 'none';
+                    document.getElementById('date_report').required = false;
+                }
+            });
+            </script>
+            {% endif %}
+            
+        </div>
+        
+        <!-- Informations client -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Informations Client</h6>
+                </div>
+                <div class="card-body">
+                    <div class="client-contrat-details">
+
+                        {% if client %}
+                        <div class="row mb-2">
+                            <div class="col-6 form-label text-left">Nom</div>
+                            <div class="col-6 text-left">
+                            {{ client.prenom }} {{ client.nom }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6 form-label text-left">Téléphone</div>
+                            <div class="col-6 text-left">
+                            {{ client.phone }}
+                            </div>
+                        </div>
+
+                        {% if client.email %}
+                            <div class="row mb-2">
+                            <div class="col-6 form-label text-left">Email</div>
+                            <div class="col-6 text-left">
+                                {{ client.email }}
+                            </div>
+                            </div>
+                        {% endif %}
+                        {% endif %}
+
+                        {% if contrat %}
+                        <div class="row my-3">
+                            <div class="col-12"><hr></div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6 form-label text-left">Contrat</div>
+                            <div class="col-6 text-left">
+                            {{ contrat.reference }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6 form-label text-left">Type</div>
+                            <div class="col-6 text-left">
+                            {{ contrat_type|title }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 form-label text-left">Statut</div>
+                            <div class="col-6 text-left">
+                            {{ contrat.get_statut_display }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Historique des pénalités -->
+            {% if historique_penalites %}
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Autres pénalités</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in historique_penalites %}
+                                <tr>
+                                    <td>{{ p.date_creation|date:"d/m/Y" }}</td>
+                                    <td>{{ p.montant|floatformat:0 }} FCFA</td>
+                                    <td>
+                                        <span class="badge badge-sm 
+                                            {% if p.statut == 'en_attente' %}badge-warning
+                                            {% elif p.statut == 'payee' %}badge-success
+                                            {% elif p.statut == 'annulee' %}badge-secondary
+                                            {% endif %}">
+                                            {{ p.get_statut_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+
+</div>
+{% endblock %}
+
+

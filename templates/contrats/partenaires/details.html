@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titre }}</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:modifier_partenaire' partenaire.id %}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{% url 'contrats:liste_partenaires' %}" class="btn btn-default">
+                            <i class="fas fa-arrow-left"></i> Retour à la liste
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Informations personnelles</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Nom complet</th>
+                                    <td>{{ partenaire.prenom }} {{ partenaire.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ partenaire.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone</th>
+                                    <td>{{ partenaire.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Numéro CNI</th>
+                                    <td>{{ partenaire.numero_cni }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse</th>
+                                    <td>{{ partenaire.adresse }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date d'ajout</th>
+                                    <td>{{ partenaire.created_at|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Documents</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 200px;">Photo CNI (Recto)</th>
+                                    <td>
+                                        {% if partenaire.photo_cni_recto %}
+                                            <a href="{{ partenaire.photo_cni_recto.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Photo CNI (Verso)</th>
+                                    <td>
+                                        {% if partenaire.photo_cni_verso %}
+                                            <a href="{{ partenaire.photo_cni_verso.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Justificatif d'activité</th>
+                                    <td>
+                                        {% if partenaire.justificatif_activite %}
+                                            <a href="{{ partenaire.justificatif_activite.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Plan de localisation</th>
+                                    <td>
+                                        {% if partenaire.plan_localisation %}
+                                            <a href="{{ partenaire.plan_localisation.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Contrat physique</th>
+                                    <td>
+                                        {% if partenaire.contrat_physique %}
+                                            <a href="{{ partenaire.contrat_physique.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Non fourni</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section des contrats -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">Contrats associés</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:ajouter_contrat_partenaire' %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Nouveau contrat
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Date signature</th>
+                                <th>Montant total</th>
+                                <th>Motos associées</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for contrat in partenaire.contrats.all %}
+                            <tr>
+                                <td>{{ contrat.reference }}</td>
+                                <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
+                                <td>{{ contrat.montant_total|floatformat:"0" }} FCFA</td>
+                                <td>
+                                    <span class="badge badge-info">
+                                        {{ contrat.motos_associees.count }} moto(s)
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if contrat.statut == 'actif' %}
+                                        <span class="badge badge-success">Actif</span>
+                                    {% elif contrat.statut == 'terminé' %}
+                                        <span class="badge badge-info">Terminé</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Suspendu</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'contrats:details_contrat_partenaire' contrat.id %}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> Voir
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun contrat associé</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

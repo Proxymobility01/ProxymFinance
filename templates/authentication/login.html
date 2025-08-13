@@ -1,0 +1,304 @@
+{% comment %}
+templates/authentication/login.html
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxym Finance - Connexion</title>
+    
+    <!-- Google Fonts - Orbitron pour les titres -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+    
+    <!-- CSS personnalisé -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+
+    <style>
+        /* Styles spécifiques à la page de connexion */
+        body {
+            background-color: var(--bg-secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 420px;
+            padding: 2rem;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .login-logo h1 {
+            font-family: 'Orbitron', sans-serif !important;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-top: 1rem;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .login-form .form-control {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .remember-me input {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-login {
+            background-color: var(--primary-color);
+            color: #000;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-login:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Styles pour les messages d'erreur */
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Style pour les messages de Django */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Bouton de changement de thème -->
+    <button id="theme-toggle" class="theme-toggle">
+        <i class="ti ti-moon"></i>
+    </button>
+
+    <div class="login-container">
+        <div class="login-logo">
+            <img src="{% static 'images/logo.png' %}" alt="Proxym Finance" class="navbar-logo" style="height: 36px;">
+            <h1>Proxym Finance</h1>
+        </div>
+        
+        <!-- Messages Django -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <!-- Erreurs de formulaire (si applicable) -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form class="login-form" id="login-form" method="POST" action="{% url 'authentication:login' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="error-message">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Mot de passe</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="error-message">{{ form.password.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="remember-me">
+                {{ form.remember_me }}
+                <label for="remember">Se souvenir de moi</label>
+            </div>
+            
+            <button type="submit" class="btn-login">
+                <i class="ti ti-login"></i> Se connecter
+            </button>
+        </form>
+        
+        <div class="forgot-password">
+            <a href="#" id="forgot-password-link">Mot de passe oublié?</a>
+        </div>
+        
+        <div class="register-link" style="text-align: center; margin-top: 1rem;">
+            <p>Vous n'avez pas de compte? <a href="{% url 'authentication:register' %}">Créez-en un</a></p>
+        </div>
+    </div>
+
+    <!-- Modal pour mot de passe oublié -->
+    <div class="modal" id="forgot-password-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div class="modal-dialog" style="position: relative; width: 400px; margin: 100px auto; background-color: var(--card-bg); border-radius: var(--border-radius-md); box-shadow: var(--shadow);">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Récupération de mot de passe</h3>
+                    <button class="modal-close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-color);">&times;</button>
+                </div>
+                <div class="modal-body" style="padding: 15px;">
+                    <p>Veuillez entrer votre adresse email. Nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+                    <form id="forgot-password-form" method="POST" action="{% url 'authentication:forgot_password' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="Votre adresse email" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="padding: 15px; border-top: 1px solid var(--border-color); text-align: right;">
+                    <button class="btn btn-secondary modal-close">Annuler</button>
+                    <button class="btn btn-primary" id="send-reset-link">Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Gestion du thème
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const htmlElement = document.documentElement;
+            
+            // Vérifier les préférences de l'utilisateur depuis localStorage
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            htmlElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+            
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                // Mettre à jour l'attribut et sauvegarder dans localStorage
+                htmlElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Mettre à jour l'icône
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                const iconElement = themeToggle.querySelector('i');
+                if (theme === 'dark') {
+                    iconElement.className = 'ti ti-sun';
+                    themeToggle.title = 'Passer au thème clair';
+                } else {
+                    iconElement.className = 'ti ti-moon';
+                    themeToggle.title = 'Passer au thème sombre';
+                }
+            }
+            
+            // Gestion du modal "Mot de passe oublié"
+            const forgotPasswordLink = document.getElementById('forgot-password-link');
+            const forgotPasswordModal = document.getElementById('forgot-password-modal');
+            const closeButtons = document.querySelectorAll('.modal-close');
+            const sendResetLinkBtn = document.getElementById('send-reset-link');
+            
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                forgotPasswordModal.style.display = 'block';
+            });
+            
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    forgotPasswordModal.style.display = 'none';
+                });
+            });
+            
+            sendResetLinkBtn.addEventListener('click', function() {
+                document.getElementById('forgot-password-form').submit();
+            });
+            
+            // Fermer le modal en cliquant en dehors
+            window.addEventListener('click', function(event) {
+                if (event.target === forgotPasswordModal) {
+                    forgotPasswordModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

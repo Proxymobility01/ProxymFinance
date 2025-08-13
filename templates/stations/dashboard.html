@@ -1,0 +1,149 @@
+{% extends 'stations/base_stations.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Page header -->
+    <div class="page-header">
+        <h2 class="page-title">Tableau de bord des Stations</h2>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Actions rapides</h3>
+            <div class="btn-group">
+                <a href="{% url 'stations:station-list' %}" class="btn btn-primary">Voir toutes les stations</a>
+                <a href="{% url 'stations:charge-list' %}" class="btn btn-secondary">Gérer les charges</a>
+                <a href="{% url 'stations:maintenance-list' %}" class="btn btn-info">Planifier maintenance</a>
+                <a href="{% url 'stations:notification-list' %}" class="btn btn-warning">
+                    Notifications
+                    {% if notifications_non_lues > 0 %}
+                    <span class="badge bg-danger">{{ notifications_non_lues }}</span>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques principales -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Stations totales</h5>
+                    <p class="card-text display-6">{{ total_stations }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Stations actives</h5>
+                    <p class="card-text display-6 text-success">{{ stations_actives }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Batteries totales</h5>
+                    <p class="card-text display-6">{{ total_batteries }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Maintenances à venir</h5>
+                    <p class="card-text display-6 text-warning">{{ maintenance_due }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Swaps par station ce mois</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="swapsByStationChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Charges par type ce mois</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chargesByTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Graphique Swaps par station
+    const swapsByStationData = {{ swaps_by_station_data|safe }};
+    const swapsCtx = document.getElementById('swapsByStationChart').getContext('2d');
+    new Chart(swapsCtx, {
+        type: 'bar',
+        data: {
+            labels: swapsByStationData.map(item => item.name),
+            datasets: [{
+                label: 'Nombre de swaps',
+                data: swapsByStationData.map(item => item.swaps),
+                backgroundColor: '#3b82f6',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Graphique Charges par type
+    const chargesByTypeData = {{ charges_by_type_data|safe }};
+    const chargesCtx = document.getElementById('chargesByTypeChart').getContext('2d');
+    new Chart(chargesCtx, {
+        type: 'doughnut',
+        data: {
+            labels: chargesByTypeData.map(item => item.type),
+            datasets: [{
+                data: chargesByTypeData.map(item => item.amount),
+                backgroundColor: [
+                    '#3b82f6',
+                    '#10b981',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#8b5cf6'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

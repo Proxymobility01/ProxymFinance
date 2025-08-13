@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Détails du Chauffeur{% endblock %}
+{% block page_title %}{{ chauffeur.nom_complet }}{% endblock %}
+
+{% block page_actions %}
+<a href="{% url 'contrats:modifier_chauffeur' chauffeur.id %}" class="btn btn-warning">
+    <i class="ti ti-edit"></i> Modifier
+</a>
+<a href="{% url 'contrats:ajouter_contrat_chauffeur' %}?chauffeur={{ chauffeur.id }}" class="btn btn-primary">
+    <i class="ti ti-file-plus"></i> Nouveau contrat
+</a>
+<a href="{% url 'contrats:liste_chauffeurs' %}" class="btn btn-secondary">
+    <i class="ti ti-arrow-left"></i> Retour
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Informations personnelles -->
+    <div class="col-6 ">
+{# — Carte Informations Personnelles — #}
+<div class="col-md-4 mb-4">
+  <div class="card">
+    <div class="card-header">
+      <h3>Informations Personnelles</h3>
+    </div>
+    <div class="card-body">
+      <div class="chauffeur-details">
+
+        {# Avatar et nom #}
+        <div class="text-center mb-4">
+          {% if chauffeur.photo %}
+            <img src="{{ chauffeur.photo.url }}" alt="{{ chauffeur.nom_complet }}"
+                 class="rounded-circle"
+                 style="width: 120px; height: 120px; object-fit: cover;">
+          {% else %}
+            <div class="user-avatar" style="width: 120px; height: 120px; font-size: 48px; margin: 0 auto;">
+              {{ chauffeur.prenom|slice:":1" }}{{ chauffeur.nom|slice:":1" }}
+            </div>
+          {% endif %}
+          <h4 class="mt-3">{{ chauffeur.nom_complet }}</h4>
+        </div>
+
+        {# Email #}
+        <div class="row mb-2">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-mail"></i> Email
+          </div>
+          <div class="col-6 text-left">
+            {{ chauffeur.email }}
+          </div>
+        </div>
+
+        {# Téléphone #}
+        <div class="row mb-2">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-phone"></i> Téléphone
+          </div>
+          <div class="col-6 text-left">
+            {{ chauffeur.phone }}
+          </div>
+        </div>
+
+        {# Numéro CNI #}
+        <div class="row mb-2">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-id-badge"></i> Numéro CNI
+          </div>
+          <div class="col-6 text-left">
+            {{ chauffeur.numero_cni }}
+          </div>
+        </div>
+
+        {# Domicile #}
+        <div class="row mb-2">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-home"></i> Domicile
+          </div>
+          <div class="col-6 text-left">
+            {{ chauffeur.domicile }}
+          </div>
+        </div>
+
+        {# Inscrit depuis #}
+        <div class="row">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-calendar"></i> Inscrit depuis
+          </div>
+          <div class="col-6 text-left">
+            {{ chauffeur.created_at|date:"d/m/Y" }}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{# — Carte Documents — #}
+<div class="col-md-4 mb-4">
+  <div class="card">
+    <div class="card-header">
+      <h3>Documents</h3>
+    </div>
+    <div class="card-body">
+      <div class="chauffeur-documents">
+
+        {# CNI (Recto) #}
+        <div class="row mb-2">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-id-badge"></i> CNI (Recto)
+          </div>
+          <div class="col-6 text-left">
+            {% if chauffeur.photo_cni_recto %}
+              <a href="{{ chauffeur.photo_cni_recto.url }}"
+                 class="btn btn-sm btn-info" target="_blank">
+                <i class="ti ti-eye"></i> Voir
+              </a>
+            {% else %}
+              <span class="badge badge-warning">Non fourni</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {# CNI (Verso) #}
+        <div class="row mb-2">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-id-badge"></i> CNI (Verso)
+          </div>
+          <div class="col-6 text-left">
+            {% if chauffeur.photo_cni_verso %}
+              <a href="{{ chauffeur.photo_cni_verso.url }}"
+                 class="btn btn-sm btn-info" target="_blank">
+                <i class="ti ti-eye"></i> Voir
+              </a>
+            {% else %}
+              <span class="badge badge-warning">Non fourni</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {# Permis de conduire #}
+        <div class="row mb-2">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-license"></i> Permis de conduire
+          </div>
+          <div class="col-6 text-left">
+            {% if chauffeur.permis_conduire %}
+              <a href="{{ chauffeur.permis_conduire.url }}"
+                 class="btn btn-sm btn-info" target="_blank">
+                <i class="ti ti-eye"></i> Voir
+              </a>
+            {% else %}
+              <span class="badge badge-warning">Non fourni</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {# Plan de localisation #}
+        <div class="row">
+          <div class="col-6 form-label text-left">
+            <i class="ti ti-map-pin"></i> Plan de localisation
+          </div>
+          <div class="col-6 text-left">
+            {% if chauffeur.plan_localisation %}
+              <a href="{{ chauffeur.plan_localisation.url }}"
+                 class="btn btn-sm btn-info" target="_blank">
+                <i class="ti ti-eye"></i> Voir
+              </a>
+            {% else %}
+              <span class="badge badge-warning">Non fourni</span>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+    
+    <!-- Contrats -->
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3>Contrats Chauffeur</h3>
+                <a href="{% url 'contrats:ajouter_contrat_chauffeur' %}?chauffeur={{ chauffeur.id }}" class="btn btn-sm btn-primary">
+                    <i class="ti ti-plus"></i> Nouveau contrat
+                </a>
+            </div>
+            <div class="card-body">
+                {% if contrats_chauffeur %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Moto</th>
+                                    <th>Date signature</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for contrat in contrats_chauffeur %}
+                                <tr>
+                                    <td>{{ contrat.reference }}</td>
+                                    <td>{{ contrat.moto.model }} ({{ contrat.moto.vin|slice:"-6:" }})</td>
+                                    <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
+                                    <td>{{ contrat.montant_total|floatformat:0 }} FCFA</td>
+                                    <td>
+                                        {% if contrat.statut == 'actif' %}
+                                            <span class="badge badge-success">Actif</span>
+                                        {% elif contrat.statut == 'terminé' %}
+                                            <span class="badge badge-danger">Terminé</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Suspendu</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'contrats:details_contrat_chauffeur' contrat.id %}" class="btn btn-sm btn-info" title="Détails">
+                                            <i class="ti ti-eye"></i>
+                                        </a>
+                                        <a href="{% url 'contrats:modifier_contrat_chauffeur' contrat.id %}" class="btn btn-sm btn-warning" title="Modifier">
+                                            <i class="ti ti-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="ti ti-file-off" style="font-size: 48px; opacity: 0.5;"></i>
+                        <p class="mt-3">Aucun contrat chauffeur trouvé.</p>
+                        <a href="{% url 'contrats:ajouter_contrat_chauffeur' %}?chauffeur={{ chauffeur.id }}" class="btn btn-primary mt-2">
+                            <i class="ti ti-plus"></i> Créer un contrat
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Contrats batterie -->
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3>Contrats Batterie</h3>
+                <a href="{% url 'contrats:ajouter_contrat_batterie' %}?chauffeur={{ chauffeur.id }}" class="btn btn-sm btn-primary">
+                    <i class="ti ti-plus"></i> Nouveau contrat
+                </a>
+            </div>
+            <div class="card-body">
+                {% if contrats_batterie %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Batterie</th>
+                                    <th>Date signature</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for contrat in contrats_batterie %}
+                                <tr>
+                                    <td>{{ contrat.reference }}</td>
+                                    <td>{{ contrat.batterie }}</td>
+                                    <td>{{ contrat.date_signature|date:"d/m/Y" }}</td>
+                                    <td>{{ contrat.montant_total|floatformat:0 }} FCFA</td>
+                                    <td>
+                                        {% if contrat.statut == 'actif' %}
+                                            <span class="badge badge-success">Actif</span>
+                                        {% elif contrat.statut == 'terminé' %}
+                                            <span class="badge badge-danger">Terminé</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">Suspendu</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'contrats:details_contrat_batterie' contrat.id %}" class="btn btn-sm btn-info" title="Détails">
+                                            <i class="ti ti-eye"></i>
+                                        </a>
+                                        <a href="{% url 'contrats:modifier_contrat_batterie' contrat.id %}" class="btn btn-sm btn-warning" title="Modifier">
+                                            <i class="ti ti-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="ti ti-battery-off" style="font-size: 48px; opacity: 0.5;"></i>
+                        <p class="mt-3">Aucun contrat batterie trouvé.</p>
+                        <a href="{% url 'contrats:ajouter_contrat_batterie' %}?chauffeur={{ chauffeur.id }}" class="btn btn-primary mt-2">
+                            <i class="ti ti-plus"></i> Créer un contrat
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

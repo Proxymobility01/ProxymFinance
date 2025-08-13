@@ -1,0 +1,219 @@
+<!-- templates/contrats/associations/modal_ajouter.html -->
+<!-- Modal complet retourné par AJAX -->
+<div class="modal fade" id="addAssociationModal" tabindex="-1" aria-labelledby="addAssociationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAssociationModalLabel">
+                    <i class="ti ti-link"></i> {{ title }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form id="associationForm" method="post" action="{% url 'contrats:ajouter_association' %}">
+                {% csrf_token %}
+
+                <div class="modal-body">
+                    <div id="form-errors" class="alert alert-danger d-none">
+                        <ul class="mb-0" id="error-list"></ul>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.validated_user.id_for_label }}" class="form-label">
+                                    {{ form.validated_user.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.validated_user }}
+                                {% if form.validated_user.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.validated_user.errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="mt-2">
+                                    <a href="{% url 'contrats:ajouter_chauffeur' %}?ajax=1"
+                                       class="btn btn-sm btn-outline-primary"
+                                       id="addChauffeurFromAssociation">
+                                        <i class="ti ti-plus"></i> Nouveau chauffeur
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.moto_valide.id_for_label }}" class="form-label">
+                                    {{ form.moto_valide.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.moto_valide }}
+                                {% if form.moto_valide.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.moto_valide.errors }}
+                                    </div>
+                                {% endif %}
+                                <div class="mt-2">
+                                    <a href="{% url 'contrats:ajouter_moto' %}?ajax=1"
+                                       class="btn btn-sm btn-outline-primary"
+                                       id="addMotoFromAssociation">
+                                        <i class="ti ti-plus"></i> Nouvelle moto
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="{{ form.statut.id_for_label }}" class="form-label">
+                                    {{ form.statut.label }}
+                                </label>
+                                {{ form.statut }}
+                                {% if form.statut.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.statut.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="ti ti-info-circle"></i>
+                        <strong>Information:</strong> Cette association permet de lier un chauffeur à une moto pour la création de contrats.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="ti ti-x"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="saveAssociationBtn">
+                        <i class="ti ti-check"></i> Créer l'association
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser Select2 pour les champs de sélection
+    if (typeof $ !== 'undefined' && $.fn.select2) {
+        $('#id_validated_user, #id_moto_valide').select2({
+            theme: 'bootstrap4',
+            width: '100%',
+            dropdownParent: $('#addAssociationModal')
+        });
+    }
+
+    // Gérer la soumission du formulaire
+    document.getElementById('associationForm').addEventListener('submit',function (e){
+        e.preventDefault();
+        const formData = new FormData(this);
+        const submitBtn = document.getElementById('saveAssociationBtn');
+    })
+
+    $('#associationForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const submitBtn = $('#saveAssociationBtn');
+        const errorContainer = $('#form-errors');
+        const errorList = $('#error-list');
+
+        // Désactiver le bouton et afficher le spinner
+        submitBtn.prop('disabled', true);
+        submitBtn.html('<span class="spinner-border spinner-border-sm me-2"></span>Création...');
+
+        // Masquer les erreurs précédentes
+        errorContainer.addClass('d-none');
+        errorList.empty();
+
+        $.ajax({
+            url: this.action + '?ajax=1',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Ajouter la nouvelle option au select du formulaire principal
+                    if (typeof window.updateAssociationSelect === 'function') {
+                        window.updateAssociationSelect(response.association_id, response.association_display);
+                    }
+
+                    // Fermer le modal
+                    $('#addAssociationModal').modal('hide');
+
+                    // Afficher un message de succès
+                    if (typeof showSuccessMessage === 'function') {
+                        showSuccessMessage(response.message);
+                    } else {
+                        alert(response.message);
+                    }
+                } else {
+                    // Afficher les erreurs
+                    displayFormErrors(response.errors);
+                }
+            },
+            error: function() {
+                errorContainer.removeClass('d-none');
+                errorList.html('<li>Une erreur inattendue s\'est produite. Veuillez réessayer.</li>');
+            },
+            complete: function() {
+                // Réactiver le bouton
+                submitBtn.prop('disabled', false);
+                submitBtn.html('<i class="ti ti-check"></i> Créer l\'association');
+            }
+        });
+    });
+
+    function displayFormErrors(errors) {
+        const errorContainer = $('#form-errors');
+        const errorList = $('#error-list');
+
+        errorList.empty();
+
+        // Parcourir toutes les erreurs
+        for (const field in errors) {
+            if (errors.hasOwnProperty(field)) {
+                const fieldErrors = errors[field];
+                fieldErrors.forEach(function(error) {
+                    errorList.append('<li><strong>' + field + ':</strong> ' + error + '</li>');
+                });
+            }
+        }
+
+        errorContainer.removeClass('d-none');
+    }
+
+    // Nettoyer le formulaire quand le modal se ferme
+    $('#addAssociationModal').on('hidden.bs.modal', function() {
+        $('#associationForm')[0].reset();
+        $('#form-errors').addClass('d-none');
+        if (typeof $ !== 'undefined' && $.fn.select2) {
+            $('#id_validated_user, #id_moto_valide').val(null).trigger('change');
+        }
+    });
+});
+
+// Fonction globale pour mettre à jour le select d'association dans le formulaire principal
+window.updateAssociationSelect = function(associationId, associationDisplay) {
+    const associationSelect = $('#id_association');
+    if (associationSelect.length) {
+        // Ajouter la nouvelle option
+        const newOption = new Option(associationDisplay, associationId, true, true);
+        associationSelect.append(newOption);
+
+        // Si c'est un Select2, actualiser
+        if (associationSelect.hasClass('select2-hidden-accessible')) {
+            associationSelect.trigger('change');
+        }
+    }
+};
+</script>

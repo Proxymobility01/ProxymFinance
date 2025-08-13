@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titre }}</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'contrats:ajouter_garant' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Ajouter un garant
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped" id="table-garants">
+                        <thead>
+                            <tr>
+                                <th>Nom complet</th>
+                                <th>Numéro CNI</th>
+                                <th>Téléphone</th>
+                                <th>Occupation</th>
+                                <th>Contrats garantis</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for garant in garants %}
+                            <tr>
+                                <td>{{ garant.prenom }} {{ garant.nom }}</td>
+                                <td>{{ garant.numero_cni }}</td>
+                                <td>{{ garant.telephone }}</td>
+                                <td>{{ garant.occupation }}</td>
+                                <td>
+                                    <span class="badge badge-info">
+                                        {{ garant.contrats_garantis.count }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'contrats:details_garant' garant.id %}" class="btn btn-sm btn-info">
+                                        <i class="ti ti-eye"></i>
+                                    </a>
+                                    <a href="{% url 'contrats:modifier_garant' garant.id %}" class="btn btn-sm btn-warning">
+                                        <i class="ti ti-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun garant trouvé</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if garants.paginator.num_pages > 1 %}
+                    <div class="pagination-container mt-4">
+                        <nav aria-label="Pagination">
+                            <ul class="pagination justify-content-center">
+                                {% if garants.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevrons-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ garants.previous_page_number }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevron-left"></i>
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {% for num in garants.paginator.page_range %}
+                                    {% if num > garants.number|add:'-3' and num < garants.number|add:'3' %}
+                                    <li class="page-item {% if garants.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">{{ num }}</a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if garants.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ garants.next_page_number }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevron-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ garants.paginator.num_pages }}{% if request.GET %}{% for key, value in request.GET.items %}{% if key != 'page' and value %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}">
+                                        <i class="ti ti-chevrons-right"></i>
+                                    </a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#table-garants').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+            "url": "{% static 'datatables/fr.json' %}"
+        }
+    });
+});
+</script>
+{% endblock %}

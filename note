@@ -1,0 +1,40 @@
+-- ===================================================================
+-- NOTES IMPORTANTES
+-- ===================================================================
+
+/*
+1. MOTS DE PASSE :
+   - Les mots de passe dans cet exemple sont des hashes bcrypt fictifs
+   - Pour générer un vrai hash bcrypt, utilisez Python :
+
+   import bcrypt
+   password = "motdepasse123"
+   hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+   print(hashed.decode('utf-8'))
+
+2. IDS AUTO-GÉNÉRÉS :
+   - Les IDs sont auto-générés par Django/MySQL
+   - Ajustez les foreign keys selon vos vraies données
+
+3. COORDONNÉES GPS :
+   - Les coordonnées longitude/latitude sont des exemples pour le Cameroun
+   - Remplacez par les vraies coordonnées de vos agences
+
+4. COMMANDE DJANGO ALTERNATIVE :
+   - Vous pouvez aussi utiliser les fixtures Django ou le shell Django :
+   python manage.py shell
+
+   # Puis dans le shell Python :
+   from authentication.models import Employe, RoleFinance
+   import bcrypt
+
+   # Créer un employé
+   hashed_password = bcrypt.hashpw("password123".encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+   employe = Employe.objects.create(
+       nom="Test",
+       prenom="User",
+       email="test@proxym.com",
+       phone="+237123456789",
+       password=hashed_password
+   )
+*/

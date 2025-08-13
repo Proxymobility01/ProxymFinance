@@ -1,0 +1,491 @@
+<!-- templates/stations/station_detail.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ station.nom_agence }} - Détails{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- En-tête avec le style Proxym -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header">
+                <h1>{{ station.nom_agence }}</h1>
+                <p class="text-muted">
+                    {% if station.ville %}{{ station.ville }}{% endif %}
+                    {% if station.adresse %} - {{ station.adresse }}{% endif %}
+                </p>
+                <div class="header-actions">
+                    <a href="{% url 'stations:station_specific_charge_list' station.id %}" class="btn btn-secondary">
+                        Voir Charges
+                    </a>
+                    <a href="{% url 'stations:rentability_analysis_create' %}?station={{ station.id }}" class="btn btn-primary">
+                        Analyser
+                    </a>
+                    <a href="{% url 'stations:station_charge_create' %}" class="btn btn-success" data-modal="charge" data-station-id="{{ station.id }}">
+                        Ajouter une charge
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres avec le système Proxym -->
+    <div class="row">
+        <div class="col-12 mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Filtres de période</h3>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Période</label>
+                            {{ filter_form.periode }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Date début</label>
+                            {{ filter_form.date_debut }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Date fin</label>
+                            {{ filter_form.date_fin }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-flex">
+                                <button type="submit" class="btn btn-primary">Filtrer</button>
+                                <a href="{% url 'stations:station_detail' station.id %}" class="btn btn-secondary" style="margin-left: 0.5rem;">Reset</a>
+                            </div>
+                        </div>
+                    </form>
+                    <small class="text-muted">
+                        Période analysée: {{ start_date|date:"d/m/Y" }} - {{ end_date|date:"d/m/Y" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métriques principales avec le style Proxym -->
+    <div class="row">
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Revenus</h5>
+                    <h3 class="text-success">{{ revenue|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">{{ swap_count }} swaps</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Charges</h5>
+                    <h3 class="text-danger">{{ total_charges|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Coûts opérationnels</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Bénéfice</h5>
+                    <h3 class="{% if profit >= 0 %}text-success{% else %}text-danger{% endif %}">
+                        {{ profit|floatformat:0|intcomma }} FCFA
+                    </h3>
+                    <small class="text-muted">Marge: {{ profit_margin|floatformat:1 }}%</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card metric-card">
+                <div class="card-body">
+                    <h5>Prix moyen/swap</h5>
+                    <h3 class="text-info">{{ avg_swap_price|floatformat:0|intcomma }} FCFA</h3>
+                    <small class="text-muted">Tarif moyen</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques et données -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <div class="chart-header">
+                        <h3>Évolution quotidienne</h3>
+                        <div class="chart-period-buttons">
+                            <button type="button" class="btn btn-secondary active" onclick="updateChart(7)">7j</button>
+                            <button type="button" class="btn btn-secondary" onclick="updateChart(30)">30j</button>
+                            <button type="button" class="btn btn-secondary" onclick="updateChart(90)">90j</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="evolutionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Répartition des charges</h3>
+                </div>
+                <div class="card-body">
+                    {% if charges_by_category %}
+                        <div class="charges-chart-container">
+                            <canvas id="chargesChart"></canvas>
+                        </div>
+                        <div class="charges-legend mt-3">
+                            {% for category in charges_by_category %}
+                            <div class="charges-legend-item">
+                                <div class="d-flex align-items-center">
+                                    <span class="charges-legend-color" style="background-color: {% cycle '#FF6384' '#36A2EB' '#FFCE56' '#4BC0C0' '#9966FF' '#FF9F40' %}"></span>
+                                    <span>{{ category.categorie__nom }}</span>
+                                </div>
+                                <strong>{{ category.total|floatformat:0|intcomma }} FCFA</strong>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <p>Aucune charge pour cette période</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions récentes -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Swaps récents</h3>
+                </div>
+                <div class="card-body">
+                    {% if recent_swaps %}
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Client</th>
+                                        <th>Prix</th>
+                                        <th>Agent</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for swap in recent_swaps %}
+                                    <tr>
+                                        <td>{{ swap.swap_date|date:"d/m H:i" }}</td>
+                                        <td>
+                                            {% if swap.nom or swap.prenom %}
+                                                {{ swap.prenom|default:"" }} {{ swap.nom|default:"" }}
+                                            {% else %}
+                                                <span class="text-muted">Client anonyme</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-success montant-value">{{ swap.swap_price|default:0|floatformat:0 }} FCFA</td>
+                                        <td>
+                                            <small class="text-muted">Agent #{{ swap.agent_user_id }}</small>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <p>Aucun swap pour cette période</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Charges récentes</h3>
+                </div>
+                <div class="card-body">
+                    {% if recent_charges %}
+                        {% for charge in recent_charges %}
+                        <div class="transaction-item">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1">{{ charge.intitule }}</h6>
+                                    <small class="text-muted">{{ charge.categorie.nom }} - {{ charge.date_charge|date:"d/m/Y" }}</small>
+                                    {% if charge.commentaire %}
+                                        <br><small class="text-info">{{ charge.commentaire|truncatewords:10 }}</small>
+                                    {% endif %}
+                                </div>
+                                <div class="text-right">
+                                    <strong class="text-danger">{{ charge.montant|floatformat:0|intcomma }} FCFA</strong>
+                                    <br><small class="text-muted">{{ charge.periode }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                        <div class="text-center mt-3">
+                            <a href="{% url 'stations:station_specific_charge_list' station.id %}" class="btn btn-secondary btn-sm">
+                                Voir toutes les charges
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <p>Aucune charge pour cette période</p>
+                            <a href="{% url 'stations:station_charge_create' %}?station={{ station.id }}" class="btn btn-primary btn-sm">
+                                Ajouter une charge
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script>
+let evolutionChart;
+let chargesChart;
+
+document.addEventListener('DOMContentLoaded', function() {
+    initEvolutionChart();
+    initChargesChart();
+});
+
+function initEvolutionChart() {
+    const ctx = document.getElementById('evolutionChart').getContext('2d');
+    const dailyData = {{ daily_data_json|safe }};
+
+    const labels = dailyData.map(d => {
+        const date = new Date(d.date);
+        return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' });
+    });
+
+    const revenues = dailyData.map(d => d.revenue);
+    const charges = dailyData.map(d => d.charges);
+    const profits = dailyData.map(d => d.profit);
+
+    evolutionChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Revenus',
+                data: revenues,
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#4CAF50',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.4,
+                fill: false
+            }, {
+                label: 'Charges',
+                data: charges,
+                borderColor: '#F44336',
+                backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#F44336',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.4,
+                fill: false
+            }, {
+                label: 'Bénéfice',
+                data: profits,
+                borderColor: '#DCDC34',
+                backgroundColor: 'rgba(220, 220, 52, 0.1)',
+                borderWidth: 3,
+                pointBackgroundColor: '#DCDC34',
+                pointBorderColor: '#ffffff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            size: 14,
+                            family: 'Arial'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#DCDC34',
+                    borderWidth: 1,
+                    cornerRadius: 6,
+                    displayColors: true,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' +
+                                   new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' FCFA';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 12,
+                            family: 'Arial'
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        display: true,
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 12,
+                            family: 'Arial'
+                        },
+                        callback: function(value) {
+                            return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
+                        }
+                    }
+                }
+            },
+            elements: {
+                line: {
+                    borderJoinStyle: 'round'
+                }
+            }
+        }
+    });
+}
+
+function initChargesChart() {
+    {% if charges_by_category %}
+    const ctx = document.getElementById('chargesChart').getContext('2d');
+
+    const labels = [{% for category in charges_by_category %}'{{ category.categorie__nom|escapejs }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+    const data = [{% for category in charges_by_category %}{{ category.total|floatformat:0 }}{% if not forloop.last %},{% endif %}{% endfor %}];
+
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+
+    chargesChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors.slice(0, labels.length),
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#ffffff',
+                    borderColor: '#DCDC34',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' +
+                                   new Intl.NumberFormat('fr-FR').format(context.parsed) + ' FCFA';
+                        }
+                    }
+                }
+            }
+        }
+    });
+    {% endif %}
+}
+
+function updateChart(days) {
+    document.querySelectorAll('.chart-period-buttons .btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    fetch(`{% url 'stations:api_station_evolution' station.id %}?days=${days}`)
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.data.map(d => {
+                const date = new Date(d.date);
+                return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' });
+            });
+
+            evolutionChart.data.labels = labels;
+            evolutionChart.data.datasets[0].data = data.data.map(d => d.revenue);
+            evolutionChart.data.datasets[1].data = data.data.map(d => d.charges);
+            evolutionChart.data.datasets[2].data = data.data.map(d => d.profit);
+            evolutionChart.update();
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des données:', error);
+        });
+}
+
+// Gestion du formulaire de filtre
+document.addEventListener('DOMContentLoaded', function() {
+    const periodeSelect = document.querySelector('select[name="periode"]');
+    const dateFields = document.querySelectorAll('input[type="date"]');
+
+    if (periodeSelect) {
+        periodeSelect.addEventListener('change', function() {
+            const isCustom = this.value === 'custom';
+            dateFields.forEach(field => {
+                field.style.display = isCustom ? 'block' : 'none';
+                field.required = isCustom;
+            });
+        });
+
+        // Déclencher l'événement au chargement
+        periodeSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
+{% endblock %}

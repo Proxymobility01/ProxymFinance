@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+{% load static %}
+motif du rejet
+{% block title %}Détails du Congé{% endblock %}
+{% block page_title %}Détails du Congé{% endblock %}
+
+{% block page_actions %}
+{% if conge.statut == 'en_attente' %}
+<button type="button" class="btn btn-success btn-approuver" data-id="{{ conge.id }}">
+    <i class="ti ti-check"></i> Approuver
+</button>
+<button type="button" class="btn btn-danger btn-rejeter" data-id="{{ conge.id }}">
+    <i class="ti ti-x"></i> Rejeter
+</button>
+{% endif %}
+<a href="{% url 'contrats:liste_conges' %}" class="btn btn-secondary">
+    <i class="ti ti-arrow-left"></i> Retour à la liste
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- Informations du congé -->
+        <div class="card">
+            <div class="card-header">
+                <h3>
+                    Congé de {{ conge.contrat.chauffeur.nom_complet }}
+                    {% if conge.statut == 'en_attente' %}
+                        <span class="badge badge-warning">En attente</span>
+                    {% elif conge.statut == 'approuvé' %}
+                        <span class="badge badge-success">Approuvé</span>
+                    {% elif conge.statut == 'planifié' %}
+                        <span class="badge badge-info">Planifié</span>
+                    {% elif conge.statut == 'en_cours' %}
+                        <span class="badge badge-primary">En cours</span>
+                    {% elif conge.statut == 'terminé' %}
+                        <span class="badge badge-secondary">Terminé</span>
+                    {% elif conge.statut == 'annulé' %}
+                        <span class="badge badge-danger">Annulé</span>
+                    {% elif conge.statut == 'rejeté' %}
+                        <span class="badge badge-danger">Rejeté</span>
+                    {% endif %}
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Informations générales</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 40%;">Chauffeur</th>
+                                    <td>
+                                        <a href="{% url 'contrats:details_chauffeur' conge.contrat.association.validated_user.id %}">
+                                            {{conge.contrat.association.validated_user.nom}} . {{conge.contrat.association.validated_user.prenom}}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Contrat</th>
+                                    <td>
+                                        <a href="{% url 'contrats:details_contrat_chauffeur' conge.contrat.id %}">
+                                            {{ conge.contrat.reference }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Date de début</th>
+                                    <td>{{ conge.date_debut|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de fin</th>
+                                    <td>{{ conge.date_fin|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nombre de jours</th>
+                                    <td>{{ conge.nombre_jours }} jour(s)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Suivi de la demande</h5>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 40%;">Date de demande</th>
+                                    <td>{{ conge.date_demande|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% if conge.date_approbation %}
+                                <tr>
+                                    <th>Date d'approbation</th>
+                                    <td>{{ conge.date_approbation|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endif %}
+                                {% if conge.approuve_par %}
+                                <tr>
+                                    <th>Approuvé par</th>
+                                    <td>{{ conge.approuve_par }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <th>Statut actuel</th>
+                                    <td>
+                                        {% if conge.statut == 'en_attente' %}
+                                            <span class="badge badge-warning">En attente</span>
+                                        {% elif conge.statut == 'approuvé' %}
+                                            <span class="badge badge-success">Approuvé</span>
+                                        {% elif conge.statut == 'planifié' %}
+                                            <span class="badge badge-info">Planifié</span>
+                                        {% elif conge.statut == 'en_cours' %}
+                                            <span class="badge badge-primary">En cours</span>
+                                        {% elif conge.statut == 'terminé' %}
+                                            <span class="badge badge-secondary">Terminé</span>
+                                        {% elif conge.statut == 'annulé' %}
+                                            <span class="badge badge-danger">Annulé</span>
+                                        {% elif conge.statut == 'rejeté' %}
+                                            <span class="badge badge-danger">Rejeté</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% if conge.commentaire %}
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="alert2 {% if conge.statut == 'rejeté' %}alert-danger{% else %}alert-info{% endif %}">
+                            <h5 class="mb-2">{% if conge.statut == 'rejeté' %}Motif du rejet{% else %}Commentaire{% endif %}</h5>
+                            <p class="mb-0">{{ conge.commentaire }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% if conge.motif %}
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h5 class="mb-2">Motif de la demande</h5>
+                        <p>{{ conge.motif }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <!-- Informations du chauffeur et du contrat -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>
+                    <a href="{% url 'contrats:details_chauffeur' conge.contrat.association.validated_user.id %}">
+                        {{conge.contrat.association.validated_user.nom}} . {{conge.contrat.association.validated_user.prenom}}
+                    </a>
+                </h4>
+            </div>
+            <div class="card-body">
+  <div class="contrat-informations">
+    <h6 class="mb-3">Informations du contrat</h6>
+
+    <div class="row mb-2">
+      <div class="col-6 form-label text-left">Référence</div>
+      <div class="col-6 text-left">
+        <a href="{% url 'contrats:details_contrat_chauffeur' conge.contrat.id %}">
+          {{ conge.contrat.reference }}
+        </a>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-6 form-label text-left">Date d'embauche</div>
+      <div class="col-6 text-left">
+        {{ conge.contrat.date_debut|date:"d/m/Y" }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6 form-label text-left">Jours de congés restants</div>
+      <div class="col-6 text-left">
+        {{ conge.contrat.jours_conges_restants }}
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+        <!-- Historique des congés récents -->
+        <div class="card">
+            <div class="card-header">
+                <h4>Congés récents</h4>
+            </div>
+            <div class="card-body">
+                {% with conges_recents=conge.contrat.congeschauffeur_set.all|slice:":5" %}
+                    {% if conges_recents %}
+                        <ul class="list-group">
+                            {% for conge_recent in conges_recents %}
+                                {% if conge_recent.id != conge.id %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <a href="{% url 'contrats:details_conge' conge_recent.id %}">
+                                                {{ conge_recent.date_debut|date:"d/m/Y" }} - {{ conge_recent.date_fin|date:"d/m/Y" }}
+                                            </a>
+                                            <span class="d-block text-muted">{{ conge_recent.nombre_jours }} jour(s)</span>
+                                        </div>
+                                        {% if conge_recent.statut == 'en_attente' %}
+                                            <span class="badge badge-warning">En attente</span>
+                                        {% elif conge_recent.statut == 'approuvé' %}
+                                            <span class="badge badge-success">Approuvé</span>
+                                        {% elif conge_recent.statut == 'planifié' %}
+                                            <span class="badge badge-info">Planifié</span>
+                                        {% elif conge_recent.statut == 'en_cours' %}
+                                            <span class="badge badge-primary">En cours</span>
+                                        {% elif conge_recent.statut == 'terminé' %}
+                                            <span class="badge badge-secondary">Terminé</span>
+                                        {% elif conge_recent.statut == 'annulé' %}
+                                            <span class="badge badge-danger">Annulé</span>
+                                        {% elif conge_recent.statut == 'rejeté' %}
+                                            <span class="badge badge-danger">Rejeté</span>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Aucun congé récent.</p>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Approuver -->
+<div class="modal fade" id="approuverCongeModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Approuver la demande de congé</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'contrats:modifier_statut_conge' conge.id %}" method="post" id="approuverForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="statut" value="approuvé">
+                    <div class="form-group">
+                        <label for="commentaire-approuver">Commentaire (optionnel):</label>
+                        <textarea id="commentaire-approuver" name="commentaire" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success">Approuver</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Rejeter -->
+<div class="modal fade" id="rejeterCongeModal" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Rejeter la demande de congé</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'contrats:modifier_statut_conge' conge.id %}" method="post" id="rejeterForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="statut" value="rejeté">
+                    <div class="form-group">
+                        <label for="commentaire-rejeter">Motif de refus:</label>
+                        <textarea id="commentaire-rejeter" name="commentaire" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-danger">Rejeter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Overlay pour l'arrière-plan des modales -->
+<div class="modal-backdrop fade" id="modal-backdrop" style="display: none;"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        
+        // Modales
+        const approuverModal = document.getElementById('approuverCongeModal');
+        const rejeterModal = document.getElementById('rejeterCongeModal');
+        
+        // Boutons d'action
+        const btnsApprouver = document.querySelectorAll('.btn-approuver');
+        const btnsRejeter = document.querySelectorAll('.btn-rejeter');
+        
+        // Fonction pour ouvrir une modale
+        function openModal(modal) {
+            modal.style.display = 'block';
+            modal.classList.add('show');
+            
+            modalBackdrop.style.display = 'block';
+            modalBackdrop.classList.add('show');
+            
+            document.body.classList.add('modal-open');
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = '15px';
+        }
+        
+        // Fonction pour fermer une modale
+        function closeModal(modal) {
+            if (!modal) return;
+            
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 150);
+            
+            modalBackdrop.classList.remove('show');
+            setTimeout(() => {
+                modalBackdrop.style.display = 'none';
+            }, 150);
+            
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }
+        
+        // Gestionnaires pour les boutons d'approbation
+        btnsApprouver.forEach(btn => {
+            btn.addEventListener('click', function() {
+                openModal(approuverModal);
+            });
+        });
+        
+        // Gestionnaires pour les boutons de rejet
+        btnsRejeter.forEach(btn => {
+            btn.addEventListener('click', function() {
+                openModal(rejeterModal);
+            });
+        });
+        
+        // Gestionnaires pour fermer les modales
+        const closeButtons = document.querySelectorAll('.modal .close, .modal .btn-secondary');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                closeModal(modal);
+            });
+        });
+        
+        // Fermer la modale en cliquant sur l'arrière-plan
+        modalBackdrop.addEventListener('click', function() {
+            const openModals = document.querySelectorAll('.modal.show');
+            openModals.forEach(modal => {
+                closeModal(modal);
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    
+</style>
+
+
+{% endblock %}

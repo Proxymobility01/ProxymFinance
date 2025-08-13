@@ -1,0 +1,450 @@
+<!-- templates/stations/rentability_analysis_form.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}
+    {% if analysis %}Modifier l'Analyse{% else %}Nouvelle Analyse de Rentabilité{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            {% if analysis %}
+                Modifier l'Analyse de Rentabilité
+            {% else %}
+                Nouvelle Analyse de Rentabilité
+            {% endif %}
+        </h1>
+        <div class="header-actions">
+            <a href="{% url 'stations:rentability_analysis_list' %}" class="btn btn-secondary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                    <path d="M19 12H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Retour à la liste
+            </a>
+            {% if analysis %}
+            <a href="{% url 'stations:rentability_analysis_detail' analysis.pk %}" class="btn btn-info">
+                Voir Détails
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Messages d'erreur ou succès -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <!-- Formulaire principal -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        {% if analysis %}Paramètres de l'Analyse{% else %}Configuration de l'Analyse{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="analysisForm">
+                        {% csrf_token %}
+
+                        <!-- Nom de l'analyse -->
+                        <div class="form-group">
+                            <label for="{{ form.nom_analyse.id_for_label }}" class="form-label required">
+                                Nom de l'analyse
+                            </label>
+                            {{ form.nom_analyse }}
+                            {% if form.nom_analyse.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.nom_analyse.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                Donnez un nom descriptif à votre analyse (ex: "Analyse Q1 2025 - Station Centre")
+                            </div>
+                        </div>
+
+                        <!-- Station -->
+                        <div class="form-group">
+                            <label for="{{ form.station.id_for_label }}" class="form-label required">
+                                Station à analyser
+                            </label>
+                            {{ form.station }}
+                            {% if form.station.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.station.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Type de période -->
+                        <div class="form-group">
+                            <label for="{{ form.type_periode.id_for_label }}" class="form-label required">
+                                Type de période
+                            </label>
+                            {{ form.type_periode }}
+                            {% if form.type_periode.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.type_periode.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                Sélectionnez le type de période pour l'analyse ou choisissez "Période personnalisée"
+                            </div>
+                        </div>
+
+                        <!-- Dates personnalisées -->
+                        <div class="row" id="customDatesRow">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.date_debut.id_for_label }}" class="form-label required">
+                                        Date de début
+                                    </label>
+                                    {{ form.date_debut }}
+                                    {% if form.date_debut.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_debut.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.date_fin.id_for_label }}" class="form-label required">
+                                        Date de fin
+                                    </label>
+                                    {{ form.date_fin }}
+                                    {% if form.date_fin.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_fin.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="form-group mt-4">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                                            <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        {% if analysis %}Mettre à jour{% else %}Créer l'analyse{% endif %}
+                                    </button>
+                                    <a href="{% url 'stations:rentability_analysis_list' %}" class="btn btn-secondary" style="margin-left: 0.5rem;">
+                                        Annuler
+                                    </a>
+                                </div>
+                                {% if analysis %}
+                                <div>
+                                    <a href="{% url 'stations:rentability_analysis_delete' analysis.pk %}"
+                                       class="btn btn-outline-danger"
+                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette analyse ?')">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                                            <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        Supprimer
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aide et informations -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Aide</h3>
+                </div>
+                <div class="card-body">
+                    <div class="help-section">
+                        <h6>Types de période disponibles :</h6>
+                        <ul class="help-list">
+                            <li><strong>Jour :</strong> Analyse pour la journée en cours</li>
+                            <li><strong>Semaine :</strong> Analyse pour la semaine en cours</li>
+                            <li><strong>Mois :</strong> Analyse pour le mois en cours</li>
+                            <li><strong>Trimestre :</strong> Analyse pour le trimestre en cours</li>
+                            <li><strong>Année :</strong> Analyse pour l'année en cours</li>
+                            <li><strong>Personnalisée :</strong> Définissez vos propres dates</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section mt-4">
+                        <h6>Métriques calculées :</h6>
+                        <ul class="help-list">
+                            <li><strong>Revenus :</strong> Total des swaps sur la période</li>
+                            <li><strong>Charges :</strong> Somme des coûts opérationnels</li>
+                            <li><strong>Bénéfice :</strong> Revenus - Charges</li>
+                            <li><strong>Marge :</strong> (Bénéfice / Revenus) × 100</li>
+                            <li><strong>Nombre de swaps :</strong> Total des échanges</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section mt-4">
+                        <h6>Conseils :</h6>
+                        <div class="alert alert-info">
+                            <small>
+                                Pour une analyse comparative, créez plusieurs analyses avec la même période
+                                pour différentes stations.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aperçu si modification -->
+            {% if analysis %}
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h3>Aperçu Actuel</h3>
+                </div>
+                <div class="card-body">
+                    <div class="preview-metrics">
+                        <div class="preview-item">
+                            <span class="preview-label">Station :</span>
+                            <span class="preview-value">{{ analysis.station.nom_agence }}</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Période :</span>
+                            <span class="preview-value">{{ analysis.date_debut|date:"d/m/Y" }} - {{ analysis.date_fin|date:"d/m/Y" }}</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Revenus :</span>
+                            <span class="preview-value text-success">{{ analysis.revenus_total|floatformat:0|intcomma }} FCFA</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Charges :</span>
+                            <span class="preview-value text-danger">{{ analysis.charges_total|floatformat:0|intcomma }} FCFA</span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Bénéfice :</span>
+                            <span class="preview-value {% if analysis.benefice_net >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                {{ analysis.benefice_net|floatformat:0|intcomma }} FCFA
+                            </span>
+                        </div>
+                        <div class="preview-item">
+                            <span class="preview-label">Marge :</span>
+                            <span class="preview-value {% if analysis.marge_beneficiaire >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                {{ analysis.marge_beneficiaire|floatformat:1 }}%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Styles spécifiques au formulaire */
+.help-section {
+    margin-bottom: var(--spacing-md);
+}
+
+.help-section h6 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    font-family: var(--font-family-heading);
+}
+
+.help-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.help-list li {
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: var(--font-size-sm);
+}
+
+.help-list li:last-child {
+    border-bottom: none;
+}
+
+.help-list strong {
+    color: var(--primary-color);
+}
+
+.preview-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.preview-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.preview-item:last-child {
+    border-bottom: none;
+}
+
+.preview-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.preview-value {
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+}
+
+.form-text {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+/* Masquer les dates par défaut */
+#customDatesRow {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .d-flex.justify-content-between > div {
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-top: var(--spacing-xs);
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const typePeriodeSelect = document.getElementById('{{ form.type_periode.id_for_label }}');
+    const customDatesRow = document.getElementById('customDatesRow');
+    const dateDebutField = document.getElementById('{{ form.date_debut.id_for_label }}');
+    const dateFinField = document.getElementById('{{ form.date_fin.id_for_label }}');
+
+    function toggleCustomDates() {
+        const isCustom = typePeriodeSelect.value === 'custom';
+
+        if (isCustom) {
+            customDatesRow.style.display = 'flex';
+            dateDebutField.required = true;
+            dateFinField.required = true;
+        } else {
+            customDatesRow.style.display = 'none';
+            dateDebutField.required = false;
+            dateFinField.required = false;
+
+            // Auto-remplir les dates selon le type de période
+            setAutoDates(typePeriodeSelect.value);
+        }
+    }
+
+    function setAutoDates(periodType) {
+        const today = new Date();
+        let startDate, endDate;
+
+        switch(periodType) {
+            case 'day':
+                startDate = endDate = today;
+                break;
+            case 'week':
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay());
+                const endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 6);
+                startDate = startOfWeek;
+                endDate = endOfWeek;
+                break;
+            case 'month':
+                startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                break;
+            case 'quarter':
+                const quarter = Math.floor(today.getMonth() / 3);
+                startDate = new Date(today.getFullYear(), quarter * 3, 1);
+                endDate = new Date(today.getFullYear(), quarter * 3 + 3, 0);
+                break;
+            case 'year':
+                startDate = new Date(today.getFullYear(), 0, 1);
+                endDate = new Date(today.getFullYear(), 11, 31);
+                break;
+            default:
+                return;
+        }
+
+        if (startDate && endDate) {
+            dateDebutField.value = startDate.toISOString().split('T')[0];
+            dateFinField.value = endDate.toISOString().split('T')[0];
+        }
+    }
+
+    // Écouter les changements
+    typePeriodeSelect.addEventListener('change', toggleCustomDates);
+
+    // Initialiser l'état
+    toggleCustomDates();
+
+    // Validation du formulaire
+    document.getElementById('analysisForm').addEventListener('submit', function(e) {
+        const startDate = new Date(dateDebutField.value);
+        const endDate = new Date(dateFinField.value);
+
+        if (startDate > endDate) {
+            e.preventDefault();
+            alert('La date de début doit être antérieure à la date de fin.');
+            return false;
+        }
+
+        // Vérifier que la période n'est pas trop longue (par exemple, plus de 2 ans)
+        const diffTime = Math.abs(endDate - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays > 730) {
+            if (!confirm('La période sélectionnée est très longue (' + diffDays + ' jours). Êtes-vous sûr de vouloir continuer ?')) {
+                e.preventDefault();
+                return false;
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
