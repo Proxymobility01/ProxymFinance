@@ -1,12 +1,13 @@
 # À ajouter dans payments/utils.py
 
 from django.utils import timezone
-from datetime import date, time, timedelta
+from datetime import datetime, date, time, timedelta
 from decimal import Decimal
 from django.db.models import Q
-
 from contrats.models import ContratChauffeur, ContratPartenaire, ContratBatterie, CongesChauffeur
 from .models import Paiement, Penalite, ReglePenalite
+from django.db import transaction
+
 
 
 def creer_penalites_manquees_automatiquement(jours_max=30):
@@ -229,8 +230,14 @@ def creer_penalites_manquees_automatiquement(jours_max=30):
 def verifier_et_appliquer_penalites_si_necessaire():
     """
     Fonction appelée depuis centre_paiements pour vérifier et appliquer les pénalités
-    """
+
     return creer_penalites_manquees_automatiquement(jours_max=30)
+    """
+    """
+    ➜ Version adaptée : ne traite QUE la date du jour et UNIQUEMENT après 12:01.
+    Idempotent. Ne crée pas de rétroactifs.
+    """
+    return appliquer_penalites_du_jour()
 
 
 def _est_jour_de_paiement(contrat, date_ref):
@@ -292,4 +299,196 @@ def _est_jour_de_paiement(contrat, date_ref):
         return False
 
     return False
+
+
+# --- Pénalités du jour (après 12:01), idempotent ---
+
+def _has_payment_today(contrat, today):
+    """Paiement (hors pénalité) déjà effectué aujourd'hui ?"""
+    if isinstance(contrat, ContratChauffeur):
+        return Paiement.objects.filter(
+            contrat_chauffeur=contrat, date_paiement=today, est_penalite=False
+        ).exists()
+    if isinstance(contrat, ContratPartenaire):
+        return Paiement.objects.filter(
+            contrat_partenaire=contrat, date_paiement=today, est_penalite=False
+        ).exists()
+    # ContratBatterie
+    return Paiement.objects.filter(
+        contrat_batterie=contrat, date_paiement=today, est_penalite=False
+    ).exists()
+
+
+def _penalty_exists_for_today(contrat, today):
+    """Évite les doublons : une pénalité existe déjà pour aujourd'hui ?"""
+    if isinstance(contrat, ContratChauffeur):
+        return Penalite.objects.filter(
+            contrat_chauffeur=contrat, date_paiement_manque=today
+        ).exists()
+    if isinstance(contrat, ContratPartenaire):
+        return Penalite.objects.filter(
+            contrat_partenaire=contrat, date_paiement_manque=today
+        ).exists()
+    # ContratBatterie
+    return Penalite.objects.filter(
+        contrat_batterie=contrat, date_paiement_manque=today
+    ).exists()
+
+
+def _create_penalty(contrat, type_penalite, montant, motif, today, cree_par=None, description=None):
+    """Crée une pénalité pour le contrat, datée d'aujourd'hui."""
+    description = description or f"Pénalité automatique pour retard du {today.strftime('%d/%m/%Y')}"
+    if isinstance(contrat, ContratChauffeur):
+        return Penalite.objects.create(
+            contrat_chauffeur=contrat,
+            contrat_reference=contrat.reference,
+            type_penalite=type_penalite,
+            montant=montant,
+            motif=motif,
+            description=description,
+            statut='en_attente',
+            date_paiement_manque=today,
+            cree_par=cree_par
+        )
+    if isinstance(contrat, ContratPartenaire):
+        return Penalite.objects.create(
+            contrat_partenaire=contrat,
+            contrat_reference=contrat.reference,
+            type_penalite=type_penalite,
+            montant=montant,
+            motif=motif,
+            description=description,
+            statut='en_attente',
+            date_paiement_manque=today,
+            cree_par=cree_par
+        )
+    # ContratBatterie
+    return Penalite.objects.create(
+        contrat_batterie=contrat,
+        contrat_reference=contrat.reference,
+        type_penalite=type_penalite,
+        montant=montant,
+        motif=motif,
+        description=description,
+        statut='en_attente',
+        date_paiement_manque=today,
+        cree_par=cree_par
+    )
+
+
+def _is_battery_standalone(contrat_bat: ContratBatterie) -> bool:
+    """Un contrat batterie 'standalone' = pas couvert par un contrat chauffeur/partenaire actif."""
+    if contrat_bat.chauffeur and ContratChauffeur.objects.filter(
+        association__validated_user=contrat_bat.chauffeur, statut='actif'
+    ).exists():
+        return False
+    if contrat_bat.partenaire and ContratPartenaire.objects.filter(
+        partenaire=contrat_bat.partenaire, statut='actif'
+    ).exists():
+        return False
+    return True
+
+
+def appliquer_penalites_du_jour(run_dt=None, user=None) -> int:
+    """
+    Applique les pénalités UNIQUEMENT pour la date du jour, et UNIQUEMENT après 12:01 (Africa/Douala).
+    Idempotent : ne recrée pas si paiement déjà fait ou pénalité déjà existante pour aujourd'hui.
+    Retourne le nombre de pénalités créées.
+    """
+    tz = timezone.get_current_timezone()
+    now = timezone.localtime(run_dt, tz) if run_dt else timezone.localtime()
+    today = now.date()
+
+    # 12:01 locale Cameroun (TIME_ZONE = 'Africa/Douala')
+    cutoff = timezone.make_aware(datetime.combine(today, time(12, 1)), tz)
+    if now < cutoff:
+        return 0
+
+    created = 0
+
+    # 1) Chauffeurs
+    # 1) Chauffeurs
+    for contrat in ContratChauffeur.objects.filter(statut='actif', date_debut__lte=today):
+        if not _est_jour_de_paiement(contrat, today):
+            continue
+
+        # Congé => pas de pénalité
+        try:
+            est_en_conge = CongesChauffeur.objects.filter(
+                contrat=contrat,
+                date_debut__lte=today,
+                date_fin__gte=today,
+                statut__in=['approuvé', 'planifié', 'en_cours']
+            ).exists()
+        except Exception:
+            est_en_conge = False
+        if est_en_conge:
+            continue
+
+        if _has_payment_today(contrat, today) or _penalty_exists_for_today(contrat, today):
+            continue
+
+        # ✅ Récupération correcte du "chauffeur"
+        chauffeur_user = getattr(contrat.association, 'validated_user', None)
+
+        # ✅ Vérifier s’il a un contrat batterie actif
+        has_battery = False
+        if chauffeur_user:
+            has_battery = ContratBatterie.objects.filter(
+                chauffeur=chauffeur_user,
+                statut='actif'
+            ).exists()
+
+        type_penalite = 'combine' if has_battery else 'batterie_seule'
+
+        montant, motif = ReglePenalite.get_penalite_applicable(
+            type_penalite,
+            heure_paiement=now.time(),
+            jours_retard=0
+        )
+
+        if montant and montant > 0 and motif:
+            with transaction.atomic():
+                if _has_payment_today(contrat, today) or _penalty_exists_for_today(contrat, today):
+                    continue
+                _create_penalty(contrat, type_penalite, montant, motif, today, cree_par=user)
+                created += 1
+
+    # 2) Partenaires
+    for contrat in ContratPartenaire.objects.filter(statut='actif', date_debut__lte=today):
+        if not _est_jour_de_paiement(contrat, today):
+            continue
+        if _has_payment_today(contrat, today) or _penalty_exists_for_today(contrat, today):
+            continue
+
+        type_penalite = 'combine' if ContratBatterie.objects.filter(partenaire=contrat.partenaire, statut='actif').exists() else 'batterie_seule'
+        montant, motif = ReglePenalite.get_penalite_applicable(type_penalite, heure_paiement=now.time(), jours_retard=0)
+        if montant and montant > 0 and motif:
+            with transaction.atomic():
+                if _has_payment_today(contrat, today) or _penalty_exists_for_today(contrat, today):
+                    continue
+                _create_penalty(contrat, type_penalite, montant, motif, today, cree_par=user)
+                created += 1
+
+    # 3) Batteries standalone
+    for contrat in ContratBatterie.objects.filter(statut='actif', date_debut__lte=today):
+        if not _is_battery_standalone(contrat):
+            continue
+        if not _est_jour_de_paiement(contrat, today):
+            continue
+        if _has_payment_today(contrat, today) or _penalty_exists_for_today(contrat, today):
+            continue
+
+        montant, motif = ReglePenalite.get_penalite_applicable('batterie_seule', heure_paiement=now.time(), jours_retard=0)
+        if montant and montant > 0 and motif:
+            with transaction.atomic():
+                if _has_payment_today(contrat, today) or _penalty_exists_for_today(contrat, today):
+                    continue
+                _create_penalty(contrat, 'batterie_seule', montant, motif, today, cree_par=user)
+                created += 1
+
+    return created
+
+
+
 

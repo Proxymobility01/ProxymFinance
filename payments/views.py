@@ -34,40 +34,44 @@ from django.db import transaction
 from .models import Paiement, Penalite, ReglePenalite
 from .utils import _est_jour_de_paiement
 from django.db.models import Count, Q
+# + à importer en haut du fichier
+from django.utils.dateparse import parse_date
+from datetime import time
+from django.utils import timezone
+
 
 def centre_paiements(request):
     """Centre de paiements unifié avec application automatique des pénalités"""
     dt_now = timezone.localtime()
-    aujourd_hui = dt_now.date()
-    heure_actuelle = dt_now.time()
-    heure_limite = dt_now.replace(hour=13, minute=0, second=0, microsecond=0).time()
+    # -- AJOUT: lire la date choisie dans l'URL
+    selected_date_str = request.GET.get('date')
+    selected_date = parse_date(selected_date_str) if selected_date_str else None
 
-    try:
-        created = run_penalties_if_due()
-        if created:
-            messages.info(request, f"{created} pénalité(s) automatique(s) appliquée(s).")
-    except Exception as e:
-        # log…
-        pass
+    aujourd_hui = (selected_date or dt_now.date())
+    is_today = (aujourd_hui == timezone.localdate())
 
-    if not request.user.is_authenticated:
-        return redirect(f"/login/?next={request.path}")
+    # si on consulte une date passée/future, on fige l'heure du jour à 23:59:59
+    heure_actuelle = dt_now.time() if is_today else time(23, 59, 59)
+    heure_limite = time(13, 0)
 
-    # Appliquer automatiquement les pénalités si nécessaire
-    try:
-        from .utils import verifier_et_appliquer_penalites_si_necessaire
-        penalites_creees = verifier_et_appliquer_penalites_si_necessaire()
+    # ⚠️ (option sûr) : ne déclencher l’auto-création de pénalités QUE pour aujourd’hui
+    if is_today:
+        try:
+            created = run_penalties_if_due()
+            if created:
+                messages.info(request, f"{created} pénalité(s) automatique(s) appliquée(s).")
+        except Exception:
+            pass
 
-        if penalites_creees > 0:
-            messages.info(
-                request,
-                f"{penalites_creees} pénalité(s) automatique(s) ont été appliquées pour les paiements manqués."
-            )
-    except Exception as e:
-        # En cas d'erreur, continuer normalement
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error(f"Erreur lors de l'application automatique des pénalités: {e}")
+        try:
+            from .utils import verifier_et_appliquer_penalites_si_necessaire
+            penalites_creees = verifier_et_appliquer_penalites_si_necessaire()
+            if penalites_creees > 0:
+                messages.info(request,
+                              f"{penalites_creees} pénalité(s) automatique(s) ont été appliquées pour les paiements manqués.")
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"Erreur lors de l'application automatique des pénalités: {e}")
 
     # Récupérer tous les contrats actifs
     contrats_chauffeur = ContratChauffeur.objects.filter(statut='actif')
@@ -744,14 +748,14 @@ def centre_paiements(request):
         'titre': 'Centre de Paiements',
         'paiements': paiements_page,
         'stats': stats,
-        'aujourd_hui': aujourd_hui,
-        'heure_actuelle': heure_actuelle,
+        'aujourd_hui': aujourd_hui,        # déjà présent chez vous
+        'heure_actuelle': heure_actuelle,  # déjà présent chez vous
         'onglet_actif': request.GET.get('onglet', 'a_traiter'),
         'vue_calendrier': request.GET.get('vue', 'liste') == 'calendrier',
+        'is_today': is_today,              # + utile pour l’affichage si besoin
     }
     return render(request, 'payments/centre.html', context)
 
-    return render(request, 'payments/centre.html', context)
 
 
 def _est_jour_de_paiement(contrat, date_ref):

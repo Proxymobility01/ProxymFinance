@@ -402,13 +402,28 @@
                 <option value="batterie">Batterie</option>
             </select>
         </div>
-        
+
+        <div class="filter-group me-3">
+          <label for="date-filter">Date&nbsp;:</label>
+          <input type="date"
+                 class="form-control form-control-sm"
+                 id="date-filter"
+                 value="{{ aujourd_hui|date:'Y-m-d' }}">
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-apply-date">
+          Appliquer
+        </button>
+        <button type="button" class="btn btn-sm btn-link" id="btn-clear-date">
+          Réinitialiser
+        </button>
+
+
         <div class="search-container">
             <i class="fas fa-search"></i>
             <input type="text" class="form-control form-control-sm" id="search-input" placeholder="Rechercher un client, un numéro...">
         </div>
     </div>
-    
+
     <!-- Tableau des paiements -->
     <div class="payments-table-container">
         <table class="payments-table" id="payments-table">
@@ -533,10 +548,14 @@
     <ul class="pagination">
         {% if paiements.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page=1" title="Première page">&laquo;</a>
+                <a class="page-link"
+   href="?page=1{% if aujourd_hui %}&date={{ aujourd_hui|date:'Y-m-d' }}{% endif %}"
+   title="Première page">&laquo;</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ paiements.previous_page_number }}" title="Page précédente">&lsaquo;</a>
+                <a class="page-link"
+   href="?page={{ paiements.previous_page_number }}{% if aujourd_hui %}&date={{ aujourd_hui|date:'Y-m-d' }}{% endif %}"
+   title="Page précédente">&lsaquo;</a>
             </li>
         {% endif %}
         {% for num in paiements.paginator.page_range %}
@@ -546,16 +565,22 @@
                 </li>
             {% elif num > paiements.number|add:'-3' and num < paiements.number|add:'3' %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    <a class="page-link"
+   href="?page={{ num }}{% if aujourd_hui %}&date={{ aujourd_hui|date:'Y-m-d' }}{% endif %}">{{ num }}</a>
+
                 </li>
             {% endif %}
         {% endfor %}
         {% if paiements.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ paiements.next_page_number }}" title="Page suivante">&rsaquo;</a>
+                <a class="page-link"
+   href="?page={{ paiements.next_page_number }}{% if aujourd_hui %}&date={{ aujourd_hui|date:'Y-m-d' }}{% endif %}"
+   title="Page suivante">&rsaquo;</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ paiements.paginator.num_pages }}" title="Dernière page">&raquo;</a>
+                <a class="page-link"
+   href="?page={{ paiements.paginator.num_pages }}{% if aujourd_hui %}&date={{ aujourd_hui|date:'Y-m-d' }}{% endif %}"
+   title="Dernière page">&raquo;</a>
             </li>
         {% endif %}
     </ul>
@@ -663,5 +688,53 @@
             searchInput.addEventListener('input', applyFilters);
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const dateInput = document.getElementById('date-filter');
+      if (dateInput) {
+        dateInput.addEventListener('change', function () {
+          const url = new URL(window.location.href);
+          if (this.value) {
+            url.searchParams.set('date', this.value);
+          } else {
+            url.searchParams.delete('date');
+          }
+          // On repart sur la première page pour éviter des pages vides
+          url.searchParams.delete('page');
+          window.location.href = url.toString();
+        });
+      }
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+  const dateInput = document.getElementById('date-filter');
+
+  const applyDate = () => {
+    const url = new URL(window.location.href);
+    if (dateInput && dateInput.value) {
+      url.searchParams.set('date', dateInput.value);
+    } else {
+      url.searchParams.delete('date');
+    }
+    // éviter d'arriver sur une page vide
+    url.searchParams.delete('page');
+    window.location.href = url.toString();
+  };
+
+  // Clic sur "Appliquer"
+  document.getElementById('btn-apply-date')?.addEventListener('click', applyDate);
+
+  // Entrée (Enter) dans le champ date
+  dateInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') applyDate();
+  });
+
+  // Réinitialiser (revient au jour courant)
+  document.getElementById('btn-clear-date')?.addEventListener('click', () => {
+    if (dateInput) dateInput.value = '';
+    applyDate();
+  });
+});
+
+
 </script>
 {% endblock %}
